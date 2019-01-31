@@ -5,4 +5,18 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="DecimalExtensions.cs" />
+    <None Include="IOutput.cs" />
+    <None Include="PaymentCalculator.cs" />
+    <None Include="Program.cs" />
+    <None Include="Scenario.cs" />
+    <None Include="RentVsOwnException.cs" />
+    <None Include="TempFileOutput.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
+  </ItemGroup>
+
 </Project>

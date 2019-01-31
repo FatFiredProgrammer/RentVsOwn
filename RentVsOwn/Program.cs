@@ -1,12 +1,45 @@
 ﻿using System;
+using System.Linq;
 
 namespace RentVsOwn
 {
-    class Program
+    /// <summary>
+    ///     Program entry point.
+    /// </summary>
+    internal static class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        ///     Defines the entry point of the application.
+        /// </summary>
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var verbose = args.Any(c => string.Equals(c, "-v", StringComparison.CurrentCultureIgnoreCase)) || args.Any(c => string.Equals(c, "--verbose", StringComparison.CurrentCultureIgnoreCase));
+#if DEBUG
+
+            // var output = verbose ? new VerboseOutput() : (IOutput)new DebugOutput();
+            // var output = verbose ? new VerboseOutput() : (IOutput)new ConsoleOutput();
+            var output = verbose ? new TempFileOutput() : (IOutput)new TempFileOutput();
+#else
+            var output = verbose? new VerboseOutput() : (IOutput)new ConsoleOutput();
+#endif
+
+            try
+            {
+                var scenario = new Scenario
+                {
+                };
+
+                scenario.Run(output);
+            }
+            catch (Exception exception)
+            {
+                output.WriteLine("===== Failed =====");
+                output.WriteLine($"{exception.GetType()}: {exception.Message}");
+            }
+            finally
+            {
+                output.Flush();
+            }
         }
     }
 }
