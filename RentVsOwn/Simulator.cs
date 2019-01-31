@@ -113,7 +113,7 @@ namespace RentVsOwn
         ///     Gets or sets the insurance per month.
         /// </summary>
         /// <value>The insurance per month.</value>
-        public decimal InsurancePerMonth { get; set; } = 2000;
+        public decimal InsurancePerMonth { get; set; } = 2000m / 12;
 
         /// <summary>
         ///     Gets or sets the hoa per month.
@@ -131,7 +131,7 @@ namespace RentVsOwn
         ///     Gets or sets the home maintenance percentage per year.
         /// </summary>
         /// <value>The home maintenance percentage per year.</value>
-        public decimal HomeMaintenancePercentagePerYear { get; set; } = .15m;
+        public decimal HomeMaintenancePercentagePerYear { get; set; } = .015m;
 
         /// <summary>
         ///     Gets or sets the sales commission percentage.
@@ -194,8 +194,8 @@ namespace RentVsOwn
             var people = new List<IPerson>
             {
                 new Owner(),
-                new Landlord(),
-                new Renter(),
+           //     new Landlord(),
+           //     new Renter(),
             };
             do
             {

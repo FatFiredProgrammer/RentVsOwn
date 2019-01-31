@@ -16,19 +16,23 @@ namespace RentVsOwn
             HomePurchaseAmount = Math.Max(1m, simulator.HomePurchaseAmount).ToDollars();
             HomeValue = HomePurchaseAmount;
 
+            OwnerHomeValue = HomeValue;
             OwnerDownPaymentPercentage = Math.Min(Math.Max(0m, simulator.OwnerDownPaymentPercentage), 100).ToPercent();
             OwnerDownPayment = (HomePurchaseAmount * OwnerDownPaymentPercentage).ToDollars();
             OwnerInterestRate = Math.Min(Math.Max(0m, simulator.OwnerInterestRate), 100).ToPercent();
             OwnerLoanAmount = HomePurchaseAmount - OwnerDownPayment;
+            OwnerLoanBalance = OwnerLoanAmount;
             OwnerLoanYears = Math.Max(1, simulator.OwnerLoanYears);
             OwnerMonthlyPayment = PaymentCalculator.CalculatePayment(OwnerLoanAmount, OwnerInterestRate, OwnerLoanYears);
 
+            LandlordHomeValue = HomeValue;
             LandlordDownPaymentPercentage = simulator.LandlordDownPaymentPercentage ?? simulator.OwnerDownPaymentPercentage;
             LandlordDownPaymentPercentage = Math.Min(Math.Max(0m, LandlordDownPaymentPercentage), 100).ToPercent();
             LandlordDownPayment = (HomePurchaseAmount * LandlordDownPaymentPercentage).ToDollars();
             LandlordInterestRate = simulator.LandlordInterestRate ?? simulator.OwnerInterestRate;
             LandlordInterestRate = Math.Min(Math.Max(0m, LandlordInterestRate), 100).ToPercent();
             LandlordLoanAmount = HomePurchaseAmount - LandlordDownPayment;
+            LandlordLoanBalance = LandlordLoanAmount;
             LandlordLoanYears = Math.Max(1, simulator.LandlordLoanYears ?? OwnerLoanYears);
             LandlordMonthlyPayment = PaymentCalculator.CalculatePayment(LandlordLoanAmount, LandlordInterestRate, LandlordLoanYears);
 
@@ -71,7 +75,10 @@ namespace RentVsOwn
         public bool IsYearEnd => ((Month - 1) % 12) == 11;
 
         public decimal HomePurchaseAmount { get; }
+
         public decimal HomeValue { get; private set; }
+
+        public decimal OwnerHomeValue { get; set; }
 
         public decimal OwnerInterestRate { get; }
 
@@ -82,6 +89,8 @@ namespace RentVsOwn
         public decimal OwnerDownPayment { get; }
 
         public decimal OwnerLoanAmount { get; }
+
+        public decimal OwnerLoanBalance { get; set; }
 
         public decimal OwnerMonthlyPayment { get; }
 
@@ -99,6 +108,8 @@ namespace RentVsOwn
 
         public decimal MarginalTaxRate { get; }
 
+        public decimal LandlordHomeValue { get; set; }
+
         public decimal LandlordInterestRate { get; }
 
         public int LandlordLoanYears { get; }
@@ -108,6 +119,8 @@ namespace RentVsOwn
         public decimal LandlordDownPayment { get; }
 
         public decimal LandlordLoanAmount { get; }
+
+        public decimal LandlordLoanBalance { get; set; }
 
         public decimal LandlordMonthlyPayment { get; }
 
@@ -157,9 +170,12 @@ namespace RentVsOwn
                 Rent = (Rent + Rent * RentChangePerYearPercentage).ToDollars();
                 output.WriteLine($"Rent increased {RentChangePerYearPercentage:P2} to {Rent:C0}");
             }
+
             if (HomeAppreciationPercentagePerYear > 0)
             {
                 HomeValue = (HomeValue + HomeValue * HomeAppreciationPercentagePerYear).ToDollars();
+                OwnerHomeValue = (OwnerHomeValue + OwnerHomeValue * HomeAppreciationPercentagePerYear).ToDollars();
+                LandlordHomeValue = (LandlordHomeValue + LandlordHomeValue * HomeAppreciationPercentagePerYear).ToDollars();
                 output.WriteLine($"Home value increased {HomeAppreciationPercentagePerYear:P2} to {HomeValue:C0}");
             }
 
@@ -190,6 +206,10 @@ namespace RentVsOwn
             text.AppendLine($"|{nameof(OwnerDownPaymentPercentage)}|{OwnerDownPaymentPercentage:P2}|");
             text.AppendLine($"|{nameof(OwnerDownPayment)}|{OwnerDownPayment:C0}|");
             text.AppendLine($"|{nameof(OwnerLoanAmount)}|{OwnerLoanAmount:C0}|");
+            if (OwnerHomeValue > 0)
+                text.AppendLine($"|{nameof(OwnerHomeValue)}|{OwnerHomeValue:C0}|");
+            if (OwnerLoanBalance > 0)
+                text.AppendLine($"|{nameof(OwnerLoanBalance)}|{OwnerLoanBalance:C0}|");
             text.AppendLine($"|{nameof(OwnerMonthlyPayment)}|{OwnerMonthlyPayment:C0}|");
 
             text.AppendLine($"|{nameof(RentChangePerYearPercentage)}|{RentChangePerYearPercentage:P2}|");
@@ -202,6 +222,10 @@ namespace RentVsOwn
             text.AppendLine($"|{nameof(LandlordDownPaymentPercentage)}|{LandlordDownPaymentPercentage:P2}|");
             text.AppendLine($"|{nameof(LandlordDownPayment)}|{LandlordDownPayment:C0}|");
             text.AppendLine($"|{nameof(LandlordLoanAmount)}|{LandlordLoanAmount:C0}|");
+            if (LandlordHomeValue > 0)
+                text.AppendLine($"|{nameof(LandlordHomeValue)}|{LandlordHomeValue:C0}|");
+            if (LandlordLoanBalance > 0)
+                text.AppendLine($"|{nameof(LandlordLoanBalance)}|{LandlordLoanBalance:C0}|");
             text.AppendLine($"|{nameof(LandlordMonthlyPayment)}|{LandlordMonthlyPayment:C0}|");
             text.AppendLine($"|{nameof(DepreciationYears)}|{DepreciationYears:N2}|");
 

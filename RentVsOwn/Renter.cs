@@ -65,7 +65,7 @@ namespace RentVsOwn
             if (simulation.RentersInsurancePerMonth > 0)
             {
                 _spent += simulation.RentersInsurancePerMonth;
-                output.WriteLine($"Spent {simulation.Rent:C0} on renters insurance");
+                output.WriteLine($"Spent {simulation.RentersInsurancePerMonth:C0} on renters insurance");
             }
 
             _averageSpent = (_spent / simulation.Months).ToDollars();
