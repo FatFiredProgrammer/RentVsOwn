@@ -25,12 +25,12 @@ namespace RentVsOwn
 
             try
             {
-                var scenario = new Scenario
+                var simulator = new Simulator
                 {
-                    Name = "Default Scenario"
+                    Name = "Default Simulator"
                 };
 
-                scenario.Run(output);
+                simulator.Run(output);
             }
             catch (Exception exception)
             {

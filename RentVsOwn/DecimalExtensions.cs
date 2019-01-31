@@ -32,6 +32,8 @@ namespace RentVsOwn
 
         public static decimal ToDollarCents(this decimal value)
             => Math.Round(value, 2);
+        public static decimal ToDollars(this decimal value)
+            => Math.Round(value, 0);
 
         public static decimal ToPercent(this decimal value)
             => Math.Round(value, 4);
