@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using JetBrains.Annotations;
@@ -11,7 +10,7 @@ namespace RentVsOwn
     /// </summary>
     [PublicAPI]
     [DebuggerDisplay("{" + nameof(ToString) + "()}")]
-    public sealed class Scenario : IScenario
+    public sealed class Scenario
     {
         public Scenario()
         {
@@ -21,13 +20,23 @@ namespace RentVsOwn
         ///     Gets or sets the name of the scenario.
         /// </summary>
         /// <value>The name.</value>
-        public string Name { get; set; }
+        public string Name { get; set; } = "Default Scenario";
 
         /// <summary>
-        /// Gets or sets the years for the simulation.
+        ///     Gets or sets the years for the simulation.
         /// </summary>
         /// <value>The years.</value>
-        public decimal Years { get; set; }
+        public decimal Years { get; set; } = 8.7m;
+
+        /// <summary>
+        ///     Gets or sets the initial rent.
+        /// </summary>
+        /// <value>The initial rent.</value>
+        public decimal Rent { get; set; } = 2300;
+
+        private void Initialize()
+        {
+        }
 
         /// <summary>
         ///     Runs the specified scenario.
@@ -42,11 +51,11 @@ namespace RentVsOwn
 
             var simulations = new List<ISimulation>
             {
-                new Owner(this),
-                new Landlord(this),
-                new Renter(this),
+                new Owner(),
+                new Landlord(),
+                new Renter(),
             };
-            var period = new Period((int)Math.Round(Years/12, 0));
+            var period = new Period(this);
             do
             {
                 simulations.ForEach(c => c.Simulate(period, output));
@@ -54,11 +63,7 @@ namespace RentVsOwn
             while (period.Next());
 
             // ReSharper disable once ImplicitlyCapturedClosure
-            simulations.ForEach(action: c => output.WriteLine(c.ToString()));
-        }
-
-        private void Initialize()
-        {
+            simulations.ForEach(c => output.WriteLine(c.ToString()));
         }
 
         /// <inheritdoc />

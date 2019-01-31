@@ -27,6 +27,7 @@ namespace RentVsOwn
             {
                 var scenario = new Scenario
                 {
+                    Name = "Default Scenario"
                 };
 
                 scenario.Run(output);

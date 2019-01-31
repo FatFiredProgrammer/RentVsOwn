@@ -2,6 +2,8 @@
 {
     public interface IPeriod
     {
+        int Months { get; }
+
         int Month { get; }
 
         bool IsFinal { get; }

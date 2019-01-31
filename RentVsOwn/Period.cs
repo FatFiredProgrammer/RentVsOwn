@@ -4,12 +4,12 @@ namespace RentVsOwn
 {
     public sealed class Period : IPeriod
     {
-        public Period(int months)
+        public Period(Scenario scenario)
         {
-            if (months <= 0)
-                throw new ArgumentException("months <= 0", nameof(months));
+            if (scenario == null)
+                throw new ArgumentNullException(nameof(scenario));
 
-            Months = months;
+            Months = Math.Max(1, (int)Math.Round(scenario.Years / 12, 0));
         }
 
         public int Month { get; private set; } = 1;
