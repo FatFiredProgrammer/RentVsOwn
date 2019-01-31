@@ -17,7 +17,7 @@ namespace RentVsOwn
 
         private decimal _cash;
 
-        private decimal _spent;
+        private decimal _totalSpent;
 
         private decimal _averageSpent;
 
@@ -46,7 +46,7 @@ namespace RentVsOwn
             var initialCash = simulation.OwnerDownPayment + simulation.ClosingFixedCosts + simulation.OwnerLoanAmount + simulation.ClosingVariableCostsPercentage;
 
             _cash = 0;
-            _spent = 0;
+            _totalSpent = 0;
             _averageSpent = 0;
             _securityDeposit = (simulation.RentSecurityDepositMonths * simulation.Rent).ToDollars();
             output.WriteLine($"Security deposit of {_securityDeposit:C0}");
@@ -60,15 +60,13 @@ namespace RentVsOwn
             var growth = (_invested * simulation.DiscountRate / 12).ToDollarCents();
             _invested += growth;
             output.WriteLine($"Investment grew by {growth:C0}");
-            _spent += simulation.Rent;
+            _totalSpent += simulation.Rent;
             output.WriteLine($"Spent {simulation.Rent:C0} on rent");
             if (simulation.RentersInsurancePerMonth > 0)
             {
-                _spent += simulation.RentersInsurancePerMonth;
+                _totalSpent += simulation.RentersInsurancePerMonth;
                 output.WriteLine($"Spent {simulation.RentersInsurancePerMonth:C0} on renters insurance");
             }
-
-            _averageSpent = (_spent / simulation.Months).ToDollars();
         }
 
         /// <inheritdoc />
@@ -86,13 +84,14 @@ namespace RentVsOwn
             Process(simulation, output);
             if (simulation.IsFinal)
                 Finalize(simulation, output);
+            _averageSpent = (_totalSpent / simulation.Months).ToDollars();
         }
 
         /// <inheritdoc />
         public override string ToString()
         {
             var text = new StringBuilder();
-            text.AppendLine($"{Name} has spent {_spent:C0} (average of {_averageSpent:C0} / month) and has a net worth of {NetWorth:C0} on an initial investment of {_basis:C0}");
+            text.AppendLine($"{Name} has spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has a net worth of {NetWorth:C0} on an initial investment of {_basis:C0}");
             return text.ToString().TrimEnd();
         }
     }

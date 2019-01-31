@@ -90,6 +90,11 @@ namespace RentVsOwn
         /// </summary>
         /// <value>The owner down payment percentage.</value>
         public decimal? LandlordDownPaymentPercentage { get; set; } = .25m;
+        /// <summary>
+        /// Gets or sets the management fee percentage.
+        /// </summary>
+        /// <value>The management fee percentage.</value>
+        public decimal LandlordManagementFeePercentage { get; set; } = .1m;
 
         /// <summary>
         ///     Gets or sets the closing fixed costs.
@@ -150,6 +155,12 @@ namespace RentVsOwn
         /// </summary>
         /// <value>The depreciation years.</value>
         public decimal DepreciationYears { get; set; } = 27.5m;
+        /// <summary>
+        /// Gets or sets the depreciable percentage.
+        /// This is the percentage of the home which is depreciable versus land.
+        /// </summary>
+        /// <value>The depreciable percentage.</value>
+        public decimal DepreciablePercentage { get; set; } = .8m;
 
         /// <summary>
         ///     Gets or sets the discount rate.
@@ -172,12 +183,11 @@ namespace RentVsOwn
         public decimal MarginalTaxRate { get; set; } = .24m;
 
         /// <summary>
-        /// Gets or sets the inflation rate.
-        /// This controls an increase in costs each year.
+        ///     Gets or sets the inflation rate.
+        ///     This controls an increase in costs each year.
         /// </summary>
         /// <value>The inflation rate.</value>
         public decimal InflationRate { get; set; } = .02m;
-
 
         /// <summary>
         ///     Runs the specified scenario.
@@ -193,9 +203,9 @@ namespace RentVsOwn
 
             var people = new List<IPerson>
             {
-                new Owner(),
-           //     new Landlord(),
-           //     new Renter(),
+                // new Owner(),
+                new Landlord(),
+                // new Renter(),
             };
             do
             {

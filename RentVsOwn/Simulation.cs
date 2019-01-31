@@ -31,6 +31,7 @@ namespace RentVsOwn
             LandlordDownPayment = (HomePurchaseAmount * LandlordDownPaymentPercentage).ToDollars();
             LandlordInterestRate = simulator.LandlordInterestRate ?? simulator.OwnerInterestRate;
             LandlordInterestRate = Math.Min(Math.Max(0m, LandlordInterestRate), 100).ToPercent();
+            LandlordManagementFeePercentage = Math.Min(Math.Max(0m, simulator.LandlordManagementFeePercentage), 100).ToPercent();
             LandlordLoanAmount = HomePurchaseAmount - LandlordDownPayment;
             LandlordLoanBalance = LandlordLoanAmount;
             LandlordLoanYears = Math.Max(1, simulator.LandlordLoanYears ?? OwnerLoanYears);
@@ -56,6 +57,7 @@ namespace RentVsOwn
             SalesCommissionPercentage = Math.Min(Math.Max(0m, simulator.SalesCommissionPercentage), 100).ToPercent();
             SalesFixedCosts = Math.Max(0m, simulator.SalesFixedCosts).ToDollars();
             DepreciationYears = Math.Max(1, simulator.DepreciationYears).ToValue();
+            DepreciablePercentage = Math.Min(Math.Max(0m, simulator.DepreciablePercentage), 100).ToPercent();
         }
 
         public string Name { get; }
@@ -71,8 +73,6 @@ namespace RentVsOwn
         public bool IsFinal => Month == Months;
 
         public bool IsNewYear => Month != 1 && ((Month - 1) % 12) == 0;
-
-        public bool IsYearEnd => ((Month - 1) % 12) == 11;
 
         public decimal HomePurchaseAmount { get; }
 
@@ -124,6 +124,8 @@ namespace RentVsOwn
 
         public decimal LandlordMonthlyPayment { get; }
 
+        public decimal LandlordManagementFeePercentage { get; }
+
         public decimal ClosingFixedCosts { get; }
 
         public decimal ClosingVariableCostsPercentage { get; }
@@ -143,6 +145,8 @@ namespace RentVsOwn
         public decimal SalesFixedCosts { get; }
 
         public decimal DepreciationYears { get; }
+        public decimal DepreciablePercentage { get; }
+
 
         public decimal InflationRate { get; }
 
@@ -227,7 +231,9 @@ namespace RentVsOwn
             if (LandlordLoanBalance > 0)
                 text.AppendLine($"|{nameof(LandlordLoanBalance)}|{LandlordLoanBalance:C0}|");
             text.AppendLine($"|{nameof(LandlordMonthlyPayment)}|{LandlordMonthlyPayment:C0}|");
+            text.AppendLine($"|{nameof(LandlordManagementFeePercentage)}|{LandlordManagementFeePercentage:P2}|");
             text.AppendLine($"|{nameof(DepreciationYears)}|{DepreciationYears:N2}|");
+            text.AppendLine($"|{nameof(DepreciablePercentage)}|{DepreciablePercentage:P2}|");
 
             text.AppendLine($"|{nameof(ClosingFixedCosts)}|{ClosingFixedCosts:C0}|");
             text.AppendLine($"|{nameof(ClosingVariableCostsPercentage)}|{ClosingVariableCostsPercentage:P2}|");

@@ -15,7 +15,7 @@ namespace RentVsOwn
 
         private decimal _cash;
 
-        private decimal _spent;
+        private decimal _totalSpent;
 
         private decimal _averageSpent;
 
@@ -28,7 +28,7 @@ namespace RentVsOwn
             output.WriteLine($"Fixed sales costs of {salesFixedCosts:C0} and commission of {salesCommission:C0}");
             var proceeds = homeValue - salesFixedCosts - salesCommission;
             output.WriteLine($"Paid of loan balance of {simulation.OwnerLoanBalance:C0}");
-            proceeds -= simulation.OwnerLoanBalance ;
+            proceeds -= simulation.OwnerLoanBalance;
             simulation.OwnerLoanBalance = 0;
             simulation.OwnerHomeValue = 0;
 
@@ -41,7 +41,7 @@ namespace RentVsOwn
         {
             _initialInvestment = 0;
             _cash = 0;
-            _spent = 0;
+            _totalSpent = 0;
             _averageSpent = 0;
 
             output.WriteLine($"Down payment of {simulation.OwnerDownPayment:C0}");
@@ -58,7 +58,7 @@ namespace RentVsOwn
         private void Process(Simulation simulation, IOutput output)
         {
             var loanPayment = simulation.OwnerMonthlyPayment;
-            _spent += loanPayment;
+            _totalSpent += loanPayment;
             var interest = (simulation.OwnerLoanBalance * simulation.OwnerInterestRate / 12).ToDollars();
             var principal = (loanPayment - interest).ToDollars();
             output.WriteLine($"Loan payment of {loanPayment:C0} ({principal:C0} principal / {interest:C0} interest)");
@@ -67,25 +67,23 @@ namespace RentVsOwn
             output.WriteLine($"New loan balance of {simulation.OwnerLoanBalance:C0}");
 
             var propertyTax = (simulation.OwnerHomeValue * simulation.PropertyTaxPercentage / 12).ToDollars();
-            _spent += propertyTax;
+            _totalSpent += propertyTax;
             output.WriteLine($"Spent {propertyTax:C0} on property tax");
             if (simulation.InsurancePerMonth > 0)
             {
-                _spent += simulation.InsurancePerMonth;
+                _totalSpent += simulation.InsurancePerMonth;
                 output.WriteLine($"Spent {simulation.InsurancePerMonth:C0} on insurance");
             }
 
             if (simulation.HoaPerMonth > 0)
             {
-                _spent += simulation.HoaPerMonth;
+                _totalSpent += simulation.HoaPerMonth;
                 output.WriteLine($"Spent {simulation.HoaPerMonth:C0} on HOA");
             }
 
             var homeMaintenance = (simulation.OwnerHomeValue * simulation.HomeMaintenancePercentagePerYear / 12).ToDollars();
-            _spent += homeMaintenance;
+            _totalSpent += homeMaintenance;
             output.WriteLine($"Spent {homeMaintenance:C0} on home maintenance");
-
-            _averageSpent = (_spent / simulation.Months).ToDollars();
         }
 
         /// <inheritdoc />
@@ -104,13 +102,14 @@ namespace RentVsOwn
             if (simulation.IsFinal)
                 Finalize(simulation, output);
             NetWorth = _cash + simulation.OwnerHomeValue - simulation.OwnerLoanBalance;
+            _averageSpent = (_totalSpent / simulation.Months).ToDollars();
         }
 
         /// <inheritdoc />
         public override string ToString()
         {
             var text = new StringBuilder();
-            text.AppendLine($"{Name} has spent {_spent:C0} (average of {_averageSpent:C0} / month) and has a net worth of {NetWorth:C0} on an initial investment of {_initialInvestment:C0}");
+            text.AppendLine($"{Name} has spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has a net worth of {NetWorth:C0} on an initial investment of {_initialInvestment:C0}");
             return text.ToString().TrimEnd();
         }
     }
