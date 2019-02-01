@@ -203,9 +203,9 @@ namespace RentVsOwn
 
             var people = new List<IPerson>
             {
+                new Owner(),
+                new Renter(),
                 new Landlord(),
-                //new Owner(),
-                //new Renter(),
             };
             do
             {

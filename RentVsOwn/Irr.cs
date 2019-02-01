@@ -12,100 +12,50 @@ namespace RentVsOwn
         {
         }
 
-        public static int MaxIterations = 50000;
+        public static int MaxIterations { get; set; } = 50000;
 
-        public static double Tolerance = 0.00000001;
+        public static double Tolerance { get; set; } = 0.00000001;
 
-        private int _numberOfIterations;
+        private int _iterationCount;
+        private double _initialGuess;
 
-        private double _result;
+        private readonly List<double> _cashFlows = new List<double>();
 
-        private List<double> CashFlows { get; } = new List<double>();
-
-        /// <summary>
-        ///     Gets a value indicating whether this instance is valid cash flows.
-        /// </summary>
-        /// <value>
-        ///     <c>true</c> if this instance is valid cash flows; otherwise, <c>false</c>.
-        /// </value>
-        private bool ValidCashFlows
+        public static double Calculate(double initialInvestment, IList<double> cashFlows, double initialGuess)
         {
-            //Cash flows for the first period must be positive
-            //There should be at least two cash flow periods
-            get
+            if (initialInvestment <= 0)
+                throw new ArgumentException("initialInvestment <= 0", nameof(initialInvestment));
+            if (cashFlows == null || cashFlows.Count < 1)
+                throw new ArgumentException("cashFlows.Count < 1", nameof(cashFlows));
+
+            var irr = new Irr
             {
-                const int minPeriods = 2;
-
-                if (CashFlows.Count < minPeriods || (CashFlows[0] > 0))
-                {
-                    throw new ArgumentOutOfRangeException("Cash flow for the first period must be negative and there should");
-                }
-
-                return true;
-            }
+                _initialGuess = initialGuess
+            };
+            irr._cashFlows.Add(-initialInvestment);
+            irr._cashFlows.AddRange(cashFlows);
+            return irr.Calculate();
         }
 
-        /// <summary>
-        ///     Gets the initial guess.
-        /// </summary>
-        /// <value>The initial guess.</value>
-        private double InitialGuess => -1 * (1 + (CashFlows[1] / CashFlows[0]));
-
-        private List<KeyValuePair<double, double>> Results { get; } = new List<KeyValuePair<double, double>>();
-
-        public static double Calculate(double initialInvestment, IEnumerable<double> cashFlows)
+        private double Calculate(double estimatedReturn)
         {
-            var irr = new Irr();
-            irr.CashFlows.Add(-initialInvestment);
-            irr.CashFlows.AddRange(cashFlows);
-            return irr.Execute();
-        }
-
-        /// <summary>
-        ///     Does the newton rapshon calculation.
-        /// </summary>
-        /// <param name="estimatedReturn">The estimated return.</param>
-        /// <returns></returns>
-        private void DoNewtonRapshonCalculation(double estimatedReturn)
-        {
-            _numberOfIterations++;
-            _result = estimatedReturn - SumOfIrrPolynomial(estimatedReturn) / IRRDerivativeSum(estimatedReturn);
-            Results.Add(new KeyValuePair<double, double>(_numberOfIterations, _result));
-
-            while (!HasConverged(_result) && MaxIterations != _numberOfIterations)
+            _iterationCount++;
+            var result = estimatedReturn - SumOfPolynomial(estimatedReturn) / CalculateDerivativeSum(estimatedReturn);
+            while (!HasConverged(result) && MaxIterations != _iterationCount)
             {
-                DoNewtonRapshonCalculation(_result);
-            }
-        }
-
-        private double Execute()
-        {
-            if (ValidCashFlows)
-            {
-                DoNewtonRapshonCalculation(InitialGuess);
-
-                if (_result > 1)
-                {
-                    throw new Exception(
-                        "Failed to calculate the IRR for the cash flow series. Please provide a valid cash flow sequence");
-                }
+                result = Calculate(result);
             }
 
-            return _result;
+            return result;
         }
 
-        /// <summary>
-        ///     Determines whether the specified estimated return rate has converged.
-        /// </summary>
-        /// <param name="estimatedReturnRate">The estimated return rate.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified estimated return rate has converged; otherwise, <c>false</c>.
-        /// </returns>
-        private bool HasConverged(double estimatedReturnRate)
+        private double Calculate()
         {
-            //Check that the calculated value makes the IRR polynomial zero.
-            var isWithinTolerance = Math.Abs(SumOfIrrPolynomial(estimatedReturnRate)) <= Tolerance;
-            return (isWithinTolerance) ? true : false;
+            var result = Calculate(_initialGuess);
+            if (result > 1)
+                throw new Exception("IRR calculation failed to converge.");
+
+            return result;
         }
 
         /// <summary>
@@ -113,44 +63,40 @@ namespace RentVsOwn
         /// </summary>
         /// <param name="estimatedReturnRate">The estimated return rate.</param>
         /// <returns></returns>
-        private double IRRDerivativeSum(double estimatedReturnRate)
+        private double CalculateDerivativeSum(double estimatedReturnRate)
         {
             var sumOfDerivative = 0d;
             if (IsValidIterationBounds(estimatedReturnRate))
             {
-                for (var i = 1; i < CashFlows.Count; i++)
+                for (var i = 1; i < _cashFlows.Count; i++)
                 {
-                    sumOfDerivative += CashFlows[i] * (i) / Math.Pow((1 + estimatedReturnRate), i);
+                    sumOfDerivative += _cashFlows[i] * (i) / Math.Pow((1 + estimatedReturnRate), i);
                 }
             }
 
             return sumOfDerivative * -1;
         }
 
-        /// <summary>
-        ///     Determines whether [is valid iteration bounds] [the specified estimated return rate].
-        /// </summary>
-        /// <param name="estimatedReturnRate">The estimated return rate.</param>
-        /// <returns>
-        ///     <c>true</c> if [is valid iteration bounds] [the specified estimated return rate]; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool IsValidIterationBounds(double estimatedReturnRate) =>
-            estimatedReturnRate != -1 && (estimatedReturnRate < int.MaxValue) &&
-            (estimatedReturnRate > int.MinValue);
+        private bool HasConverged(double estimatedReturnRate)
+        {
+            //Check that the calculated value makes the IRR polynomial zero.
+            var isWithinTolerance = Math.Abs(SumOfPolynomial(estimatedReturnRate)) <= Tolerance;
+            return isWithinTolerance;
+        }
 
-        /// <summary>
-        ///     Sums the of IRR polynomial.
-        /// </summary>
-        /// <param name="estimatedReturnRate">The estimated return rate.</param>
-        /// <returns></returns>
-        private double SumOfIrrPolynomial(double estimatedReturnRate)
+        private static bool IsValidIterationBounds(double estimatedReturnRate) =>
+            Math.Abs(estimatedReturnRate + 1) > Tolerance &&
+            estimatedReturnRate < int.MaxValue &&
+            estimatedReturnRate > int.MinValue;
+
+        private double SumOfPolynomial(double estimatedReturnRate)
         {
             var sumOfPolynomial = 0d;
             if (IsValidIterationBounds(estimatedReturnRate))
             {
-                for (var j = 0; j < CashFlows.Count; j++)
+                for (var j = 0; j < _cashFlows.Count; j++)
                 {
-                    sumOfPolynomial += CashFlows[j] / (Math.Pow((1 + estimatedReturnRate), j));
+                    sumOfPolynomial += _cashFlows[j] / (Math.Pow((1 + estimatedReturnRate), j));
                 }
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace RentVsOwn
@@ -28,6 +29,8 @@ namespace RentVsOwn
             /// </summary>
             /// <value>The cash.</value>
             public decimal Cash { get; set; }
+
+            public decimal PersonalLoan { get; set; }
         }
 
         /// <inheritdoc />
@@ -75,15 +78,21 @@ namespace RentVsOwn
 
         private void CalculateExpenses(Monthly monthly, Simulation simulation, IOutput output)
         {
-            var managementFee = simulation.Rent * simulation.LandlordManagementFeePercentage;
-            monthly.Expenses += managementFee;
-            monthly.Cash -= managementFee;
-            output.WriteLine($"* Management fee of {managementFee:C0}");
+            if (simulation.LandlordManagementFeePercentage > 0)
+            {
+                var managementFee = simulation.Rent * simulation.LandlordManagementFeePercentage;
+                monthly.Expenses += managementFee;
+                monthly.Cash -= managementFee;
+                output.WriteLine($"* Management fee of {managementFee:C0}");
+            }
 
-            var propertyTax = (simulation.LandlordHomeValue * simulation.PropertyTaxPercentage / 12).ToDollars();
-            monthly.Expenses += propertyTax;
-            monthly.Cash -= propertyTax;
-            output.WriteLine($"* Spent {propertyTax:C0} on property tax");
+            if (simulation.PropertyTaxPercentage > 0)
+            {
+                var propertyTax = (simulation.LandlordHomeValue * simulation.PropertyTaxPercentage / 12).ToDollars();
+                monthly.Expenses += propertyTax;
+                monthly.Cash -= propertyTax;
+                output.WriteLine($"* Spent {propertyTax:C0} on property tax");
+            }
 
             if (simulation.InsurancePerMonth > 0)
             {
@@ -99,10 +108,13 @@ namespace RentVsOwn
                 output.WriteLine($"* Spent {simulation.HoaPerMonth:C0} on HOA");
             }
 
-            var homeMaintenance = (simulation.LandlordHomeValue * simulation.HomeMaintenancePercentagePerYear / 12).ToDollars();
-            monthly.Expenses += homeMaintenance;
-            monthly.Cash -= homeMaintenance;
-            output.WriteLine($"* Spent {homeMaintenance:C0} on home maintenance");
+            if (simulation.HomeMaintenancePercentagePerYear > 0)
+            {
+                var homeMaintenance = (simulation.LandlordHomeValue * simulation.HomeMaintenancePercentagePerYear / 12).ToDollars();
+                monthly.Expenses += homeMaintenance;
+                monthly.Cash -= homeMaintenance;
+                output.WriteLine($"* Spent {homeMaintenance:C0} on home maintenance");
+            }
 
             // We pay the previous years taxes at the start of each new year.
             if (simulation.IsNewYear && _currentYearTaxableIncome > 0)
@@ -182,8 +194,9 @@ namespace RentVsOwn
 
             _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRate / 12);
             output.WriteLine($"* Net present value of {_npv:C0}");
-            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows) * 12;
+            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRate / 12) * 12;
             output.WriteLine($"* Internal rate of return of {_irr:P2}");
+            Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1);
         }
 
         private void Initialize(Simulation simulation, IOutput output)
@@ -200,7 +213,7 @@ namespace RentVsOwn
             _currentYearTaxableIncome = 0;
             _cashFlows = new List<double>();
             _npv = null;
-            _irr= null;
+            _irr = null;
 
             _basis = simulation.LandlordHomeValue;
             output.WriteLine($"* Down payment of {simulation.LandlordDownPayment:C0}");
@@ -227,6 +240,7 @@ namespace RentVsOwn
                 Principal = 0,
                 Expenses = 0,
                 Cash = simulation.Rent,
+                PersonalLoan = 0,
             };
 
             _totalRent += monthly.Rent;
@@ -342,7 +356,9 @@ namespace RentVsOwn
                 output.WriteLine($"* Negative cash flow of {monthly.Rent - (monthly.Expenses + monthly.Principal):C0}");
             }
 
-            var cashFlow = monthly.NetIncome;
+            // monthly.PersonalLoan could be positive or negative depending on whether we took out loan or repaid one.
+            // Essentially, the personal loan causes us to defer cash flow (for NPV/IRR) until we actually payback the loan.
+            var cashFlow = monthly.NetIncome - monthly.PersonalLoan;
             _cashFlows.Add((double)cashFlow);
             output.WriteLine($"* NPV cash flow of {cashFlow:C0}");
         }
@@ -354,6 +370,7 @@ namespace RentVsOwn
                 var personalLoanPayment = Math.Min(_personalLoan, monthly.Cash);
                 _personalLoan -= personalLoanPayment;
                 monthly.Cash -= personalLoanPayment;
+                monthly.PersonalLoan = -personalLoanPayment;
                 output.WriteLine($"* Paid back {personalLoanPayment:C0} of personal loan leaving a balance of {_personalLoan:C0} and cash of {monthly.Cash:C0}");
             }
         }
@@ -397,6 +414,7 @@ namespace RentVsOwn
             {
                 var personalLoanAmount = Math.Abs(monthly.Cash);
                 _personalLoan += personalLoanAmount;
+                monthly.PersonalLoan = personalLoanAmount;
                 output.WriteLine($"* Required personal loan of {personalLoanAmount:C0} creating a balance of {_personalLoan:C0}");
 
                 monthly.Cash = 0;

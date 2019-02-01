@@ -9,7 +9,6 @@ An application that simulates owning, renting and being a landlord of a property
 |Years|8.70|
 |Months|104|
 |HomePurchaseAmount|$289,900|
-|HomeValue|$289,900|
 |OwnerInterestRate|4.25%|
 |OwnerLoanYears|30|
 |OwnerDownPaymentPercentage|20.00%|
@@ -37,9 +36,9 @@ An application that simulates owning, renting and being a landlord of a property
 |ClosingVariableCostsPercentage|1.50%|
 |PropertyTaxPercentage|2.10%|
 |InsurancePerMonth|$167|
-|HoaPerMonth|$100|
+|HoaPerMonth|$0|
 |HomeAppreciationPercentagePerYear|3.70%|
-|HomeMaintenancePercentagePerYear|1.50%|
+|HomeMaintenancePercentagePerYear|1.00%|
 |SalesCommissionPercentage|6.00%|
 |SalesFixedCosts|$1,000|
 |DiscountRate|8.00%|
@@ -55,23 +54,24 @@ Landlord in month # 1
 * Fixed closing costs of $500
 * Variable closing costs of $3,261
 * Total initial investment of $76,236
+* Basis in home purchase $286,139
 * Initial loan balance of $217,425
 * Received rent of $2,300
 * Loan payment of $1,405 ($544 principal / $861 interest)
 * New loan balance of $216,881
 * Management fee of $230
-* Loan payment of $1,405 ($547 principal / $858 interest)
-* New loan balance of $216,334
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,227
-* Net income of $1,439
+* Spent $242 on home maintenance
+* Total monthly expenses of $2,007 leaving cash of ($251)
+* Net taxable income of $293
 * Allowed monthly depreciation of $703 + carry-over of $0
-* Taxable income of $1,439 ($1,439 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,439 leaving balance of $214,895
+* Used depreciation of $293 resulting in adjusted taxable income of $0
+* Carry over depreciation of $410
+* Required personal loan of $251 creating a balance of $251
+* Monthly expenses $2,007 + principle of $544 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $43
 
 ---
 
@@ -86,16 +86,16 @@ Owner in month # 1
 * New loan balance of $231,600
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 1
 
+* Starting cash of $61,959 ($57,980 owner down payment + $500 owner fixed closing costs + $3,479 owner variable closing costs)
 * Security deposit of $2,300
-* Invested  $288,100
-* Investment grew by $1,921
+* Invested  $59,659
+* Investment of $60,057 grew by $398 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -104,21 +104,21 @@ Renter in month # 1
 Landlord in month # 2
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($554 principal / $851 interest)
-* New loan balance of $214,341
+* Loan payment of $1,405 ($547 principal / $858 interest)
+* New loan balance of $216,334
 * Management fee of $230
-* Loan payment of $1,405 ($557 principal / $848 interest)
-* New loan balance of $213,784
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,217
-* Net income of $1,449
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $746 ($2,185 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,449 leaving balance of $212,335
+* Spent $242 on home maintenance
+* Total monthly expenses of $2,004 leaving cash of ($251)
+* Net taxable income of $296
+* Allowed monthly depreciation of $703 + carry-over of $410
+* Used depreciation of $296 resulting in adjusted taxable income of $0
+* Carry over depreciation of $817
+* Required personal loan of $251 creating a balance of $501
+* Monthly expenses $2,004 + principle of $547 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $46
 
 ---
 
@@ -128,14 +128,13 @@ Owner in month # 2
 * New loan balance of $231,279
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 2
 
-* Investment grew by $1,933
+* Investment of $60,457 grew by $400 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -144,21 +143,21 @@ Renter in month # 2
 Landlord in month # 3
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($565 principal / $840 interest)
-* New loan balance of $211,770
+* Loan payment of $1,405 ($549 principal / $856 interest)
+* New loan balance of $215,785
 * Management fee of $230
-* Loan payment of $1,405 ($567 principal / $838 interest)
-* New loan balance of $211,203
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,206
-* Net income of $1,460
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $757 ($2,942 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,460 leaving balance of $209,743
+* Spent $242 on home maintenance
+* Total monthly expenses of $2,002 leaving cash of ($251)
+* Net taxable income of $298
+* Allowed monthly depreciation of $703 + carry-over of $817
+* Used depreciation of $298 resulting in adjusted taxable income of $0
+* Carry over depreciation of $1,222
+* Required personal loan of $251 creating a balance of $752
+* Monthly expenses $2,002 + principle of $549 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $48
 
 ---
 
@@ -168,14 +167,13 @@ Owner in month # 3
 * New loan balance of $230,957
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 3
 
-* Investment grew by $1,946
+* Investment of $60,860 grew by $403 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -184,21 +182,21 @@ Renter in month # 3
 Landlord in month # 4
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($575 principal / $830 interest)
-* New loan balance of $209,168
+* Loan payment of $1,405 ($551 principal / $854 interest)
+* New loan balance of $215,234
 * Management fee of $230
-* Loan payment of $1,405 ($577 principal / $828 interest)
-* New loan balance of $208,591
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,196
-* Net income of $1,470
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $767 ($3,710 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,470 leaving balance of $207,121
+* Spent $242 on home maintenance
+* Total monthly expenses of $2,000 leaving cash of ($251)
+* Net taxable income of $300
+* Allowed monthly depreciation of $703 + carry-over of $1,222
+* Used depreciation of $300 resulting in adjusted taxable income of $0
+* Carry over depreciation of $1,625
+* Required personal loan of $251 creating a balance of $1,003
+* Monthly expenses $2,000 + principle of $551 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $50
 
 ---
 
@@ -208,14 +206,13 @@ Owner in month # 4
 * New loan balance of $230,634
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 4
 
-* Investment grew by $1,959
+* Investment of $61,266 grew by $406 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -224,21 +221,21 @@ Renter in month # 4
 Landlord in month # 5
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($585 principal / $820 interest)
-* New loan balance of $206,536
+* Loan payment of $1,405 ($553 principal / $852 interest)
+* New loan balance of $214,681
 * Management fee of $230
-* Loan payment of $1,405 ($587 principal / $818 interest)
-* New loan balance of $205,949
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,186
-* Net income of $1,480
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $777 ($4,487 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,480 leaving balance of $204,469
+* Spent $242 on home maintenance
+* Total monthly expenses of $1,998 leaving cash of ($251)
+* Net taxable income of $302
+* Allowed monthly depreciation of $703 + carry-over of $1,625
+* Used depreciation of $302 resulting in adjusted taxable income of $0
+* Carry over depreciation of $2,026
+* Required personal loan of $251 creating a balance of $1,253
+* Monthly expenses $1,998 + principle of $553 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $52
 
 ---
 
@@ -248,14 +245,13 @@ Owner in month # 5
 * New loan balance of $230,310
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 5
 
-* Investment grew by $1,972
+* Investment of $61,674 grew by $408 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -264,21 +260,21 @@ Renter in month # 5
 Landlord in month # 6
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($596 principal / $809 interest)
-* New loan balance of $203,873
+* Loan payment of $1,405 ($555 principal / $850 interest)
+* New loan balance of $214,126
 * Management fee of $230
-* Loan payment of $1,405 ($598 principal / $807 interest)
-* New loan balance of $203,275
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,175
-* Net income of $1,491
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $788 ($5,275 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,491 leaving balance of $201,784
+* Spent $242 on home maintenance
+* Total monthly expenses of $1,996 leaving cash of ($251)
+* Net taxable income of $304
+* Allowed monthly depreciation of $703 + carry-over of $2,026
+* Used depreciation of $304 resulting in adjusted taxable income of $0
+* Carry over depreciation of $2,425
+* Required personal loan of $251 creating a balance of $1,504
+* Monthly expenses $1,996 + principle of $555 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $54
 
 ---
 
@@ -288,14 +284,13 @@ Owner in month # 6
 * New loan balance of $229,985
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 6
 
-* Investment grew by $1,986
+* Investment of $62,085 grew by $411 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -304,21 +299,21 @@ Renter in month # 6
 Landlord in month # 7
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($606 principal / $799 interest)
-* New loan balance of $201,178
+* Loan payment of $1,405 ($557 principal / $848 interest)
+* New loan balance of $213,569
 * Management fee of $230
-* Loan payment of $1,405 ($609 principal / $796 interest)
-* New loan balance of $200,569
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,165
-* Net income of $1,501
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $798 ($6,073 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,501 leaving balance of $199,068
+* Spent $242 on home maintenance
+* Total monthly expenses of $1,994 leaving cash of ($251)
+* Net taxable income of $306
+* Allowed monthly depreciation of $703 + carry-over of $2,425
+* Used depreciation of $306 resulting in adjusted taxable income of $0
+* Carry over depreciation of $2,822
+* Required personal loan of $251 creating a balance of $1,755
+* Monthly expenses $1,994 + principle of $557 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $56
 
 ---
 
@@ -328,14 +323,13 @@ Owner in month # 7
 * New loan balance of $229,659
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 7
 
-* Investment grew by $1,999
+* Investment of $62,499 grew by $414 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -344,21 +338,21 @@ Renter in month # 7
 Landlord in month # 8
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($617 principal / $788 interest)
-* New loan balance of $198,451
+* Loan payment of $1,405 ($560 principal / $845 interest)
+* New loan balance of $213,009
 * Management fee of $230
-* Loan payment of $1,405 ($619 principal / $786 interest)
-* New loan balance of $197,832
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,154
-* Net income of $1,512
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $809 ($6,882 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,512 leaving balance of $196,320
+* Spent $242 on home maintenance
+* Total monthly expenses of $1,991 leaving cash of ($251)
+* Net taxable income of $309
+* Allowed monthly depreciation of $703 + carry-over of $2,822
+* Used depreciation of $309 resulting in adjusted taxable income of $0
+* Carry over depreciation of $3,216
+* Required personal loan of $251 creating a balance of $2,005
+* Monthly expenses $1,991 + principle of $560 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $59
 
 ---
 
@@ -368,14 +362,13 @@ Owner in month # 8
 * New loan balance of $229,331
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 8
 
-* Investment grew by $2,012
+* Investment of $62,916 grew by $417 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -384,21 +377,21 @@ Renter in month # 8
 Landlord in month # 9
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($628 principal / $777 interest)
-* New loan balance of $195,692
+* Loan payment of $1,405 ($562 principal / $843 interest)
+* New loan balance of $212,447
 * Management fee of $230
-* Loan payment of $1,405 ($630 principal / $775 interest)
-* New loan balance of $195,062
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,143
-* Net income of $1,523
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $820 ($7,703 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,523 leaving balance of $193,539
+* Spent $242 on home maintenance
+* Total monthly expenses of $1,989 leaving cash of ($251)
+* Net taxable income of $311
+* Allowed monthly depreciation of $703 + carry-over of $3,216
+* Used depreciation of $311 resulting in adjusted taxable income of $0
+* Carry over depreciation of $3,608
+* Required personal loan of $251 creating a balance of $2,256
+* Monthly expenses $1,989 + principle of $562 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $61
 
 ---
 
@@ -408,14 +401,13 @@ Owner in month # 9
 * New loan balance of $229,002
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 9
 
-* Investment grew by $2,026
+* Investment of $63,335 grew by $419 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -424,21 +416,21 @@ Renter in month # 9
 Landlord in month # 10
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($639 principal / $766 interest)
-* New loan balance of $192,900
+* Loan payment of $1,405 ($564 principal / $841 interest)
+* New loan balance of $211,883
 * Management fee of $230
-* Loan payment of $1,405 ($641 principal / $764 interest)
-* New loan balance of $192,259
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,132
-* Net income of $1,534
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $831 ($8,534 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,534 leaving balance of $190,725
+* Spent $242 on home maintenance
+* Total monthly expenses of $1,987 leaving cash of ($251)
+* Net taxable income of $313
+* Allowed monthly depreciation of $703 + carry-over of $3,608
+* Used depreciation of $313 resulting in adjusted taxable income of $0
+* Carry over depreciation of $3,998
+* Required personal loan of $251 creating a balance of $2,507
+* Monthly expenses $1,987 + principle of $564 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $63
 
 ---
 
@@ -448,14 +440,13 @@ Owner in month # 10
 * New loan balance of $228,672
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 10
 
-* Investment grew by $2,039
+* Investment of $63,758 grew by $422 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -464,21 +455,21 @@ Renter in month # 10
 Landlord in month # 11
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($650 principal / $755 interest)
-* New loan balance of $190,075
+* Loan payment of $1,405 ($566 principal / $839 interest)
+* New loan balance of $211,317
 * Management fee of $230
-* Loan payment of $1,405 ($653 principal / $752 interest)
-* New loan balance of $189,422
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,121
-* Net income of $1,545
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $842 ($9,376 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,545 leaving balance of $187,877
+* Spent $242 on home maintenance
+* Total monthly expenses of $1,985 leaving cash of ($251)
+* Net taxable income of $315
+* Allowed monthly depreciation of $703 + carry-over of $3,998
+* Used depreciation of $315 resulting in adjusted taxable income of $0
+* Carry over depreciation of $4,386
+* Required personal loan of $251 creating a balance of $2,757
+* Monthly expenses $1,985 + principle of $566 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $65
 
 ---
 
@@ -488,14 +479,13 @@ Owner in month # 11
 * New loan balance of $228,341
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 11
 
-* Investment grew by $2,053
+* Investment of $64,183 grew by $425 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
@@ -504,21 +494,21 @@ Renter in month # 11
 Landlord in month # 12
 
 * Received rent of $2,300
-* Loan payment of $1,405 ($661 principal / $744 interest)
-* New loan balance of $187,216
+* Loan payment of $1,405 ($569 principal / $836 interest)
+* New loan balance of $210,748
 * Management fee of $230
-* Loan payment of $1,405 ($664 principal / $741 interest)
-* New loan balance of $186,552
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
-* Total monthly expenses of $2,110
-* Net income of $1,556
-* Allowed monthly depreciation of $703 + carry-over of $703
-* Taxable income of $853 ($10,229 YTD)
-* $703 of depreciation carried over
-* Paid additional principal of $1,556 leaving balance of $184,996
+* Spent $242 on home maintenance
+* Total monthly expenses of $1,982 leaving cash of ($251)
+* Net taxable income of $318
+* Allowed monthly depreciation of $703 + carry-over of $4,386
+* Used depreciation of $318 resulting in adjusted taxable income of $0
+* Carry over depreciation of $4,771
+* Required personal loan of $251 creating a balance of $3,008
+* Monthly expenses $1,982 + principle of $569 = $2,551 against rent of $2,300
+* Negative cash flow of ($251)
+* NPV cash flow of $68
 
 ---
 
@@ -528,47 +518,47 @@ Owner in month # 12
 * New loan balance of $228,009
 * Spent $507 on property tax
 * Spent $167 on insurance
-* Spent $100 on HOA
-* Spent $362 on home maintenance
+* Spent $242 on home maintenance
 
 ---
 
 Renter in month # 12
 
-* Investment grew by $2,066
+* Investment of $64,610 grew by $428 (0.67%)
 * Spent $2,300 on rent
 * Spent $15 on renters insurance
 
 ---
 
 Year # 1
-Rent increased 3.50% to $2,380
-Home value increased 3.70% to $300,626
-Renters insurance increased 2.00% to $15.30
-Home owner's insurance increased 2.00% to $170.00
-HOA increased 2.00% to $102.00
+
+* Rent increased 3.50% to $2,380
+* Owner Home value increased 3.70% to $300,626
+* Landlord Home value increased 3.70% to $300,626
+* Renters insurance increased 2.00% to $15.30
+* Home owner's insurance increased 2.00% to $170.00
+* HOA increased 2.00% to $0.00
 
 ---
 
 Landlord in month # 13
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($673 principal / $732 interest)
-* New loan balance of $184,323
+* Loan payment of $1,405 ($571 principal / $834 interest)
+* New loan balance of $210,177
 * Management fee of $238
-* Loan payment of $1,405 ($675 principal / $730 interest)
-* New loan balance of $183,648
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Paid last year's taxes of $2,455
-* Total monthly expenses of $4,599
-* Net income of $1,648
-* Allowed monthly depreciation of $729 + carry-over of $703
-* Taxable income of $945 ($945 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,648 leaving balance of $182,000
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,019 leaving cash of ($210)
+* Net taxable income of $361
+* Allowed monthly depreciation of $703 + carry-over of $4,771
+* Used depreciation of $361 resulting in adjusted taxable income of $0
+* Carry over depreciation of $5,113
+* Required personal loan of $210 creating a balance of $3,218
+* Monthly expenses $2,019 + principle of $571 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $151
 
 ---
 
@@ -578,14 +568,13 @@ Owner in month # 13
 * New loan balance of $227,676
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 13
 
-* Investment grew by $2,080
+* Investment of $65,041 grew by $431 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -594,21 +583,21 @@ Renter in month # 13
 Landlord in month # 14
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($685 principal / $720 interest)
-* New loan balance of $181,315
+* Loan payment of $1,405 ($573 principal / $832 interest)
+* New loan balance of $209,604
 * Management fee of $238
-* Loan payment of $1,405 ($687 principal / $718 interest)
-* New loan balance of $180,628
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,132
-* Net income of $1,660
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $931 ($1,876 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,660 leaving balance of $178,968
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,017 leaving cash of ($210)
+* Net taxable income of $363
+* Allowed monthly depreciation of $703 + carry-over of $5,113
+* Used depreciation of $363 resulting in adjusted taxable income of $0
+* Carry over depreciation of $5,453
+* Required personal loan of $210 creating a balance of $3,428
+* Monthly expenses $2,017 + principle of $573 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $153
 
 ---
 
@@ -618,14 +607,13 @@ Owner in month # 14
 * New loan balance of $227,341
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 14
 
-* Investment grew by $2,094
+* Investment of $65,475 grew by $434 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -634,21 +622,21 @@ Renter in month # 14
 Landlord in month # 15
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($697 principal / $708 interest)
-* New loan balance of $178,271
+* Loan payment of $1,405 ($575 principal / $830 interest)
+* New loan balance of $209,029
 * Management fee of $238
-* Loan payment of $1,405 ($699 principal / $706 interest)
-* New loan balance of $177,572
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,120
-* Net income of $1,672
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $943 ($2,820 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,672 leaving balance of $175,900
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,015 leaving cash of ($210)
+* Net taxable income of $365
+* Allowed monthly depreciation of $703 + carry-over of $5,453
+* Used depreciation of $365 resulting in adjusted taxable income of $0
+* Carry over depreciation of $5,791
+* Required personal loan of $210 creating a balance of $3,638
+* Monthly expenses $2,015 + principle of $575 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $155
 
 ---
 
@@ -658,14 +646,13 @@ Owner in month # 15
 * New loan balance of $227,005
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 15
 
-* Investment grew by $2,108
+* Investment of $65,911 grew by $437 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -674,21 +661,21 @@ Renter in month # 15
 Landlord in month # 16
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($709 principal / $696 interest)
-* New loan balance of $175,191
+* Loan payment of $1,405 ($578 principal / $827 interest)
+* New loan balance of $208,451
 * Management fee of $238
-* Loan payment of $1,405 ($712 principal / $693 interest)
-* New loan balance of $174,479
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,108
-* Net income of $1,684
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $955 ($3,775 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,684 leaving balance of $172,795
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,012 leaving cash of ($210)
+* Net taxable income of $368
+* Allowed monthly depreciation of $703 + carry-over of $5,791
+* Used depreciation of $368 resulting in adjusted taxable income of $0
+* Carry over depreciation of $6,126
+* Required personal loan of $210 creating a balance of $3,848
+* Monthly expenses $2,012 + principle of $578 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $158
 
 ---
 
@@ -698,14 +685,13 @@ Owner in month # 16
 * New loan balance of $226,668
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 16
 
-* Investment grew by $2,122
+* Investment of $66,351 grew by $439 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -714,21 +700,21 @@ Renter in month # 16
 Landlord in month # 17
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($721 principal / $684 interest)
-* New loan balance of $172,074
+* Loan payment of $1,405 ($580 principal / $825 interest)
+* New loan balance of $207,871
 * Management fee of $238
-* Loan payment of $1,405 ($724 principal / $681 interest)
-* New loan balance of $171,350
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,096
-* Net income of $1,696
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $967 ($4,742 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,696 leaving balance of $169,654
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,010 leaving cash of ($210)
+* Net taxable income of $370
+* Allowed monthly depreciation of $703 + carry-over of $6,126
+* Used depreciation of $370 resulting in adjusted taxable income of $0
+* Carry over depreciation of $6,459
+* Required personal loan of $210 creating a balance of $4,058
+* Monthly expenses $2,010 + principle of $580 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $160
 
 ---
 
@@ -738,14 +724,13 @@ Owner in month # 17
 * New loan balance of $226,330
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 17
 
-* Investment grew by $2,136
+* Investment of $66,793 grew by $442 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -754,21 +739,21 @@ Renter in month # 17
 Landlord in month # 18
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($733 principal / $672 interest)
-* New loan balance of $168,921
+* Loan payment of $1,405 ($582 principal / $823 interest)
+* New loan balance of $207,289
 * Management fee of $238
-* Loan payment of $1,405 ($736 principal / $669 interest)
-* New loan balance of $168,185
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,084
-* Net income of $1,708
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $979 ($5,721 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,708 leaving balance of $166,477
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,008 leaving cash of ($210)
+* Net taxable income of $372
+* Allowed monthly depreciation of $703 + carry-over of $6,459
+* Used depreciation of $372 resulting in adjusted taxable income of $0
+* Carry over depreciation of $6,790
+* Required personal loan of $210 creating a balance of $4,268
+* Monthly expenses $2,008 + principle of $582 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $162
 
 ---
 
@@ -778,14 +763,13 @@ Owner in month # 18
 * New loan balance of $225,991
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 18
 
-* Investment grew by $2,150
+* Investment of $67,238 grew by $445 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -794,21 +778,21 @@ Renter in month # 18
 Landlord in month # 19
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($746 principal / $659 interest)
-* New loan balance of $165,731
+* Loan payment of $1,405 ($584 principal / $821 interest)
+* New loan balance of $206,705
 * Management fee of $238
-* Loan payment of $1,405 ($749 principal / $656 interest)
-* New loan balance of $164,982
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,071
-* Net income of $1,721
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $992 ($6,713 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,721 leaving balance of $163,261
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,006 leaving cash of ($210)
+* Net taxable income of $374
+* Allowed monthly depreciation of $703 + carry-over of $6,790
+* Used depreciation of $374 resulting in adjusted taxable income of $0
+* Carry over depreciation of $7,119
+* Required personal loan of $210 creating a balance of $4,478
+* Monthly expenses $2,006 + principle of $584 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $164
 
 ---
 
@@ -818,14 +802,13 @@ Owner in month # 19
 * New loan balance of $225,650
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 19
 
-* Investment grew by $2,165
+* Investment of $67,687 grew by $448 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -834,21 +817,21 @@ Renter in month # 19
 Landlord in month # 20
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($759 principal / $646 interest)
-* New loan balance of $162,502
+* Loan payment of $1,405 ($587 principal / $818 interest)
+* New loan balance of $206,118
 * Management fee of $238
-* Loan payment of $1,405 ($762 principal / $643 interest)
-* New loan balance of $161,740
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,058
-* Net income of $1,734
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $1,005 ($7,719 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,734 leaving balance of $160,006
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,003 leaving cash of ($210)
+* Net taxable income of $377
+* Allowed monthly depreciation of $703 + carry-over of $7,119
+* Used depreciation of $377 resulting in adjusted taxable income of $0
+* Carry over depreciation of $7,445
+* Required personal loan of $210 creating a balance of $4,688
+* Monthly expenses $2,003 + principle of $587 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $167
 
 ---
 
@@ -858,14 +841,13 @@ Owner in month # 20
 * New loan balance of $225,308
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 20
 
-* Investment grew by $2,179
+* Investment of $68,138 grew by $451 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -874,21 +856,21 @@ Renter in month # 20
 Landlord in month # 21
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($772 principal / $633 interest)
-* New loan balance of $159,234
+* Loan payment of $1,405 ($589 principal / $816 interest)
+* New loan balance of $205,529
 * Management fee of $238
-* Loan payment of $1,405 ($775 principal / $630 interest)
-* New loan balance of $158,459
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,045
-* Net income of $1,747
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $1,018 ($8,737 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,747 leaving balance of $156,712
+* Spent $251 on home maintenance
+* Total monthly expenses of $2,001 leaving cash of ($210)
+* Net taxable income of $379
+* Allowed monthly depreciation of $703 + carry-over of $7,445
+* Used depreciation of $379 resulting in adjusted taxable income of $0
+* Carry over depreciation of $7,769
+* Required personal loan of $210 creating a balance of $4,898
+* Monthly expenses $2,001 + principle of $589 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $169
 
 ---
 
@@ -898,14 +880,13 @@ Owner in month # 21
 * New loan balance of $224,965
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 21
 
-* Investment grew by $2,194
+* Investment of $68,592 grew by $454 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -914,21 +895,21 @@ Renter in month # 21
 Landlord in month # 22
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($785 principal / $620 interest)
-* New loan balance of $155,927
+* Loan payment of $1,405 ($591 principal / $814 interest)
+* New loan balance of $204,938
 * Management fee of $238
-* Loan payment of $1,405 ($788 principal / $617 interest)
-* New loan balance of $155,139
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,032
-* Net income of $1,760
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $1,031 ($9,768 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,760 leaving balance of $153,379
+* Spent $251 on home maintenance
+* Total monthly expenses of $1,999 leaving cash of ($210)
+* Net taxable income of $381
+* Allowed monthly depreciation of $703 + carry-over of $7,769
+* Used depreciation of $381 resulting in adjusted taxable income of $0
+* Carry over depreciation of $8,091
+* Required personal loan of $210 creating a balance of $5,108
+* Monthly expenses $1,999 + principle of $591 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $171
 
 ---
 
@@ -938,14 +919,13 @@ Owner in month # 22
 * New loan balance of $224,621
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 22
 
-* Investment grew by $2,208
+* Investment of $69,049 grew by $457 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -954,21 +934,21 @@ Renter in month # 22
 Landlord in month # 23
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($798 principal / $607 interest)
-* New loan balance of $152,581
+* Loan payment of $1,405 ($594 principal / $811 interest)
+* New loan balance of $204,344
 * Management fee of $238
-* Loan payment of $1,405 ($801 principal / $604 interest)
-* New loan balance of $151,780
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,019
-* Net income of $1,773
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $1,044 ($10,812 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,773 leaving balance of $150,007
+* Spent $251 on home maintenance
+* Total monthly expenses of $1,996 leaving cash of ($210)
+* Net taxable income of $384
+* Allowed monthly depreciation of $703 + carry-over of $8,091
+* Used depreciation of $384 resulting in adjusted taxable income of $0
+* Carry over depreciation of $8,410
+* Required personal loan of $210 creating a balance of $5,318
+* Monthly expenses $1,996 + principle of $594 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $174
 
 ---
 
@@ -978,14 +958,13 @@ Owner in month # 23
 * New loan balance of $224,276
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 23
 
-* Investment grew by $2,223
+* Investment of $69,510 grew by $460 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
@@ -994,21 +973,21 @@ Renter in month # 23
 Landlord in month # 24
 
 * Received rent of $2,380
-* Loan payment of $1,405 ($811 principal / $594 interest)
-* New loan balance of $149,196
+* Loan payment of $1,405 ($596 principal / $809 interest)
+* New loan balance of $203,748
 * Management fee of $238
-* Loan payment of $1,405 ($814 principal / $591 interest)
-* New loan balance of $148,382
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
-* Total monthly expenses of $2,006
-* Net income of $1,786
-* Allowed monthly depreciation of $729 + carry-over of $729
-* Taxable income of $1,057 ($11,870 YTD)
-* $729 of depreciation carried over
-* Paid additional principal of $1,786 leaving balance of $146,596
+* Spent $251 on home maintenance
+* Total monthly expenses of $1,994 leaving cash of ($210)
+* Net taxable income of $386
+* Allowed monthly depreciation of $703 + carry-over of $8,410
+* Used depreciation of $386 resulting in adjusted taxable income of $0
+* Carry over depreciation of $8,727
+* Required personal loan of $210 creating a balance of $5,528
+* Monthly expenses $1,994 + principle of $596 = $2,590 against rent of $2,380
+* Negative cash flow of ($210)
+* NPV cash flow of $176
 
 ---
 
@@ -1018,47 +997,47 @@ Owner in month # 24
 * New loan balance of $223,929
 * Spent $526 on property tax
 * Spent $170 on insurance
-* Spent $102 on HOA
-* Spent $376 on home maintenance
+* Spent $251 on home maintenance
 
 ---
 
 Renter in month # 24
 
-* Investment grew by $2,238
+* Investment of $69,973 grew by $463 (0.67%)
 * Spent $2,380 on rent
 * Spent $15 on renters insurance
 
 ---
 
 Year # 2
-Rent increased 3.50% to $2,463
-Home value increased 3.70% to $311,749
-Renters insurance increased 2.00% to $15.61
-Home owner's insurance increased 2.00% to $173.40
-HOA increased 2.00% to $104.04
+
+* Rent increased 3.50% to $2,463
+* Owner Home value increased 3.70% to $311,749
+* Landlord Home value increased 3.70% to $311,749
+* Renters insurance increased 2.00% to $15.61
+* Home owner's insurance increased 2.00% to $173.40
+* HOA increased 2.00% to $0.00
 
 ---
 
 Landlord in month # 25
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($825 principal / $580 interest)
-* New loan balance of $145,771
+* Loan payment of $1,405 ($598 principal / $807 interest)
+* New loan balance of $203,150
 * Management fee of $246
-* Loan payment of $1,405 ($828 principal / $577 interest)
-* New loan balance of $144,943
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Paid last year's taxes of $2,849
-* Total monthly expenses of $4,888
-* Net income of $1,883
-* Allowed monthly depreciation of $756 + carry-over of $729
-* Taxable income of $1,154 ($1,154 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,883 leaving balance of $143,060
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,033 leaving cash of ($168)
+* Net taxable income of $430
+* Allowed monthly depreciation of $703 + carry-over of $8,727
+* Used depreciation of $430 resulting in adjusted taxable income of $0
+* Carry over depreciation of $9,000
+* Required personal loan of $168 creating a balance of $5,696
+* Monthly expenses $2,033 + principle of $598 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $263
 
 ---
 
@@ -1068,14 +1047,13 @@ Owner in month # 25
 * New loan balance of $223,581
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 25
 
-* Investment grew by $2,253
+* Investment of $70,440 grew by $466 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1084,21 +1062,21 @@ Renter in month # 25
 Landlord in month # 26
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($839 principal / $566 interest)
-* New loan balance of $142,221
+* Loan payment of $1,405 ($601 principal / $804 interest)
+* New loan balance of $202,549
 * Management fee of $246
-* Loan payment of $1,405 ($842 principal / $563 interest)
-* New loan balance of $141,379
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $2,026
-* Net income of $1,897
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,141 ($2,295 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,897 leaving balance of $139,482
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,030 leaving cash of ($168)
+* Net taxable income of $433
+* Allowed monthly depreciation of $703 + carry-over of $9,000
+* Used depreciation of $433 resulting in adjusted taxable income of $0
+* Carry over depreciation of $9,270
+* Required personal loan of $168 creating a balance of $5,863
+* Monthly expenses $2,030 + principle of $601 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $266
 
 ---
 
@@ -1108,14 +1086,13 @@ Owner in month # 26
 * New loan balance of $223,232
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 26
 
-* Investment grew by $2,268
+* Investment of $70,909 grew by $470 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1124,21 +1101,21 @@ Renter in month # 26
 Landlord in month # 27
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($853 principal / $552 interest)
-* New loan balance of $138,629
+* Loan payment of $1,405 ($603 principal / $802 interest)
+* New loan balance of $201,946
 * Management fee of $246
-* Loan payment of $1,405 ($856 principal / $549 interest)
-* New loan balance of $137,773
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $2,012
-* Net income of $1,911
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,155 ($3,451 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,911 leaving balance of $135,862
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,028 leaving cash of ($168)
+* Net taxable income of $435
+* Allowed monthly depreciation of $703 + carry-over of $9,270
+* Used depreciation of $435 resulting in adjusted taxable income of $0
+* Carry over depreciation of $9,538
+* Required personal loan of $168 creating a balance of $6,031
+* Monthly expenses $2,028 + principle of $603 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $268
 
 ---
 
@@ -1148,14 +1125,13 @@ Owner in month # 27
 * New loan balance of $222,882
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 27
 
-* Investment grew by $2,283
+* Investment of $71,382 grew by $473 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1164,21 +1140,21 @@ Renter in month # 27
 Landlord in month # 28
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($867 principal / $538 interest)
-* New loan balance of $134,995
+* Loan payment of $1,405 ($606 principal / $799 interest)
+* New loan balance of $201,340
 * Management fee of $246
-* Loan payment of $1,405 ($871 principal / $534 interest)
-* New loan balance of $134,124
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,998
-* Net income of $1,925
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,169 ($4,620 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,925 leaving balance of $132,199
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,025 leaving cash of ($168)
+* Net taxable income of $438
+* Allowed monthly depreciation of $703 + carry-over of $9,538
+* Used depreciation of $438 resulting in adjusted taxable income of $0
+* Carry over depreciation of $9,803
+* Required personal loan of $168 creating a balance of $6,199
+* Monthly expenses $2,025 + principle of $606 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $271
 
 ---
 
@@ -1188,14 +1164,13 @@ Owner in month # 28
 * New loan balance of $222,530
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 28
 
-* Investment grew by $2,298
+* Investment of $71,858 grew by $476 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1204,21 +1179,21 @@ Renter in month # 28
 Landlord in month # 29
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($882 principal / $523 interest)
-* New loan balance of $131,317
+* Loan payment of $1,405 ($608 principal / $797 interest)
+* New loan balance of $200,732
 * Management fee of $246
-* Loan payment of $1,405 ($885 principal / $520 interest)
-* New loan balance of $130,432
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,983
-* Net income of $1,940
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,184 ($5,804 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,940 leaving balance of $128,492
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,023 leaving cash of ($168)
+* Net taxable income of $440
+* Allowed monthly depreciation of $703 + carry-over of $9,803
+* Used depreciation of $440 resulting in adjusted taxable income of $0
+* Carry over depreciation of $10,066
+* Required personal loan of $168 creating a balance of $6,367
+* Monthly expenses $2,023 + principle of $608 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $273
 
 ---
 
@@ -1228,14 +1203,13 @@ Owner in month # 29
 * New loan balance of $222,177
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 29
 
-* Investment grew by $2,313
+* Investment of $72,337 grew by $479 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1244,21 +1218,21 @@ Renter in month # 29
 Landlord in month # 30
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($896 principal / $509 interest)
-* New loan balance of $127,596
+* Loan payment of $1,405 ($610 principal / $795 interest)
+* New loan balance of $200,122
 * Management fee of $246
-* Loan payment of $1,405 ($900 principal / $505 interest)
-* New loan balance of $126,696
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,969
-* Net income of $1,954
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,198 ($7,002 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,954 leaving balance of $124,742
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,021 leaving cash of ($168)
+* Net taxable income of $442
+* Allowed monthly depreciation of $703 + carry-over of $10,066
+* Used depreciation of $442 resulting in adjusted taxable income of $0
+* Carry over depreciation of $10,327
+* Required personal loan of $168 creating a balance of $6,534
+* Monthly expenses $2,021 + principle of $610 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $275
 
 ---
 
@@ -1268,14 +1242,13 @@ Owner in month # 30
 * New loan balance of $221,823
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 30
 
-* Investment grew by $2,329
+* Investment of $72,819 grew by $482 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1284,21 +1257,21 @@ Renter in month # 30
 Landlord in month # 31
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($911 principal / $494 interest)
-* New loan balance of $123,831
+* Loan payment of $1,405 ($613 principal / $792 interest)
+* New loan balance of $199,509
 * Management fee of $246
-* Loan payment of $1,405 ($915 principal / $490 interest)
-* New loan balance of $122,916
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,954
-* Net income of $1,969
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,213 ($8,216 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,969 leaving balance of $120,947
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,018 leaving cash of ($168)
+* Net taxable income of $445
+* Allowed monthly depreciation of $703 + carry-over of $10,327
+* Used depreciation of $445 resulting in adjusted taxable income of $0
+* Carry over depreciation of $10,585
+* Required personal loan of $168 creating a balance of $6,702
+* Monthly expenses $2,018 + principle of $613 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $278
 
 ---
 
@@ -1308,14 +1281,13 @@ Owner in month # 31
 * New loan balance of $221,468
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 31
 
-* Investment grew by $2,344
+* Investment of $73,305 grew by $485 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1324,21 +1296,21 @@ Renter in month # 31
 Landlord in month # 32
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($926 principal / $479 interest)
-* New loan balance of $120,021
+* Loan payment of $1,405 ($615 principal / $790 interest)
+* New loan balance of $198,894
 * Management fee of $246
-* Loan payment of $1,405 ($930 principal / $475 interest)
-* New loan balance of $119,091
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,939
-* Net income of $1,984
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,228 ($9,444 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,984 leaving balance of $117,107
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,016 leaving cash of ($168)
+* Net taxable income of $447
+* Allowed monthly depreciation of $703 + carry-over of $10,585
+* Used depreciation of $447 resulting in adjusted taxable income of $0
+* Carry over depreciation of $10,841
+* Required personal loan of $168 creating a balance of $6,870
+* Monthly expenses $2,016 + principle of $615 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $280
 
 ---
 
@@ -1348,14 +1320,13 @@ Owner in month # 32
 * New loan balance of $221,111
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 32
 
-* Investment grew by $2,360
+* Investment of $73,793 grew by $489 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1364,21 +1335,21 @@ Renter in month # 32
 Landlord in month # 33
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($941 principal / $464 interest)
-* New loan balance of $116,166
+* Loan payment of $1,405 ($618 principal / $787 interest)
+* New loan balance of $198,276
 * Management fee of $246
-* Loan payment of $1,405 ($945 principal / $460 interest)
-* New loan balance of $115,221
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,924
-* Net income of $1,999
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,243 ($10,687 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $1,999 leaving balance of $113,222
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,013 leaving cash of ($168)
+* Net taxable income of $450
+* Allowed monthly depreciation of $703 + carry-over of $10,841
+* Used depreciation of $450 resulting in adjusted taxable income of $0
+* Carry over depreciation of $11,094
+* Required personal loan of $168 creating a balance of $7,037
+* Monthly expenses $2,013 + principle of $618 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $283
 
 ---
 
@@ -1388,14 +1359,13 @@ Owner in month # 33
 * New loan balance of $220,753
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 33
 
-* Investment grew by $2,376
+* Investment of $74,285 grew by $492 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1404,21 +1374,21 @@ Renter in month # 33
 Landlord in month # 34
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($957 principal / $448 interest)
-* New loan balance of $112,265
+* Loan payment of $1,405 ($620 principal / $785 interest)
+* New loan balance of $197,656
 * Management fee of $246
-* Loan payment of $1,405 ($961 principal / $444 interest)
-* New loan balance of $111,304
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,908
-* Net income of $2,015
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,259 ($11,946 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $2,015 leaving balance of $109,289
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,011 leaving cash of ($168)
+* Net taxable income of $452
+* Allowed monthly depreciation of $703 + carry-over of $11,094
+* Used depreciation of $452 resulting in adjusted taxable income of $0
+* Carry over depreciation of $11,345
+* Required personal loan of $168 creating a balance of $7,205
+* Monthly expenses $2,011 + principle of $620 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $285
 
 ---
 
@@ -1428,14 +1398,13 @@ Owner in month # 34
 * New loan balance of $220,394
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 34
 
-* Investment grew by $2,392
+* Investment of $74,780 grew by $495 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1444,21 +1413,21 @@ Renter in month # 34
 Landlord in month # 35
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($972 principal / $433 interest)
-* New loan balance of $108,317
+* Loan payment of $1,405 ($623 principal / $782 interest)
+* New loan balance of $197,033
 * Management fee of $246
-* Loan payment of $1,405 ($976 principal / $429 interest)
-* New loan balance of $107,341
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,893
-* Net income of $2,030
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,274 ($13,221 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $2,030 leaving balance of $105,311
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,008 leaving cash of ($168)
+* Net taxable income of $455
+* Allowed monthly depreciation of $703 + carry-over of $11,345
+* Used depreciation of $455 resulting in adjusted taxable income of $0
+* Carry over depreciation of $11,593
+* Required personal loan of $168 creating a balance of $7,373
+* Monthly expenses $2,008 + principle of $623 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $288
 
 ---
 
@@ -1468,14 +1437,13 @@ Owner in month # 35
 * New loan balance of $220,034
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 35
 
-* Investment grew by $2,408
+* Investment of $75,279 grew by $499 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
@@ -1484,21 +1452,21 @@ Renter in month # 35
 Landlord in month # 36
 
 * Received rent of $2,463
-* Loan payment of $1,405 ($988 principal / $417 interest)
-* New loan balance of $104,323
+* Loan payment of $1,405 ($625 principal / $780 interest)
+* New loan balance of $196,408
 * Management fee of $246
-* Loan payment of $1,405 ($992 principal / $413 interest)
-* New loan balance of $103,331
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
-* Total monthly expenses of $1,877
-* Net income of $2,046
-* Allowed monthly depreciation of $756 + carry-over of $756
-* Taxable income of $1,290 ($14,511 YTD)
-* $756 of depreciation carried over
-* Paid additional principal of $2,046 leaving balance of $101,285
+* Spent $260 on home maintenance
+* Total monthly expenses of $2,006 leaving cash of ($168)
+* Net taxable income of $457
+* Allowed monthly depreciation of $703 + carry-over of $11,593
+* Used depreciation of $457 resulting in adjusted taxable income of $0
+* Carry over depreciation of $11,839
+* Required personal loan of $168 creating a balance of $7,540
+* Monthly expenses $2,006 + principle of $625 = $2,631 against rent of $2,463
+* Negative cash flow of ($168)
+* NPV cash flow of $290
 
 ---
 
@@ -1508,47 +1476,47 @@ Owner in month # 36
 * New loan balance of $219,672
 * Spent $546 on property tax
 * Spent $173 on insurance
-* Spent $104 on HOA
-* Spent $390 on home maintenance
+* Spent $260 on home maintenance
 
 ---
 
 Renter in month # 36
 
-* Investment grew by $2,424
+* Investment of $75,781 grew by $502 (0.67%)
 * Spent $2,463 on rent
 * Spent $16 on renters insurance
 
 ---
 
 Year # 3
-Rent increased 3.50% to $2,549
-Home value increased 3.70% to $323,284
-Renters insurance increased 2.00% to $15.92
-Home owner's insurance increased 2.00% to $176.87
-HOA increased 2.00% to $106.12
+
+* Rent increased 3.50% to $2,549
+* Owner Home value increased 3.70% to $323,284
+* Landlord Home value increased 3.70% to $323,284
+* Renters insurance increased 2.00% to $15.92
+* Home owner's insurance increased 2.00% to $176.87
+* HOA increased 2.00% to $0.00
 
 ---
 
 Landlord in month # 37
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,004 principal / $401 interest)
-* New loan balance of $100,281
+* Loan payment of $1,405 ($628 principal / $777 interest)
+* New loan balance of $195,780
 * Management fee of $255
-* Loan payment of $1,405 ($1,008 principal / $397 interest)
-* New loan balance of $99,273
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Paid last year's taxes of $3,483
-* Total monthly expenses of $5,391
-* Net income of $2,148
-* Allowed monthly depreciation of $784 + carry-over of $756
-* Taxable income of $1,392 ($1,392 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,148 leaving balance of $97,125
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,044 leaving cash of ($123)
+* Net taxable income of $505
+* Allowed monthly depreciation of $703 + carry-over of $11,839
+* Used depreciation of $505 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,037
+* Required personal loan of $123 creating a balance of $7,663
+* Monthly expenses $2,044 + principle of $628 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $382
 
 ---
 
@@ -1558,14 +1526,13 @@ Owner in month # 37
 * New loan balance of $219,309
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 37
 
-* Investment grew by $2,440
+* Investment of $76,286 grew by $505 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1574,21 +1541,21 @@ Renter in month # 37
 Landlord in month # 38
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,021 principal / $384 interest)
-* New loan balance of $96,104
+* Loan payment of $1,405 ($630 principal / $775 interest)
+* New loan balance of $195,150
 * Management fee of $255
-* Loan payment of $1,405 ($1,025 principal / $380 interest)
-* New loan balance of $95,079
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,892
-* Net income of $2,165
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,381 ($2,774 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,165 leaving balance of $92,914
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,042 leaving cash of ($123)
+* Net taxable income of $507
+* Allowed monthly depreciation of $703 + carry-over of $12,037
+* Used depreciation of $507 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,233
+* Required personal loan of $123 creating a balance of $7,786
+* Monthly expenses $2,042 + principle of $630 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $384
 
 ---
 
@@ -1598,14 +1565,13 @@ Owner in month # 38
 * New loan balance of $218,945
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 38
 
-* Investment grew by $2,456
+* Investment of $76,795 grew by $509 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1614,21 +1580,21 @@ Renter in month # 38
 Landlord in month # 39
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,037 principal / $368 interest)
-* New loan balance of $91,877
+* Loan payment of $1,405 ($633 principal / $772 interest)
+* New loan balance of $194,517
 * Management fee of $255
-* Loan payment of $1,405 ($1,041 principal / $364 interest)
-* New loan balance of $90,836
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,876
-* Net income of $2,181
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,397 ($4,171 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,181 leaving balance of $88,655
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,039 leaving cash of ($123)
+* Net taxable income of $510
+* Allowed monthly depreciation of $703 + carry-over of $12,233
+* Used depreciation of $510 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,426
+* Required personal loan of $123 creating a balance of $7,909
+* Monthly expenses $2,039 + principle of $633 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $387
 
 ---
 
@@ -1638,14 +1604,13 @@ Owner in month # 39
 * New loan balance of $218,579
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 39
 
-* Investment grew by $2,472
+* Investment of $77,307 grew by $512 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1654,21 +1619,21 @@ Renter in month # 39
 Landlord in month # 40
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,054 principal / $351 interest)
-* New loan balance of $87,601
+* Loan payment of $1,405 ($635 principal / $770 interest)
+* New loan balance of $193,882
 * Management fee of $255
-* Loan payment of $1,405 ($1,058 principal / $347 interest)
-* New loan balance of $86,543
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,859
-* Net income of $2,198
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,414 ($5,585 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,198 leaving balance of $84,345
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,037 leaving cash of ($123)
+* Net taxable income of $512
+* Allowed monthly depreciation of $703 + carry-over of $12,426
+* Used depreciation of $512 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,617
+* Required personal loan of $123 creating a balance of $8,032
+* Monthly expenses $2,037 + principle of $635 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $389
 
 ---
 
@@ -1678,14 +1643,13 @@ Owner in month # 40
 * New loan balance of $218,212
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 40
 
-* Investment grew by $2,489
+* Investment of $77,822 grew by $515 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1694,21 +1658,21 @@ Renter in month # 40
 Landlord in month # 41
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,071 principal / $334 interest)
-* New loan balance of $83,274
+* Loan payment of $1,405 ($638 principal / $767 interest)
+* New loan balance of $193,244
 * Management fee of $255
-* Loan payment of $1,405 ($1,075 principal / $330 interest)
-* New loan balance of $82,199
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,842
-* Net income of $2,215
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,431 ($7,016 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,215 leaving balance of $79,984
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,034 leaving cash of ($123)
+* Net taxable income of $515
+* Allowed monthly depreciation of $703 + carry-over of $12,617
+* Used depreciation of $515 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,805
+* Required personal loan of $123 creating a balance of $8,154
+* Monthly expenses $2,034 + principle of $638 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $392
 
 ---
 
@@ -1718,14 +1682,13 @@ Owner in month # 41
 * New loan balance of $217,844
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 41
 
-* Investment grew by $2,505
+* Investment of $78,341 grew by $519 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1734,21 +1697,21 @@ Renter in month # 41
 Landlord in month # 42
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,088 principal / $317 interest)
-* New loan balance of $78,896
+* Loan payment of $1,405 ($640 principal / $765 interest)
+* New loan balance of $192,604
 * Management fee of $255
-* Loan payment of $1,405 ($1,093 principal / $312 interest)
-* New loan balance of $77,803
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,825
-* Net income of $2,232
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,448 ($8,465 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,232 leaving balance of $75,571
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,032 leaving cash of ($123)
+* Net taxable income of $517
+* Allowed monthly depreciation of $703 + carry-over of $12,805
+* Used depreciation of $517 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,991
+* Required personal loan of $123 creating a balance of $8,277
+* Monthly expenses $2,032 + principle of $640 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $394
 
 ---
 
@@ -1758,14 +1721,13 @@ Owner in month # 42
 * New loan balance of $217,475
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 42
 
-* Investment grew by $2,522
+* Investment of $78,863 grew by $522 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1774,21 +1736,21 @@ Renter in month # 42
 Landlord in month # 43
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,106 principal / $299 interest)
-* New loan balance of $74,465
+* Loan payment of $1,405 ($643 principal / $762 interest)
+* New loan balance of $191,961
 * Management fee of $255
-* Loan payment of $1,405 ($1,110 principal / $295 interest)
-* New loan balance of $73,355
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,807
-* Net income of $2,250
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,466 ($9,931 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,250 leaving balance of $71,105
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,029 leaving cash of ($123)
+* Net taxable income of $520
+* Allowed monthly depreciation of $703 + carry-over of $12,991
+* Used depreciation of $520 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,174
+* Required personal loan of $123 creating a balance of $8,400
+* Monthly expenses $2,029 + principle of $643 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $397
 
 ---
 
@@ -1798,14 +1760,13 @@ Owner in month # 43
 * New loan balance of $217,104
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 43
 
-* Investment grew by $2,539
+* Investment of $79,389 grew by $526 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1814,21 +1775,21 @@ Renter in month # 43
 Landlord in month # 44
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,124 principal / $281 interest)
-* New loan balance of $69,981
+* Loan payment of $1,405 ($645 principal / $760 interest)
+* New loan balance of $191,316
 * Management fee of $255
-* Loan payment of $1,405 ($1,128 principal / $277 interest)
-* New loan balance of $68,853
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,789
-* Net income of $2,268
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,484 ($11,415 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,268 leaving balance of $66,585
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,027 leaving cash of ($123)
+* Net taxable income of $522
+* Allowed monthly depreciation of $703 + carry-over of $13,174
+* Used depreciation of $522 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,355
+* Required personal loan of $123 creating a balance of $8,523
+* Monthly expenses $2,027 + principle of $645 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $399
 
 ---
 
@@ -1838,14 +1799,13 @@ Owner in month # 44
 * New loan balance of $216,732
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 44
 
-* Investment grew by $2,556
+* Investment of $79,918 grew by $529 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1854,21 +1814,21 @@ Renter in month # 44
 Landlord in month # 45
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,141 principal / $264 interest)
-* New loan balance of $65,444
+* Loan payment of $1,405 ($648 principal / $757 interest)
+* New loan balance of $190,668
 * Management fee of $255
-* Loan payment of $1,405 ($1,146 principal / $259 interest)
-* New loan balance of $64,298
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,772
-* Net income of $2,285
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,501 ($12,916 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,285 leaving balance of $62,013
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,024 leaving cash of ($123)
+* Net taxable income of $525
+* Allowed monthly depreciation of $703 + carry-over of $13,355
+* Used depreciation of $525 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,533
+* Required personal loan of $123 creating a balance of $8,645
+* Monthly expenses $2,024 + principle of $648 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $402
 
 ---
 
@@ -1878,14 +1838,13 @@ Owner in month # 45
 * New loan balance of $216,359
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 45
 
-* Investment grew by $2,573
+* Investment of $80,451 grew by $533 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1894,21 +1853,21 @@ Renter in month # 45
 Landlord in month # 46
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,160 principal / $245 interest)
-* New loan balance of $60,853
+* Loan payment of $1,405 ($650 principal / $755 interest)
+* New loan balance of $190,018
 * Management fee of $255
-* Loan payment of $1,405 ($1,164 principal / $241 interest)
-* New loan balance of $59,689
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,753
-* Net income of $2,304
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,520 ($14,437 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,304 leaving balance of $57,385
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,022 leaving cash of ($123)
+* Net taxable income of $527
+* Allowed monthly depreciation of $703 + carry-over of $13,533
+* Used depreciation of $527 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,709
+* Required personal loan of $123 creating a balance of $8,768
+* Monthly expenses $2,022 + principle of $650 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $404
 
 ---
 
@@ -1918,14 +1877,13 @@ Owner in month # 46
 * New loan balance of $215,984
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 46
 
-* Investment grew by $2,590
+* Investment of $80,987 grew by $536 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1934,21 +1892,21 @@ Renter in month # 46
 Landlord in month # 47
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,178 principal / $227 interest)
-* New loan balance of $56,207
+* Loan payment of $1,405 ($653 principal / $752 interest)
+* New loan balance of $189,365
 * Management fee of $255
-* Loan payment of $1,405 ($1,183 principal / $222 interest)
-* New loan balance of $55,024
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,735
-* Net income of $2,322
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,538 ($15,975 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,322 leaving balance of $52,702
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,019 leaving cash of ($123)
+* Net taxable income of $530
+* Allowed monthly depreciation of $703 + carry-over of $13,709
+* Used depreciation of $530 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,882
+* Required personal loan of $123 creating a balance of $8,891
+* Monthly expenses $2,019 + principle of $653 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $407
 
 ---
 
@@ -1958,14 +1916,13 @@ Owner in month # 47
 * New loan balance of $215,608
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 47
 
-* Investment grew by $2,607
+* Investment of $81,527 grew by $540 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
@@ -1974,21 +1931,21 @@ Renter in month # 47
 Landlord in month # 48
 
 * Received rent of $2,549
-* Loan payment of $1,405 ($1,196 principal / $209 interest)
-* New loan balance of $51,506
+* Loan payment of $1,405 ($655 principal / $750 interest)
+* New loan balance of $188,710
 * Management fee of $255
-* Loan payment of $1,405 ($1,201 principal / $204 interest)
-* New loan balance of $50,305
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
-* Total monthly expenses of $1,717
-* Net income of $2,340
-* Allowed monthly depreciation of $784 + carry-over of $784
-* Taxable income of $1,556 ($17,531 YTD)
-* $784 of depreciation carried over
-* Paid additional principal of $2,340 leaving balance of $47,965
+* Spent $269 on home maintenance
+* Total monthly expenses of $2,017 leaving cash of ($123)
+* Net taxable income of $532
+* Allowed monthly depreciation of $703 + carry-over of $13,882
+* Used depreciation of $532 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,053
+* Required personal loan of $123 creating a balance of $9,014
+* Monthly expenses $2,017 + principle of $655 = $2,672 against rent of $2,549
+* Negative cash flow of ($123)
+* NPV cash flow of $409
 
 ---
 
@@ -1998,47 +1955,47 @@ Owner in month # 48
 * New loan balance of $215,231
 * Spent $566 on property tax
 * Spent $177 on insurance
-* Spent $106 on HOA
-* Spent $404 on home maintenance
+* Spent $269 on home maintenance
 
 ---
 
 Renter in month # 48
 
-* Investment grew by $2,625
+* Investment of $82,071 grew by $544 (0.67%)
 * Spent $2,549 on rent
 * Spent $16 on renters insurance
 
 ---
 
 Year # 4
-Rent increased 3.50% to $2,638
-Home value increased 3.70% to $335,246
-Renters insurance increased 2.00% to $16.24
-Home owner's insurance increased 2.00% to $180.41
-HOA increased 2.00% to $108.24
+
+* Rent increased 3.50% to $2,638
+* Owner Home value increased 3.70% to $335,246
+* Landlord Home value increased 3.70% to $335,246
+* Renters insurance increased 2.00% to $16.24
+* Home owner's insurance increased 2.00% to $180.41
+* HOA increased 2.00% to $0.00
 
 ---
 
 Landlord in month # 49
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,215 principal / $190 interest)
-* New loan balance of $46,750
+* Loan payment of $1,405 ($658 principal / $747 interest)
+* New loan balance of $188,052
 * Management fee of $264
-* Loan payment of $1,405 ($1,220 principal / $185 interest)
-* New loan balance of $45,530
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Paid last year's taxes of $4,208
-* Total monthly expenses of $5,956
-* Net income of $2,448
-* Allowed monthly depreciation of $813 + carry-over of $784
-* Taxable income of $1,664 ($1,664 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,448 leaving balance of $43,082
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,057 leaving cash of ($77)
+* Net taxable income of $581
+* Allowed monthly depreciation of $703 + carry-over of $14,053
+* Used depreciation of $581 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,175
+* Required personal loan of $77 creating a balance of $9,091
+* Monthly expenses $2,057 + principle of $658 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $504
 
 ---
 
@@ -2048,14 +2005,13 @@ Owner in month # 49
 * New loan balance of $214,852
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 49
 
-* Investment grew by $2,642
+* Investment of $82,618 grew by $547 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2064,21 +2020,21 @@ Renter in month # 49
 Landlord in month # 50
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,234 principal / $171 interest)
-* New loan balance of $41,848
+* Loan payment of $1,405 ($661 principal / $744 interest)
+* New loan balance of $187,391
 * Management fee of $264
-* Loan payment of $1,405 ($1,239 principal / $166 interest)
-* New loan balance of $40,609
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,729
-* Net income of $2,467
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,654 ($3,319 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,467 leaving balance of $38,142
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,054 leaving cash of ($77)
+* Net taxable income of $584
+* Allowed monthly depreciation of $703 + carry-over of $14,175
+* Used depreciation of $584 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,294
+* Required personal loan of $77 creating a balance of $9,168
+* Monthly expenses $2,054 + principle of $661 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $507
 
 ---
 
@@ -2088,14 +2044,13 @@ Owner in month # 50
 * New loan balance of $214,472
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 50
 
-* Investment grew by $2,660
+* Investment of $83,169 grew by $551 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2104,21 +2059,21 @@ Renter in month # 50
 Landlord in month # 51
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,254 principal / $151 interest)
-* New loan balance of $36,888
+* Loan payment of $1,405 ($663 principal / $742 interest)
+* New loan balance of $186,728
 * Management fee of $264
-* Loan payment of $1,405 ($1,259 principal / $146 interest)
-* New loan balance of $35,629
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,709
-* Net income of $2,487
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,674 ($4,993 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,487 leaving balance of $33,142
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,052 leaving cash of ($77)
+* Net taxable income of $586
+* Allowed monthly depreciation of $703 + carry-over of $14,294
+* Used depreciation of $586 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,411
+* Required personal loan of $77 creating a balance of $9,245
+* Monthly expenses $2,052 + principle of $663 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $509
 
 ---
 
@@ -2128,14 +2083,13 @@ Owner in month # 51
 * New loan balance of $214,091
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 51
 
-* Investment grew by $2,678
+* Investment of $83,723 grew by $554 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2144,21 +2098,21 @@ Renter in month # 51
 Landlord in month # 52
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,274 principal / $131 interest)
-* New loan balance of $31,868
+* Loan payment of $1,405 ($666 principal / $739 interest)
+* New loan balance of $186,062
 * Management fee of $264
-* Loan payment of $1,405 ($1,279 principal / $126 interest)
-* New loan balance of $30,589
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,689
-* Net income of $2,507
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,694 ($6,687 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,507 leaving balance of $28,082
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,049 leaving cash of ($77)
+* Net taxable income of $589
+* Allowed monthly depreciation of $703 + carry-over of $14,411
+* Used depreciation of $589 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,525
+* Required personal loan of $77 creating a balance of $9,323
+* Monthly expenses $2,049 + principle of $666 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $512
 
 ---
 
@@ -2168,14 +2122,13 @@ Owner in month # 52
 * New loan balance of $213,708
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 52
 
-* Investment grew by $2,695
+* Investment of $84,281 grew by $558 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2184,21 +2137,21 @@ Renter in month # 52
 Landlord in month # 53
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,294 principal / $111 interest)
-* New loan balance of $26,788
+* Loan payment of $1,405 ($669 principal / $736 interest)
+* New loan balance of $185,393
 * Management fee of $264
-* Loan payment of $1,405 ($1,299 principal / $106 interest)
-* New loan balance of $25,489
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,669
-* Net income of $2,527
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,714 ($8,401 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,527 leaving balance of $22,962
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,046 leaving cash of ($77)
+* Net taxable income of $592
+* Allowed monthly depreciation of $703 + carry-over of $14,525
+* Used depreciation of $592 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,636
+* Required personal loan of $77 creating a balance of $9,400
+* Monthly expenses $2,046 + principle of $669 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $515
 
 ---
 
@@ -2208,14 +2161,13 @@ Owner in month # 53
 * New loan balance of $213,324
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 53
 
-* Investment grew by $2,713
+* Investment of $84,843 grew by $562 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2224,21 +2176,21 @@ Renter in month # 53
 Landlord in month # 54
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,314 principal / $91 interest)
-* New loan balance of $21,648
+* Loan payment of $1,405 ($671 principal / $734 interest)
+* New loan balance of $184,722
 * Management fee of $264
-* Loan payment of $1,405 ($1,319 principal / $86 interest)
-* New loan balance of $20,329
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,649
-* Net income of $2,547
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,734 ($10,136 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,547 leaving balance of $17,782
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,044 leaving cash of ($77)
+* Net taxable income of $594
+* Allowed monthly depreciation of $703 + carry-over of $14,636
+* Used depreciation of $594 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,745
+* Required personal loan of $77 creating a balance of $9,477
+* Monthly expenses $2,044 + principle of $671 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $517
 
 ---
 
@@ -2248,14 +2200,13 @@ Owner in month # 54
 * New loan balance of $212,939
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 54
 
-* Investment grew by $2,731
+* Investment of $85,409 grew by $566 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2264,21 +2215,21 @@ Renter in month # 54
 Landlord in month # 55
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,335 principal / $70 interest)
-* New loan balance of $16,447
+* Loan payment of $1,405 ($674 principal / $731 interest)
+* New loan balance of $184,048
 * Management fee of $264
-* Loan payment of $1,405 ($1,340 principal / $65 interest)
-* New loan balance of $15,107
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,628
-* Net income of $2,568
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,755 ($11,891 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,568 leaving balance of $12,539
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,041 leaving cash of ($77)
+* Net taxable income of $597
+* Allowed monthly depreciation of $703 + carry-over of $14,745
+* Used depreciation of $597 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,851
+* Required personal loan of $77 creating a balance of $9,554
+* Monthly expenses $2,041 + principle of $674 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $520
 
 ---
 
@@ -2288,14 +2239,13 @@ Owner in month # 55
 * New loan balance of $212,552
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 55
 
-* Investment grew by $2,750
+* Investment of $85,978 grew by $569 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2304,21 +2254,21 @@ Renter in month # 55
 Landlord in month # 56
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,355 principal / $50 interest)
-* New loan balance of $11,184
+* Loan payment of $1,405 ($676 principal / $729 interest)
+* New loan balance of $183,372
 * Management fee of $264
-* Loan payment of $1,405 ($1,361 principal / $44 interest)
-* New loan balance of $9,823
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,608
-* Net income of $2,588
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,775 ($13,666 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,588 leaving balance of $7,235
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,039 leaving cash of ($77)
+* Net taxable income of $599
+* Allowed monthly depreciation of $703 + carry-over of $14,851
+* Used depreciation of $599 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,955
+* Required personal loan of $77 creating a balance of $9,631
+* Monthly expenses $2,039 + principle of $676 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $522
 
 ---
 
@@ -2328,14 +2278,13 @@ Owner in month # 56
 * New loan balance of $212,164
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 56
 
-* Investment grew by $2,768
+* Investment of $86,551 grew by $573 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2344,21 +2293,21 @@ Renter in month # 56
 Landlord in month # 57
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,376 principal / $29 interest)
-* New loan balance of $5,859
+* Loan payment of $1,405 ($679 principal / $726 interest)
+* New loan balance of $182,693
 * Management fee of $264
-* Loan payment of $1,405 ($1,382 principal / $23 interest)
-* New loan balance of $4,477
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,587
-* Net income of $2,609
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,796 ($15,463 YTD)
-* $813 of depreciation carried over
-* Paid additional principal of $2,609 leaving balance of $1,868
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,036 leaving cash of ($77)
+* Net taxable income of $602
+* Allowed monthly depreciation of $703 + carry-over of $14,955
+* Used depreciation of $602 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,056
+* Required personal loan of $77 creating a balance of $9,709
+* Monthly expenses $2,036 + principle of $679 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $525
 
 ---
 
@@ -2368,14 +2317,13 @@ Owner in month # 57
 * New loan balance of $211,774
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 57
 
-* Investment grew by $2,786
+* Investment of $87,128 grew by $577 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2384,21 +2332,21 @@ Renter in month # 57
 Landlord in month # 58
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,398 principal / $7 interest)
-* New loan balance of $470
+* Loan payment of $1,405 ($682 principal / $723 interest)
+* New loan balance of $182,011
 * Management fee of $264
-* Loan payment of $1,405 ($1,403 principal / $2 interest)
-* New loan balance of ($933)
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,565
-* Net income of $2,631
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,818 ($17,281 YTD)
-* $813 of depreciation carried over
-* Added net income of $2,631 to personal leaving balance of ($2,631)
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,033 leaving cash of ($77)
+* Net taxable income of $605
+* Allowed monthly depreciation of $703 + carry-over of $15,056
+* Used depreciation of $605 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,154
+* Required personal loan of $77 creating a balance of $9,786
+* Monthly expenses $2,033 + principle of $682 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $528
 
 ---
 
@@ -2408,14 +2356,13 @@ Owner in month # 58
 * New loan balance of $211,383
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 58
 
-* Investment grew by $2,805
+* Investment of $87,709 grew by $581 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2424,21 +2371,21 @@ Renter in month # 58
 Landlord in month # 59
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,409 principal / ($4) interest)
-* New loan balance of ($2,342)
+* Loan payment of $1,405 ($685 principal / $720 interest)
+* New loan balance of $181,326
 * Management fee of $264
-* Loan payment of $1,405 ($1,414 principal / ($9) interest)
-* New loan balance of ($3,756)
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,554
-* Net income of $2,642
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,829 ($19,110 YTD)
-* $813 of depreciation carried over
-* Added net income of $2,642 to personal leaving balance of ($5,273)
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,030 leaving cash of ($77)
+* Net taxable income of $608
+* Allowed monthly depreciation of $703 + carry-over of $15,154
+* Used depreciation of $608 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,249
+* Required personal loan of $77 creating a balance of $9,863
+* Monthly expenses $2,030 + principle of $685 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $531
 
 ---
 
@@ -2448,14 +2395,13 @@ Owner in month # 59
 * New loan balance of $210,991
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 59
 
-* Investment grew by $2,824
+* Investment of $88,294 grew by $585 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
@@ -2464,21 +2410,21 @@ Renter in month # 59
 Landlord in month # 60
 
 * Received rent of $2,638
-* Loan payment of $1,405 ($1,420 principal / ($15) interest)
-* New loan balance of ($5,176)
+* Loan payment of $1,405 ($687 principal / $718 interest)
+* New loan balance of $180,639
 * Management fee of $264
-* Loan payment of $1,405 ($1,425 principal / ($20) interest)
-* New loan balance of ($6,601)
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
-* Total monthly expenses of $1,543
-* Net income of $2,653
-* Allowed monthly depreciation of $813 + carry-over of $813
-* Taxable income of $1,840 ($20,950 YTD)
-* $813 of depreciation carried over
-* Added net income of $2,653 to personal leaving balance of ($7,926)
+* Spent $279 on home maintenance
+* Total monthly expenses of $2,028 leaving cash of ($77)
+* Net taxable income of $610
+* Allowed monthly depreciation of $703 + carry-over of $15,249
+* Used depreciation of $610 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,342
+* Required personal loan of $77 creating a balance of $9,940
+* Monthly expenses $2,028 + principle of $687 = $2,715 against rent of $2,638
+* Negative cash flow of ($77)
+* NPV cash flow of $533
 
 ---
 
@@ -2488,47 +2434,47 @@ Owner in month # 60
 * New loan balance of $210,597
 * Spent $587 on property tax
 * Spent $180 on insurance
-* Spent $108 on HOA
-* Spent $419 on home maintenance
+* Spent $279 on home maintenance
 
 ---
 
 Renter in month # 60
 
-* Investment grew by $2,843
+* Investment of $88,882 grew by $589 (0.67%)
 * Spent $2,638 on rent
 * Spent $16 on renters insurance
 
 ---
 
 Year # 5
-Rent increased 3.50% to $2,730
-Home value increased 3.70% to $347,650
-Renters insurance increased 2.00% to $16.56
-Home owner's insurance increased 2.00% to $184.02
-HOA increased 2.00% to $110.40
+
+* Rent increased 3.50% to $2,730
+* Owner Home value increased 3.70% to $347,650
+* Landlord Home value increased 3.70% to $347,650
+* Renters insurance increased 2.00% to $16.56
+* Home owner's insurance increased 2.00% to $184.02
+* HOA increased 2.00% to $0.00
 
 ---
 
 Landlord in month # 61
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,431 principal / ($26) interest)
-* New loan balance of ($8,032)
+* Loan payment of $1,405 ($690 principal / $715 interest)
+* New loan balance of $179,949
 * Management fee of $273
-* Loan payment of $1,405 ($1,437 principal / ($32) interest)
-* New loan balance of ($9,469)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Paid last year's taxes of $5,028
-* Total monthly expenses of $6,613
-* Net income of $2,756
-* Allowed monthly depreciation of $843 + carry-over of $813
-* Taxable income of $1,943 ($1,943 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,756 to personal leaving balance of ($10,682)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,070 leaving cash of ($30)
+* Net taxable income of $660
+* Allowed monthly depreciation of $703 + carry-over of $15,342
+* Used depreciation of $660 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,385
+* Required personal loan of $30 creating a balance of $9,970
+* Monthly expenses $2,070 + principle of $690 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $630
 
 ---
 
@@ -2538,14 +2484,13 @@ Owner in month # 61
 * New loan balance of $210,202
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 61
 
-* Investment grew by $2,862
+* Investment of $89,475 grew by $593 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2554,21 +2499,21 @@ Renter in month # 61
 Landlord in month # 62
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,442 principal / ($37) interest)
-* New loan balance of ($10,911)
+* Loan payment of $1,405 ($693 principal / $712 interest)
+* New loan balance of $179,256
 * Management fee of $273
-* Loan payment of $1,405 ($1,448 principal / ($43) interest)
-* New loan balance of ($12,359)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,573
-* Net income of $2,767
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $1,924 ($3,867 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,767 to personal leaving balance of ($13,449)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,067 leaving cash of ($30)
+* Net taxable income of $663
+* Allowed monthly depreciation of $703 + carry-over of $15,385
+* Used depreciation of $663 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,425
+* Required personal loan of $30 creating a balance of $10,000
+* Monthly expenses $2,067 + principle of $693 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $633
 
 ---
 
@@ -2578,14 +2523,13 @@ Owner in month # 62
 * New loan balance of $209,805
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 62
 
-* Investment grew by $2,881
+* Investment of $90,072 grew by $597 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2594,21 +2538,21 @@ Renter in month # 62
 Landlord in month # 63
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,454 principal / ($49) interest)
-* New loan balance of ($13,813)
+* Loan payment of $1,405 ($695 principal / $710 interest)
+* New loan balance of $178,561
 * Management fee of $273
-* Loan payment of $1,405 ($1,460 principal / ($55) interest)
-* New loan balance of ($15,273)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,561
-* Net income of $2,779
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $1,936 ($5,804 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,779 to personal leaving balance of ($16,228)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,065 leaving cash of ($30)
+* Net taxable income of $665
+* Allowed monthly depreciation of $703 + carry-over of $15,425
+* Used depreciation of $665 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,463
+* Required personal loan of $30 creating a balance of $10,030
+* Monthly expenses $2,065 + principle of $695 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $635
 
 ---
 
@@ -2618,14 +2562,13 @@ Owner in month # 63
 * New loan balance of $209,407
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 63
 
-* Investment grew by $2,900
+* Investment of $90,672 grew by $600 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2634,21 +2577,21 @@ Renter in month # 63
 Landlord in month # 64
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,465 principal / ($60) interest)
-* New loan balance of ($16,738)
+* Loan payment of $1,405 ($698 principal / $707 interest)
+* New loan balance of $177,863
 * Management fee of $273
-* Loan payment of $1,405 ($1,471 principal / ($66) interest)
-* New loan balance of ($18,209)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,550
-* Net income of $2,790
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $1,947 ($7,751 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,790 to personal leaving balance of ($19,018)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,062 leaving cash of ($30)
+* Net taxable income of $668
+* Allowed monthly depreciation of $703 + carry-over of $15,463
+* Used depreciation of $668 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,498
+* Required personal loan of $30 creating a balance of $10,060
+* Monthly expenses $2,062 + principle of $698 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $638
 
 ---
 
@@ -2658,14 +2601,13 @@ Owner in month # 64
 * New loan balance of $209,008
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 64
 
-* Investment grew by $2,919
+* Investment of $91,276 grew by $604 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2674,21 +2616,21 @@ Renter in month # 64
 Landlord in month # 65
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,477 principal / ($72) interest)
-* New loan balance of ($19,686)
+* Loan payment of $1,405 ($701 principal / $704 interest)
+* New loan balance of $177,162
 * Management fee of $273
-* Loan payment of $1,405 ($1,483 principal / ($78) interest)
-* New loan balance of ($21,169)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,538
-* Net income of $2,802
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $1,959 ($9,710 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,802 to personal leaving balance of ($21,820)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,059 leaving cash of ($30)
+* Net taxable income of $671
+* Allowed monthly depreciation of $703 + carry-over of $15,498
+* Used depreciation of $671 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,530
+* Required personal loan of $30 creating a balance of $10,090
+* Monthly expenses $2,059 + principle of $701 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $641
 
 ---
 
@@ -2698,14 +2640,13 @@ Owner in month # 65
 * New loan balance of $208,607
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 65
 
-* Investment grew by $2,939
+* Investment of $91,885 grew by $609 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2714,21 +2655,21 @@ Renter in month # 65
 Landlord in month # 66
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,489 principal / ($84) interest)
-* New loan balance of ($22,658)
+* Loan payment of $1,405 ($704 principal / $701 interest)
+* New loan balance of $176,458
 * Management fee of $273
-* Loan payment of $1,405 ($1,495 principal / ($90) interest)
-* New loan balance of ($24,153)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,526
-* Net income of $2,814
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $1,971 ($11,681 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,814 to personal leaving balance of ($24,634)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,056 leaving cash of ($30)
+* Net taxable income of $674
+* Allowed monthly depreciation of $703 + carry-over of $15,530
+* Used depreciation of $674 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,559
+* Required personal loan of $30 creating a balance of $10,120
+* Monthly expenses $2,056 + principle of $704 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $644
 
 ---
 
@@ -2738,14 +2679,13 @@ Owner in month # 66
 * New loan balance of $208,205
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 66
 
-* Investment grew by $2,958
+* Investment of $92,498 grew by $613 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2754,21 +2694,21 @@ Renter in month # 66
 Landlord in month # 67
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,501 principal / ($96) interest)
-* New loan balance of ($25,654)
+* Loan payment of $1,405 ($707 principal / $698 interest)
+* New loan balance of $175,751
 * Management fee of $273
-* Loan payment of $1,405 ($1,507 principal / ($102) interest)
-* New loan balance of ($27,161)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,514
-* Net income of $2,826
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $1,983 ($13,665 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,826 to personal leaving balance of ($27,460)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,053 leaving cash of ($30)
+* Net taxable income of $677
+* Allowed monthly depreciation of $703 + carry-over of $15,559
+* Used depreciation of $677 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,585
+* Required personal loan of $30 creating a balance of $10,150
+* Monthly expenses $2,053 + principle of $707 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $647
 
 ---
 
@@ -2778,14 +2718,13 @@ Owner in month # 67
 * New loan balance of $207,801
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 67
 
-* Investment grew by $2,978
+* Investment of $93,114 grew by $617 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2794,21 +2733,21 @@ Renter in month # 67
 Landlord in month # 68
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,513 principal / ($108) interest)
-* New loan balance of ($28,674)
+* Loan payment of $1,405 ($709 principal / $696 interest)
+* New loan balance of $175,042
 * Management fee of $273
-* Loan payment of $1,405 ($1,519 principal / ($114) interest)
-* New loan balance of ($30,193)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,502
-* Net income of $2,838
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $1,995 ($15,660 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,838 to personal leaving balance of ($30,298)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,051 leaving cash of ($30)
+* Net taxable income of $679
+* Allowed monthly depreciation of $703 + carry-over of $15,585
+* Used depreciation of $679 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,609
+* Required personal loan of $30 creating a balance of $10,180
+* Monthly expenses $2,051 + principle of $709 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $649
 
 ---
 
@@ -2818,14 +2757,13 @@ Owner in month # 68
 * New loan balance of $207,396
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 68
 
-* Investment grew by $2,998
+* Investment of $93,735 grew by $621 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2834,21 +2772,21 @@ Renter in month # 68
 Landlord in month # 69
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,525 principal / ($120) interest)
-* New loan balance of ($31,718)
+* Loan payment of $1,405 ($712 principal / $693 interest)
+* New loan balance of $174,330
 * Management fee of $273
-* Loan payment of $1,405 ($1,531 principal / ($126) interest)
-* New loan balance of ($33,249)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,490
-* Net income of $2,850
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $2,007 ($17,667 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,850 to personal leaving balance of ($33,148)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,048 leaving cash of ($30)
+* Net taxable income of $682
+* Allowed monthly depreciation of $703 + carry-over of $15,609
+* Used depreciation of $682 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,630
+* Required personal loan of $30 creating a balance of $10,210
+* Monthly expenses $2,048 + principle of $712 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $652
 
 ---
 
@@ -2858,14 +2796,13 @@ Owner in month # 69
 * New loan balance of $206,990
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 69
 
-* Investment grew by $3,018
+* Investment of $94,360 grew by $625 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2874,21 +2811,21 @@ Renter in month # 69
 Landlord in month # 70
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,537 principal / ($132) interest)
-* New loan balance of ($34,786)
+* Loan payment of $1,405 ($715 principal / $690 interest)
+* New loan balance of $173,615
 * Management fee of $273
-* Loan payment of $1,405 ($1,543 principal / ($138) interest)
-* New loan balance of ($36,329)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,478
-* Net income of $2,862
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $2,019 ($19,686 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,862 to personal leaving balance of ($36,010)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,045 leaving cash of ($30)
+* Net taxable income of $685
+* Allowed monthly depreciation of $703 + carry-over of $15,630
+* Used depreciation of $685 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,648
+* Required personal loan of $30 creating a balance of $10,240
+* Monthly expenses $2,045 + principle of $715 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $655
 
 ---
 
@@ -2898,14 +2835,13 @@ Owner in month # 70
 * New loan balance of $206,582
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 70
 
-* Investment grew by $3,038
+* Investment of $94,989 grew by $629 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2914,21 +2850,21 @@ Renter in month # 70
 Landlord in month # 71
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,549 principal / ($144) interest)
-* New loan balance of ($37,878)
+* Loan payment of $1,405 ($718 principal / $687 interest)
+* New loan balance of $172,897
 * Management fee of $273
-* Loan payment of $1,405 ($1,555 principal / ($150) interest)
-* New loan balance of ($39,433)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,466
-* Net income of $2,874
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $2,031 ($21,717 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,874 to personal leaving balance of ($38,884)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,042 leaving cash of ($30)
+* Net taxable income of $688
+* Allowed monthly depreciation of $703 + carry-over of $15,648
+* Used depreciation of $688 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,663
+* Required personal loan of $30 creating a balance of $10,270
+* Monthly expenses $2,042 + principle of $718 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $658
 
 ---
 
@@ -2938,14 +2874,13 @@ Owner in month # 71
 * New loan balance of $206,173
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 71
 
-* Investment grew by $3,058
+* Investment of $95,622 grew by $633 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
@@ -2954,21 +2889,21 @@ Renter in month # 71
 Landlord in month # 72
 
 * Received rent of $2,730
-* Loan payment of $1,405 ($1,561 principal / ($156) interest)
-* New loan balance of ($40,994)
+* Loan payment of $1,405 ($721 principal / $684 interest)
+* New loan balance of $172,176
 * Management fee of $273
-* Loan payment of $1,405 ($1,567 principal / ($162) interest)
-* New loan balance of ($42,561)
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
-* Total monthly expenses of $1,454
-* Net income of $2,886
-* Allowed monthly depreciation of $843 + carry-over of $843
-* Taxable income of $2,043 ($23,761 YTD)
-* $843 of depreciation carried over
-* Added net income of $2,886 to personal leaving balance of ($41,770)
+* Spent $290 on home maintenance
+* Total monthly expenses of $2,039 leaving cash of ($30)
+* Net taxable income of $691
+* Allowed monthly depreciation of $703 + carry-over of $15,663
+* Used depreciation of $691 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,675
+* Required personal loan of $30 creating a balance of $10,300
+* Monthly expenses $2,039 + principle of $721 = $2,760 against rent of $2,730
+* Negative cash flow of ($30)
+* NPV cash flow of $661
 
 ---
 
@@ -2978,47 +2913,45 @@ Owner in month # 72
 * New loan balance of $205,762
 * Spent $608 on property tax
 * Spent $184 on insurance
-* Spent $110 on HOA
-* Spent $435 on home maintenance
+* Spent $290 on home maintenance
 
 ---
 
 Renter in month # 72
 
-* Investment grew by $3,078
+* Investment of $96,260 grew by $637 (0.67%)
 * Spent $2,730 on rent
 * Spent $17 on renters insurance
 
 ---
 
 Year # 6
-Rent increased 3.50% to $2,826
-Home value increased 3.70% to $360,513
-Renters insurance increased 2.00% to $16.89
-Home owner's insurance increased 2.00% to $187.70
-HOA increased 2.00% to $112.61
+
+* Rent increased 3.50% to $2,826
+* Owner Home value increased 3.70% to $360,513
+* Landlord Home value increased 3.70% to $360,513
+* Renters insurance increased 2.00% to $16.89
+* Home owner's insurance increased 2.00% to $187.70
+* HOA increased 2.00% to $0.00
 
 ---
 
 Landlord in month # 73
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,573 principal / ($168) interest)
-* New loan balance of ($44,134)
+* Loan payment of $1,405 ($723 principal / $682 interest)
+* New loan balance of $171,453
 * Management fee of $283
-* Loan payment of $1,405 ($1,580 principal / ($175) interest)
-* New loan balance of ($45,714)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Paid last year's taxes of $5,703
-* Total monthly expenses of $7,199
-* Net income of $2,994
-* Allowed monthly depreciation of $874 + carry-over of $843
-* Taxable income of $2,151 ($2,151 YTD)
-* $874 of depreciation carried over
-* Added net income of $2,994 to personal leaving balance of ($44,764)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,083 leaving cash of $20
+* Net taxable income of $743
+* Allowed monthly depreciation of $703 + carry-over of $15,675
+* Used depreciation of $743 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,635
+* Paid back $20 of personal loan leaving a balance of $10,281 and cash of $0
+* NPV cash flow of $762
 
 ---
 
@@ -3028,14 +2961,13 @@ Owner in month # 73
 * New loan balance of $205,350
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 73
 
-* Investment grew by $3,099
+* Investment of $96,901 grew by $642 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3044,21 +2976,19 @@ Renter in month # 73
 Landlord in month # 74
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,586 principal / ($181) interest)
-* New loan balance of ($47,300)
+* Loan payment of $1,405 ($726 principal / $679 interest)
+* New loan balance of $170,727
 * Management fee of $283
-* Loan payment of $1,405 ($1,592 principal / ($187) interest)
-* New loan balance of ($48,892)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,484
-* Net income of $3,007
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,133 ($4,284 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,007 to personal leaving balance of ($47,771)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,080 leaving cash of $20
+* Net taxable income of $746
+* Allowed monthly depreciation of $703 + carry-over of $15,635
+* Used depreciation of $746 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,592
+* Paid back $20 of personal loan leaving a balance of $10,261 and cash of $0
+* NPV cash flow of $765
 
 ---
 
@@ -3068,14 +2998,13 @@ Owner in month # 74
 * New loan balance of $204,936
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 74
 
-* Investment grew by $3,120
+* Investment of $97,547 grew by $646 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3084,21 +3013,19 @@ Renter in month # 74
 Landlord in month # 75
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,599 principal / ($194) interest)
-* New loan balance of ($50,491)
+* Loan payment of $1,405 ($729 principal / $676 interest)
+* New loan balance of $169,998
 * Management fee of $283
-* Loan payment of $1,405 ($1,605 principal / ($200) interest)
-* New loan balance of ($52,096)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,471
-* Net income of $3,020
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,146 ($6,430 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,020 to personal leaving balance of ($50,791)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,077 leaving cash of $20
+* Net taxable income of $749
+* Allowed monthly depreciation of $703 + carry-over of $15,592
+* Used depreciation of $749 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,546
+* Paid back $20 of personal loan leaving a balance of $10,241 and cash of $0
+* NPV cash flow of $768
 
 ---
 
@@ -3108,14 +3035,13 @@ Owner in month # 75
 * New loan balance of $204,521
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 75
 
-* Investment grew by $3,140
+* Investment of $98,198 grew by $650 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3124,21 +3050,19 @@ Renter in month # 75
 Landlord in month # 76
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,611 principal / ($206) interest)
-* New loan balance of ($53,707)
+* Loan payment of $1,405 ($732 principal / $673 interest)
+* New loan balance of $169,266
 * Management fee of $283
-* Loan payment of $1,405 ($1,618 principal / ($213) interest)
-* New loan balance of ($55,325)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,459
-* Net income of $3,032
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,158 ($8,588 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,032 to personal leaving balance of ($53,823)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,074 leaving cash of $20
+* Net taxable income of $752
+* Allowed monthly depreciation of $703 + carry-over of $15,546
+* Used depreciation of $752 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,497
+* Paid back $20 of personal loan leaving a balance of $10,222 and cash of $0
+* NPV cash flow of $771
 
 ---
 
@@ -3148,14 +3072,13 @@ Owner in month # 76
 * New loan balance of $204,104
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 76
 
-* Investment grew by $3,161
+* Investment of $98,852 grew by $655 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3164,21 +3087,19 @@ Renter in month # 76
 Landlord in month # 77
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,624 principal / ($219) interest)
-* New loan balance of ($56,949)
+* Loan payment of $1,405 ($735 principal / $670 interest)
+* New loan balance of $168,531
 * Management fee of $283
-* Loan payment of $1,405 ($1,630 principal / ($225) interest)
-* New loan balance of ($58,579)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,446
-* Net income of $3,045
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,171 ($10,759 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,045 to personal leaving balance of ($56,868)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,071 leaving cash of $20
+* Net taxable income of $755
+* Allowed monthly depreciation of $703 + carry-over of $15,497
+* Used depreciation of $755 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,445
+* Paid back $20 of personal loan leaving a balance of $10,202 and cash of $0
+* NPV cash flow of $774
 
 ---
 
@@ -3188,14 +3109,13 @@ Owner in month # 77
 * New loan balance of $203,686
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 77
 
-* Investment grew by $3,182
+* Investment of $99,511 grew by $659 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3204,21 +3124,19 @@ Renter in month # 77
 Landlord in month # 78
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,637 principal / ($232) interest)
-* New loan balance of ($60,216)
+* Loan payment of $1,405 ($738 principal / $667 interest)
+* New loan balance of $167,793
 * Management fee of $283
-* Loan payment of $1,405 ($1,643 principal / ($238) interest)
-* New loan balance of ($61,859)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,433
-* Net income of $3,058
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,184 ($12,943 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,058 to personal leaving balance of ($59,926)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,068 leaving cash of $20
+* Net taxable income of $758
+* Allowed monthly depreciation of $703 + carry-over of $15,445
+* Used depreciation of $758 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,390
+* Paid back $20 of personal loan leaving a balance of $10,182 and cash of $0
+* NPV cash flow of $777
 
 ---
 
@@ -3228,14 +3146,13 @@ Owner in month # 78
 * New loan balance of $203,266
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 78
 
-* Investment grew by $3,204
+* Investment of $100,175 grew by $663 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3244,21 +3161,19 @@ Renter in month # 78
 Landlord in month # 79
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,650 principal / ($245) interest)
-* New loan balance of ($63,509)
+* Loan payment of $1,405 ($741 principal / $664 interest)
+* New loan balance of $167,052
 * Management fee of $283
-* Loan payment of $1,405 ($1,656 principal / ($251) interest)
-* New loan balance of ($65,165)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,420
-* Net income of $3,071
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,197 ($15,140 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,071 to personal leaving balance of ($62,997)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,065 leaving cash of $20
+* Net taxable income of $761
+* Allowed monthly depreciation of $703 + carry-over of $15,390
+* Used depreciation of $761 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,332
+* Paid back $20 of personal loan leaving a balance of $10,163 and cash of $0
+* NPV cash flow of $780
 
 ---
 
@@ -3268,14 +3183,13 @@ Owner in month # 79
 * New loan balance of $202,845
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 79
 
-* Investment grew by $3,225
+* Investment of $100,843 grew by $668 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3284,21 +3198,19 @@ Renter in month # 79
 Landlord in month # 80
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,663 principal / ($258) interest)
-* New loan balance of ($66,828)
+* Loan payment of $1,405 ($744 principal / $661 interest)
+* New loan balance of $166,308
 * Management fee of $283
-* Loan payment of $1,405 ($1,670 principal / ($265) interest)
-* New loan balance of ($68,498)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,407
-* Net income of $3,084
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,210 ($17,350 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,084 to personal leaving balance of ($66,081)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,062 leaving cash of $20
+* Net taxable income of $764
+* Allowed monthly depreciation of $703 + carry-over of $15,332
+* Used depreciation of $764 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,271
+* Paid back $20 of personal loan leaving a balance of $10,143 and cash of $0
+* NPV cash flow of $783
 
 ---
 
@@ -3308,14 +3220,13 @@ Owner in month # 80
 * New loan balance of $202,422
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 80
 
-* Investment grew by $3,247
+* Investment of $101,515 grew by $672 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3324,21 +3235,19 @@ Renter in month # 80
 Landlord in month # 81
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,676 principal / ($271) interest)
-* New loan balance of ($70,174)
+* Loan payment of $1,405 ($747 principal / $658 interest)
+* New loan balance of $165,561
 * Management fee of $283
-* Loan payment of $1,405 ($1,683 principal / ($278) interest)
-* New loan balance of ($71,857)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,394
-* Net income of $3,097
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,223 ($19,573 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,097 to personal leaving balance of ($69,178)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,059 leaving cash of $20
+* Net taxable income of $767
+* Allowed monthly depreciation of $703 + carry-over of $15,271
+* Used depreciation of $767 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,207
+* Paid back $20 of personal loan leaving a balance of $10,123 and cash of $0
+* NPV cash flow of $786
 
 ---
 
@@ -3348,14 +3257,13 @@ Owner in month # 81
 * New loan balance of $201,998
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 81
 
-* Investment grew by $3,268
+* Investment of $102,192 grew by $677 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3364,21 +3272,19 @@ Renter in month # 81
 Landlord in month # 82
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,689 principal / ($284) interest)
-* New loan balance of ($73,546)
+* Loan payment of $1,405 ($750 principal / $655 interest)
+* New loan balance of $164,811
 * Management fee of $283
-* Loan payment of $1,405 ($1,696 principal / ($291) interest)
-* New loan balance of ($75,242)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,381
-* Net income of $3,110
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,236 ($21,809 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,110 to personal leaving balance of ($72,288)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,056 leaving cash of $20
+* Net taxable income of $770
+* Allowed monthly depreciation of $703 + carry-over of $15,207
+* Used depreciation of $770 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,140
+* Paid back $20 of personal loan leaving a balance of $10,103 and cash of $0
+* NPV cash flow of $789
 
 ---
 
@@ -3388,14 +3294,13 @@ Owner in month # 82
 * New loan balance of $201,572
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 82
 
-* Investment grew by $3,290
+* Investment of $102,873 grew by $681 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3404,21 +3309,19 @@ Renter in month # 82
 Landlord in month # 83
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,703 principal / ($298) interest)
-* New loan balance of ($76,945)
+* Loan payment of $1,405 ($753 principal / $652 interest)
+* New loan balance of $164,058
 * Management fee of $283
-* Loan payment of $1,405 ($1,710 principal / ($305) interest)
-* New loan balance of ($78,655)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,367
-* Net income of $3,124
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,250 ($24,060 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,124 to personal leaving balance of ($75,412)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,053 leaving cash of $20
+* Net taxable income of $773
+* Allowed monthly depreciation of $703 + carry-over of $15,140
+* Used depreciation of $773 resulting in adjusted taxable income of $0
+* Carry over depreciation of $15,070
+* Paid back $20 of personal loan leaving a balance of $10,084 and cash of $0
+* NPV cash flow of $792
 
 ---
 
@@ -3428,14 +3331,13 @@ Owner in month # 83
 * New loan balance of $201,145
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 83
 
-* Investment grew by $3,312
+* Investment of $103,559 grew by $686 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
@@ -3444,21 +3346,19 @@ Renter in month # 83
 Landlord in month # 84
 
 * Received rent of $2,826
-* Loan payment of $1,405 ($1,716 principal / ($311) interest)
-* New loan balance of ($80,371)
+* Loan payment of $1,405 ($756 principal / $649 interest)
+* New loan balance of $163,302
 * Management fee of $283
-* Loan payment of $1,405 ($1,723 principal / ($318) interest)
-* New loan balance of ($82,094)
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
-* Total monthly expenses of $1,354
-* Net income of $3,137
-* Allowed monthly depreciation of $874 + carry-over of $874
-* Taxable income of $2,263 ($26,323 YTD)
-* $874 of depreciation carried over
-* Added net income of $3,137 to personal leaving balance of ($78,549)
+* Spent $300 on home maintenance
+* Total monthly expenses of $2,050 leaving cash of $20
+* Net taxable income of $776
+* Allowed monthly depreciation of $703 + carry-over of $15,070
+* Used depreciation of $776 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,997
+* Paid back $20 of personal loan leaving a balance of $10,064 and cash of $0
+* NPV cash flow of $795
 
 ---
 
@@ -3468,47 +3368,45 @@ Owner in month # 84
 * New loan balance of $200,716
 * Spent $631 on property tax
 * Spent $188 on insurance
-* Spent $113 on HOA
-* Spent $451 on home maintenance
+* Spent $300 on home maintenance
 
 ---
 
 Renter in month # 84
 
-* Investment grew by $3,334
+* Investment of $104,249 grew by $690 (0.67%)
 * Spent $2,826 on rent
 * Spent $17 on renters insurance
 
 ---
 
 Year # 7
-Rent increased 3.50% to $2,925
-Home value increased 3.70% to $373,852
-Renters insurance increased 2.00% to $17.23
-Home owner's insurance increased 2.00% to $191.45
-HOA increased 2.00% to $114.86
+
+* Rent increased 3.50% to $2,925
+* Owner Home value increased 3.70% to $373,852
+* Landlord Home value increased 3.70% to $373,852
+* Renters insurance increased 2.00% to $17.23
+* Home owner's insurance increased 2.00% to $191.45
+* HOA increased 2.00% to $0.00
 
 ---
 
 Landlord in month # 85
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,730 principal / ($325) interest)
-* New loan balance of ($83,824)
+* Loan payment of $1,405 ($759 principal / $646 interest)
+* New loan balance of $162,543
 * Management fee of $293
-* Loan payment of $1,405 ($1,737 principal / ($332) interest)
-* New loan balance of ($85,561)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Paid last year's taxes of $6,317
-* Total monthly expenses of $7,712
-* Net income of $3,250
-* Allowed monthly depreciation of $906 + carry-over of $874
-* Taxable income of $2,376 ($2,376 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,250 to personal leaving balance of ($81,799)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,096 leaving cash of $70
+* Net taxable income of $829
+* Allowed monthly depreciation of $703 + carry-over of $14,997
+* Used depreciation of $829 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,871
+* Paid back $70 of personal loan leaving a balance of $9,994 and cash of $0
+* NPV cash flow of $899
 
 ---
 
@@ -3518,14 +3416,13 @@ Owner in month # 85
 * New loan balance of $200,286
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 85
 
-* Investment grew by $3,356
+* Investment of $104,944 grew by $695 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3534,21 +3431,19 @@ Renter in month # 85
 Landlord in month # 86
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,744 principal / ($339) interest)
-* New loan balance of ($87,305)
+* Loan payment of $1,405 ($762 principal / $643 interest)
+* New loan balance of $161,781
 * Management fee of $293
-* Loan payment of $1,405 ($1,751 principal / ($346) interest)
-* New loan balance of ($89,056)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,381
-* Net income of $3,264
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,358 ($4,734 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,264 to personal leaving balance of ($85,063)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,093 leaving cash of $70
+* Net taxable income of $832
+* Allowed monthly depreciation of $703 + carry-over of $14,871
+* Used depreciation of $832 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,742
+* Paid back $70 of personal loan leaving a balance of $9,924 and cash of $0
+* NPV cash flow of $902
 
 ---
 
@@ -3558,14 +3453,13 @@ Owner in month # 86
 * New loan balance of $199,854
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 86
 
-* Investment grew by $3,379
+* Investment of $105,644 grew by $700 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3574,21 +3468,19 @@ Renter in month # 86
 Landlord in month # 87
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,758 principal / ($353) interest)
-* New loan balance of ($90,814)
+* Loan payment of $1,405 ($765 principal / $640 interest)
+* New loan balance of $161,016
 * Management fee of $293
-* Loan payment of $1,405 ($1,764 principal / ($359) interest)
-* New loan balance of ($92,578)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,367
-* Net income of $3,278
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,372 ($7,105 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,278 to personal leaving balance of ($88,341)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,090 leaving cash of $70
+* Net taxable income of $835
+* Allowed monthly depreciation of $703 + carry-over of $14,742
+* Used depreciation of $835 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,610
+* Paid back $70 of personal loan leaving a balance of $9,854 and cash of $0
+* NPV cash flow of $905
 
 ---
 
@@ -3598,14 +3490,13 @@ Owner in month # 87
 * New loan balance of $199,421
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 87
 
-* Investment grew by $3,401
+* Investment of $106,348 grew by $704 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3614,21 +3505,19 @@ Renter in month # 87
 Landlord in month # 88
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,771 principal / ($366) interest)
-* New loan balance of ($94,349)
+* Loan payment of $1,405 ($768 principal / $637 interest)
+* New loan balance of $160,248
 * Management fee of $293
-* Loan payment of $1,405 ($1,778 principal / ($373) interest)
-* New loan balance of ($96,127)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,354
-* Net income of $3,291
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,385 ($9,490 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,291 to personal leaving balance of ($91,632)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,087 leaving cash of $70
+* Net taxable income of $838
+* Allowed monthly depreciation of $703 + carry-over of $14,610
+* Used depreciation of $838 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,475
+* Paid back $70 of personal loan leaving a balance of $9,784 and cash of $0
+* NPV cash flow of $908
 
 ---
 
@@ -3638,14 +3527,13 @@ Owner in month # 88
 * New loan balance of $198,986
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 88
 
-* Investment grew by $3,424
+* Investment of $107,057 grew by $709 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3654,21 +3542,19 @@ Renter in month # 88
 Landlord in month # 89
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,786 principal / ($381) interest)
-* New loan balance of ($97,913)
+* Loan payment of $1,405 ($771 principal / $634 interest)
+* New loan balance of $159,477
 * Management fee of $293
-* Loan payment of $1,405 ($1,793 principal / ($388) interest)
-* New loan balance of ($99,706)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,339
-* Net income of $3,306
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,400 ($11,890 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,306 to personal leaving balance of ($94,938)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,084 leaving cash of $70
+* Net taxable income of $841
+* Allowed monthly depreciation of $703 + carry-over of $14,475
+* Used depreciation of $841 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,337
+* Paid back $70 of personal loan leaving a balance of $9,714 and cash of $0
+* NPV cash flow of $911
 
 ---
 
@@ -3678,14 +3564,13 @@ Owner in month # 89
 * New loan balance of $198,550
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 89
 
-* Investment grew by $3,447
+* Investment of $107,771 grew by $714 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3694,21 +3579,19 @@ Renter in month # 89
 Landlord in month # 90
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,800 principal / ($395) interest)
-* New loan balance of ($101,506)
+* Loan payment of $1,405 ($774 principal / $631 interest)
+* New loan balance of $158,703
 * Management fee of $293
-* Loan payment of $1,405 ($1,807 principal / ($402) interest)
-* New loan balance of ($103,313)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,325
-* Net income of $3,320
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,414 ($14,303 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,320 to personal leaving balance of ($98,258)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,081 leaving cash of $70
+* Net taxable income of $844
+* Allowed monthly depreciation of $703 + carry-over of $14,337
+* Used depreciation of $844 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,196
+* Paid back $70 of personal loan leaving a balance of $9,644 and cash of $0
+* NPV cash flow of $914
 
 ---
 
@@ -3718,14 +3601,13 @@ Owner in month # 90
 * New loan balance of $198,112
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 90
 
-* Investment grew by $3,470
+* Investment of $108,489 grew by $718 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3734,21 +3616,19 @@ Renter in month # 90
 Landlord in month # 91
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,814 principal / ($409) interest)
-* New loan balance of ($105,127)
+* Loan payment of $1,405 ($777 principal / $628 interest)
+* New loan balance of $157,926
 * Management fee of $293
-* Loan payment of $1,405 ($1,821 principal / ($416) interest)
-* New loan balance of ($106,948)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,311
-* Net income of $3,334
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,428 ($16,731 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,334 to personal leaving balance of ($101,592)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,078 leaving cash of $70
+* Net taxable income of $847
+* Allowed monthly depreciation of $703 + carry-over of $14,196
+* Used depreciation of $847 resulting in adjusted taxable income of $0
+* Carry over depreciation of $14,052
+* Paid back $70 of personal loan leaving a balance of $9,574 and cash of $0
+* NPV cash flow of $917
 
 ---
 
@@ -3758,14 +3638,13 @@ Owner in month # 91
 * New loan balance of $197,673
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 91
 
-* Investment grew by $3,493
+* Investment of $109,213 grew by $723 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3774,21 +3653,19 @@ Renter in month # 91
 Landlord in month # 92
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,828 principal / ($423) interest)
-* New loan balance of ($108,776)
+* Loan payment of $1,405 ($780 principal / $625 interest)
+* New loan balance of $157,146
 * Management fee of $293
-* Loan payment of $1,405 ($1,836 principal / ($431) interest)
-* New loan balance of ($110,612)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,297
-* Net income of $3,348
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,442 ($19,173 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,348 to personal leaving balance of ($104,940)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,075 leaving cash of $70
+* Net taxable income of $850
+* Allowed monthly depreciation of $703 + carry-over of $14,052
+* Used depreciation of $850 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,905
+* Paid back $70 of personal loan leaving a balance of $9,504 and cash of $0
+* NPV cash flow of $920
 
 ---
 
@@ -3798,14 +3675,13 @@ Owner in month # 92
 * New loan balance of $197,232
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 92
 
-* Investment grew by $3,516
+* Investment of $109,941 grew by $728 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3814,21 +3690,19 @@ Renter in month # 92
 Landlord in month # 93
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,843 principal / ($438) interest)
-* New loan balance of ($112,455)
+* Loan payment of $1,405 ($783 principal / $622 interest)
+* New loan balance of $156,363
 * Management fee of $293
-* Loan payment of $1,405 ($1,850 principal / ($445) interest)
-* New loan balance of ($114,305)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,282
-* Net income of $3,363
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,457 ($21,630 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,363 to personal leaving balance of ($108,303)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,072 leaving cash of $70
+* Net taxable income of $853
+* Allowed monthly depreciation of $703 + carry-over of $13,905
+* Used depreciation of $853 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,755
+* Paid back $70 of personal loan leaving a balance of $9,434 and cash of $0
+* NPV cash flow of $923
 
 ---
 
@@ -3838,14 +3712,13 @@ Owner in month # 93
 * New loan balance of $196,790
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 93
 
-* Investment grew by $3,539
+* Investment of $110,674 grew by $733 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3854,21 +3727,19 @@ Renter in month # 93
 Landlord in month # 94
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,857 principal / ($452) interest)
-* New loan balance of ($116,162)
+* Loan payment of $1,405 ($786 principal / $619 interest)
+* New loan balance of $155,577
 * Management fee of $293
-* Loan payment of $1,405 ($1,865 principal / ($460) interest)
-* New loan balance of ($118,027)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,268
-* Net income of $3,377
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,471 ($24,100 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,377 to personal leaving balance of ($111,680)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,069 leaving cash of $70
+* Net taxable income of $856
+* Allowed monthly depreciation of $703 + carry-over of $13,755
+* Used depreciation of $856 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,602
+* Paid back $70 of personal loan leaving a balance of $9,364 and cash of $0
+* NPV cash flow of $926
 
 ---
 
@@ -3878,14 +3749,13 @@ Owner in month # 94
 * New loan balance of $196,346
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 94
 
-* Investment grew by $3,563
+* Investment of $111,411 grew by $738 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3894,21 +3764,19 @@ Renter in month # 94
 Landlord in month # 95
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,872 principal / ($467) interest)
-* New loan balance of ($119,899)
+* Loan payment of $1,405 ($789 principal / $616 interest)
+* New loan balance of $154,788
 * Management fee of $293
-* Loan payment of $1,405 ($1,880 principal / ($475) interest)
-* New loan balance of ($121,779)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,253
-* Net income of $3,392
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,486 ($26,586 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,392 to personal leaving balance of ($115,072)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,066 leaving cash of $70
+* Net taxable income of $859
+* Allowed monthly depreciation of $703 + carry-over of $13,602
+* Used depreciation of $859 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,446
+* Paid back $70 of personal loan leaving a balance of $9,293 and cash of $0
+* NPV cash flow of $929
 
 ---
 
@@ -3918,14 +3786,13 @@ Owner in month # 95
 * New loan balance of $195,900
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 95
 
-* Investment grew by $3,587
+* Investment of $112,154 grew by $743 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
@@ -3934,21 +3801,19 @@ Renter in month # 95
 Landlord in month # 96
 
 * Received rent of $2,925
-* Loan payment of $1,405 ($1,887 principal / ($482) interest)
-* New loan balance of ($123,666)
+* Loan payment of $1,405 ($792 principal / $613 interest)
+* New loan balance of $153,996
 * Management fee of $293
-* Loan payment of $1,405 ($1,895 principal / ($490) interest)
-* New loan balance of ($125,561)
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
-* Total monthly expenses of $1,238
-* Net income of $3,407
-* Allowed monthly depreciation of $906 + carry-over of $906
-* Taxable income of $2,501 ($29,087 YTD)
-* $906 of depreciation carried over
-* Added net income of $3,407 to personal leaving balance of ($118,479)
+* Spent $312 on home maintenance
+* Total monthly expenses of $2,063 leaving cash of $70
+* Net taxable income of $862
+* Allowed monthly depreciation of $703 + carry-over of $13,446
+* Used depreciation of $862 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,287
+* Paid back $70 of personal loan leaving a balance of $9,223 and cash of $0
+* NPV cash flow of $932
 
 ---
 
@@ -3958,47 +3823,45 @@ Owner in month # 96
 * New loan balance of $195,453
 * Spent $654 on property tax
 * Spent $191 on insurance
-* Spent $115 on HOA
-* Spent $467 on home maintenance
+* Spent $312 on home maintenance
 
 ---
 
 Renter in month # 96
 
-* Investment grew by $3,611
+* Investment of $112,902 grew by $748 (0.67%)
 * Spent $2,925 on rent
 * Spent $17 on renters insurance
 
 ---
 
 Year # 8
-Rent increased 3.50% to $3,027
-Home value increased 3.70% to $387,685
-Renters insurance increased 2.00% to $17.57
-Home owner's insurance increased 2.00% to $195.28
-HOA increased 2.00% to $117.16
+
+* Rent increased 3.50% to $3,027
+* Owner Home value increased 3.70% to $387,685
+* Landlord Home value increased 3.70% to $387,685
+* Renters insurance increased 2.00% to $17.57
+* Home owner's insurance increased 2.00% to $195.28
+* HOA increased 2.00% to $0.00
 
 ---
 
 Landlord in month # 97
 
 * Received rent of $3,027
-* Loan payment of $1,405 ($1,902 principal / ($497) interest)
-* New loan balance of ($127,463)
+* Loan payment of $1,405 ($795 principal / $610 interest)
+* New loan balance of $153,201
 * Management fee of $303
-* Loan payment of $1,405 ($1,910 principal / ($505) interest)
-* New loan balance of ($129,373)
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
-* Paid last year's taxes of $6,981
-* Total monthly expenses of $8,262
-* Net income of $3,524
-* Allowed monthly depreciation of $940 + carry-over of $906
-* Taxable income of $2,618 ($2,618 YTD)
-* $940 of depreciation carried over
-* Added net income of $3,524 to personal leaving balance of ($122,003)
+* Spent $323 on home maintenance
+* Total monthly expenses of $2,109 leaving cash of $123
+* Net taxable income of $918
+* Allowed monthly depreciation of $703 + carry-over of $13,287
+* Used depreciation of $918 resulting in adjusted taxable income of $0
+* Carry over depreciation of $13,072
+* Paid back $123 of personal loan leaving a balance of $9,100 and cash of $0
+* NPV cash flow of $1,041
 
 ---
 
@@ -4008,14 +3871,13 @@ Owner in month # 97
 * New loan balance of $195,004
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
+* Spent $323 on home maintenance
 
 ---
 
 Renter in month # 97
 
-* Investment grew by $3,635
+* Investment of $113,654 grew by $753 (0.67%)
 * Spent $3,027 on rent
 * Spent $18 on renters insurance
 
@@ -4024,21 +3886,19 @@ Renter in month # 97
 Landlord in month # 98
 
 * Received rent of $3,027
-* Loan payment of $1,405 ($1,917 principal / ($512) interest)
-* New loan balance of ($131,290)
+* Loan payment of $1,405 ($799 principal / $606 interest)
+* New loan balance of $152,402
 * Management fee of $303
-* Loan payment of $1,405 ($1,925 principal / ($520) interest)
-* New loan balance of ($133,215)
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
-* Total monthly expenses of $1,266
-* Net income of $3,539
-* Allowed monthly depreciation of $940 + carry-over of $940
-* Taxable income of $2,599 ($5,217 YTD)
-* $940 of depreciation carried over
-* Added net income of $3,539 to personal leaving balance of ($125,542)
+* Spent $323 on home maintenance
+* Total monthly expenses of $2,105 leaving cash of $123
+* Net taxable income of $922
+* Allowed monthly depreciation of $703 + carry-over of $13,072
+* Used depreciation of $922 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,853
+* Paid back $123 of personal loan leaving a balance of $8,977 and cash of $0
+* NPV cash flow of $1,045
 
 ---
 
@@ -4048,14 +3908,13 @@ Owner in month # 98
 * New loan balance of $194,554
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
+* Spent $323 on home maintenance
 
 ---
 
 Renter in month # 98
 
-* Investment grew by $3,659
+* Investment of $114,412 grew by $758 (0.67%)
 * Spent $3,027 on rent
 * Spent $18 on renters insurance
 
@@ -4064,21 +3923,19 @@ Renter in month # 98
 Landlord in month # 99
 
 * Received rent of $3,027
-* Loan payment of $1,405 ($1,932 principal / ($527) interest)
-* New loan balance of ($135,147)
+* Loan payment of $1,405 ($802 principal / $603 interest)
+* New loan balance of $151,600
 * Management fee of $303
-* Loan payment of $1,405 ($1,940 principal / ($535) interest)
-* New loan balance of ($137,087)
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
-* Total monthly expenses of $1,251
-* Net income of $3,554
-* Allowed monthly depreciation of $940 + carry-over of $940
-* Taxable income of $2,614 ($7,831 YTD)
-* $940 of depreciation carried over
-* Added net income of $3,554 to personal leaving balance of ($129,096)
+* Spent $323 on home maintenance
+* Total monthly expenses of $2,102 leaving cash of $123
+* Net taxable income of $925
+* Allowed monthly depreciation of $703 + carry-over of $12,853
+* Used depreciation of $925 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,631
+* Paid back $123 of personal loan leaving a balance of $8,854 and cash of $0
+* NPV cash flow of $1,048
 
 ---
 
@@ -4088,14 +3945,13 @@ Owner in month # 99
 * New loan balance of $194,102
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
+* Spent $323 on home maintenance
 
 ---
 
 Renter in month # 99
 
-* Investment grew by $3,683
+* Investment of $115,175 grew by $763 (0.67%)
 * Spent $3,027 on rent
 * Spent $18 on renters insurance
 
@@ -4104,21 +3960,19 @@ Renter in month # 99
 Landlord in month # 100
 
 * Received rent of $3,027
-* Loan payment of $1,405 ($1,948 principal / ($543) interest)
-* New loan balance of ($139,035)
+* Loan payment of $1,405 ($805 principal / $600 interest)
+* New loan balance of $150,795
 * Management fee of $303
-* Loan payment of $1,405 ($1,955 principal / ($550) interest)
-* New loan balance of ($140,990)
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
-* Total monthly expenses of $1,235
-* Net income of $3,570
-* Allowed monthly depreciation of $940 + carry-over of $940
-* Taxable income of $2,630 ($10,461 YTD)
-* $940 of depreciation carried over
-* Added net income of $3,570 to personal leaving balance of ($132,666)
+* Spent $323 on home maintenance
+* Total monthly expenses of $2,099 leaving cash of $123
+* Net taxable income of $928
+* Allowed monthly depreciation of $703 + carry-over of $12,631
+* Used depreciation of $928 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,406
+* Paid back $123 of personal loan leaving a balance of $8,731 and cash of $0
+* NPV cash flow of $1,051
 
 ---
 
@@ -4128,14 +3982,13 @@ Owner in month # 100
 * New loan balance of $193,648
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
+* Spent $323 on home maintenance
 
 ---
 
 Renter in month # 100
 
-* Investment grew by $3,708
+* Investment of $115,943 grew by $768 (0.67%)
 * Spent $3,027 on rent
 * Spent $18 on renters insurance
 
@@ -4144,21 +3997,19 @@ Renter in month # 100
 Landlord in month # 101
 
 * Received rent of $3,027
-* Loan payment of $1,405 ($1,963 principal / ($558) interest)
-* New loan balance of ($142,953)
+* Loan payment of $1,405 ($808 principal / $597 interest)
+* New loan balance of $149,987
 * Management fee of $303
-* Loan payment of $1,405 ($1,971 principal / ($566) interest)
-* New loan balance of ($144,924)
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
-* Total monthly expenses of $1,220
-* Net income of $3,585
-* Allowed monthly depreciation of $940 + carry-over of $940
-* Taxable income of $2,645 ($13,106 YTD)
-* $940 of depreciation carried over
-* Added net income of $3,585 to personal leaving balance of ($136,251)
+* Spent $323 on home maintenance
+* Total monthly expenses of $2,096 leaving cash of $123
+* Net taxable income of $931
+* Allowed monthly depreciation of $703 + carry-over of $12,406
+* Used depreciation of $931 resulting in adjusted taxable income of $0
+* Carry over depreciation of $12,178
+* Paid back $123 of personal loan leaving a balance of $8,608 and cash of $0
+* NPV cash flow of $1,054
 
 ---
 
@@ -4168,14 +4019,13 @@ Owner in month # 101
 * New loan balance of $193,193
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
+* Spent $323 on home maintenance
 
 ---
 
 Renter in month # 101
 
-* Investment grew by $3,733
+* Investment of $116,716 grew by $773 (0.67%)
 * Spent $3,027 on rent
 * Spent $18 on renters insurance
 
@@ -4184,21 +4034,19 @@ Renter in month # 101
 Landlord in month # 102
 
 * Received rent of $3,027
-* Loan payment of $1,405 ($1,979 principal / ($574) interest)
-* New loan balance of ($146,903)
+* Loan payment of $1,405 ($811 principal / $594 interest)
+* New loan balance of $149,176
 * Management fee of $303
-* Loan payment of $1,405 ($1,986 principal / ($581) interest)
-* New loan balance of ($148,889)
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
-* Total monthly expenses of $1,204
-* Net income of $3,601
-* Allowed monthly depreciation of $940 + carry-over of $940
-* Taxable income of $2,661 ($15,767 YTD)
-* $940 of depreciation carried over
-* Added net income of $3,601 to personal leaving balance of ($139,852)
+* Spent $323 on home maintenance
+* Total monthly expenses of $2,093 leaving cash of $123
+* Net taxable income of $934
+* Allowed monthly depreciation of $703 + carry-over of $12,178
+* Used depreciation of $934 resulting in adjusted taxable income of $0
+* Carry over depreciation of $11,947
+* Paid back $123 of personal loan leaving a balance of $8,485 and cash of $0
+* NPV cash flow of $1,057
 
 ---
 
@@ -4208,14 +4056,13 @@ Owner in month # 102
 * New loan balance of $192,736
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
+* Spent $323 on home maintenance
 
 ---
 
 Renter in month # 102
 
-* Investment grew by $3,758
+* Investment of $117,494 grew by $778 (0.67%)
 * Spent $3,027 on rent
 * Spent $18 on renters insurance
 
@@ -4224,21 +4071,19 @@ Renter in month # 102
 Landlord in month # 103
 
 * Received rent of $3,027
-* Loan payment of $1,405 ($1,994 principal / ($589) interest)
-* New loan balance of ($150,883)
+* Loan payment of $1,405 ($815 principal / $590 interest)
+* New loan balance of $148,361
 * Management fee of $303
-* Loan payment of $1,405 ($2,002 principal / ($597) interest)
-* New loan balance of ($152,885)
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
-* Total monthly expenses of $1,189
-* Net income of $3,616
-* Allowed monthly depreciation of $940 + carry-over of $940
-* Taxable income of $2,676 ($18,444 YTD)
-* $940 of depreciation carried over
-* Added net income of $3,616 to personal leaving balance of ($143,468)
+* Spent $323 on home maintenance
+* Total monthly expenses of $2,089 leaving cash of $123
+* Net taxable income of $938
+* Allowed monthly depreciation of $703 + carry-over of $11,947
+* Used depreciation of $938 resulting in adjusted taxable income of $0
+* Carry over depreciation of $11,712
+* Paid back $123 of personal loan leaving a balance of $8,362 and cash of $0
+* NPV cash flow of $1,061
 
 ---
 
@@ -4248,14 +4093,13 @@ Owner in month # 103
 * New loan balance of $192,278
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
+* Spent $323 on home maintenance
 
 ---
 
 Renter in month # 103
 
-* Investment grew by $3,783
+* Investment of $118,277 grew by $783 (0.67%)
 * Spent $3,027 on rent
 * Spent $18 on renters insurance
 
@@ -4264,31 +4108,31 @@ Renter in month # 103
 Landlord in month # 104
 
 * Received rent of $3,027
-* Loan payment of $1,405 ($2,010 principal / ($605) interest)
-* New loan balance of ($154,895)
+* Loan payment of $1,405 ($818 principal / $587 interest)
+* New loan balance of $147,543
 * Management fee of $303
-* Loan payment of $1,405 ($2,018 principal / ($613) interest)
-* New loan balance of ($156,913)
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
-* Total monthly expenses of $1,173
-* Net income of $3,632
-* Allowed monthly depreciation of $940 + carry-over of $940
-* Taxable income of $2,692 ($21,136 YTD)
-* $940 of depreciation carried over
-* Added net income of $3,632 to personal leaving balance of ($147,100)
+* Spent $323 on home maintenance
+* Total monthly expenses of $2,086 leaving cash of $123
+* Net taxable income of $941
+* Allowed monthly depreciation of $703 + carry-over of $11,712
+* Used depreciation of $941 resulting in adjusted taxable income of $0
+* Carry over depreciation of $11,474
+* Paid back $123 of personal loan leaving a balance of $8,239 and cash of $0
+* NPV cash flow of $1,064
 * Sold home for $387,685
-* Fixed sales costs of $1,000 and commission of $23,261
-* Paid of loan balance of ($156,913)
-* Paid depreciation recapture taxes of $20,031
-* Paid capital gains taxes of $65,531
-* Paid remaining yearly taxes of $5,073
-* Closed out personal loan of ($147,100)
-* Net home sale proceeds of $576,802
-* Total cash on hand of $576,802
-* Net present value of ($75,608)
+* Fixed sales costs of $1,000 and commission of $23,261 leaving proceeds of $363,424
+* Total gain from sale of $77,285
+* Paid depreciation recapture taxes of $14,793 on $61,638
+* Paid capital gains taxes of $2,347 on $15,647
+* Paid off loan balance of $147,543
+* Closed out personal loan of $8,239
+* Net home sale proceeds of $190,502
+* Total cash on hand of $190,502
+* Adjusted NPV cash flow of $191,566 accounting for sale proceeds of $190,502
+* Net present value of $53,061
+* Internal rate of return of 14.89%
 
 ---
 
@@ -4298,24 +4142,25 @@ Owner in month # 104
 * New loan balance of $191,818
 * Spent $678 on property tax
 * Spent $195 on insurance
-* Spent $117 on HOA
-* Spent $485 on home maintenance
+* Spent $323 on home maintenance
 * Sold home for $387,685
 * Fixed sales costs of $1,000 and commission of $23,261
-* Paid of loan balance of $191,818
+* Paid off loan balance of $191,818
 * Home sale proceeds of $171,606
 
 ---
 
 Renter in month # 104
 
-* Investment grew by $3,808
+* Investment of $119,066 grew by $789 (0.67%)
 * Spent $3,027 on rent
 * Spent $18 on renters insurance
-* Capital gains of $286,883
-* Capital gains tax of $43,032
-* Cashed out investment of $574,983
+* Capital gains of $59,407 on initial investment of $59,659
+* Capital gains tax of $8,911
+* Cashed out investment of $119,066
 * Returned security deposit of $2,300
+* Cash on hand of $112,455
+* Total spent $275,634
 
 ---
 
@@ -4324,12 +4169,13 @@ Renter in month # 104
 |Years|8.70|
 |Months|104|
 |HomePurchaseAmount|$289,900|
-|HomeValue|$387,685|
 |OwnerInterestRate|4.25%|
 |OwnerLoanYears|30|
 |OwnerDownPaymentPercentage|20.00%|
 |OwnerDownPayment|$57,980|
 |OwnerLoanAmount|$231,920|
+|OwnerHomeValue|$0|
+|OwnerLoanBalance|$0|
 |OwnerMonthlyPayment|$1,141|
 |RentChangePerYearPercentage|3.50%|
 |Rent|$3,027|
@@ -4340,6 +4186,8 @@ Renter in month # 104
 |LandlordDownPaymentPercentage|25.00%|
 |LandlordDownPayment|$72,475|
 |LandlordLoanAmount|$217,425|
+|LandlordHomeValue|$0|
+|LandlordLoanBalance|$0|
 |LandlordMonthlyPayment|$1,405|
 |LandlordManagementFeePercentage|10.00%|
 |DepreciationYears|27.50|
@@ -4348,9 +4196,9 @@ Renter in month # 104
 |ClosingVariableCostsPercentage|1.50%|
 |PropertyTaxPercentage|2.10%|
 |InsurancePerMonth|$195|
-|HoaPerMonth|$117|
+|HoaPerMonth|$0|
 |HomeAppreciationPercentagePerYear|3.70%|
-|HomeMaintenancePercentagePerYear|1.50%|
+|HomeMaintenancePercentagePerYear|1.00%|
 |SalesCommissionPercentage|6.00%|
 |SalesFixedCosts|$1,000|
 |DiscountRate|8.00%|
@@ -4360,13 +4208,14 @@ Renter in month # 104
 
 ---
 
-Landlord has total rent of $273,948 (average of $2,634 / month), total expenses of $328,820 (average of $3,162 / month), and has a net worth of $576,802 on an initial investment of $76,236
-Net present value of ($75,608)
+Landlord received total rent of $273,948 (average of $2,634 / month), total expenses of $253,706 (average of $2,439 / month), and has net worth of $190,502 on initial investment of $76,236
+Net present value of $53,061
+Internal rate of return of 14.89%
 
 ---
 
-Owner has spent $253,072 (average of $2,433 / month) and has a net worth of $171,606 on an initial investment of $61,959
+Owner spent $227,336 (average of $2,186 / month) and has net worth of $171,606 on initial investment of $61,959
 
 ---
 
-Renter has spent $275,634 (average of $2,650 / month) and has a net worth of $534,251 on an initial investment of $288,100
+Renter spent $275,634 (average of $2,650 / month) and has net worth of $112,455 on initial investment of $59,659
