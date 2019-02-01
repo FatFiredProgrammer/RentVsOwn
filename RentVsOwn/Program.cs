@@ -27,7 +27,10 @@ namespace RentVsOwn
             {
                 var simulator = new Simulator
                 {
-                    Name = "Default Simulator"
+                    Name = "Default Simulator",
+                    LandlordManagementFeePercentage = 0,
+                    HoaPerMonth = 0,
+                    Years = 10,
                 };
 
                 simulator.Run(output);

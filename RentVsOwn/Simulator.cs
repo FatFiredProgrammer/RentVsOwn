@@ -136,7 +136,7 @@ namespace RentVsOwn
         ///     Gets or sets the home maintenance percentage per year.
         /// </summary>
         /// <value>The home maintenance percentage per year.</value>
-        public decimal HomeMaintenancePercentagePerYear { get; set; } = .015m;
+        public decimal HomeMaintenancePercentagePerYear { get; set; } = .01m;
 
         /// <summary>
         ///     Gets or sets the sales commission percentage.
@@ -203,9 +203,9 @@ namespace RentVsOwn
 
             var people = new List<IPerson>
             {
-                // new Owner(),
                 new Landlord(),
-                // new Renter(),
+                //new Owner(),
+                //new Renter(),
             };
             do
             {

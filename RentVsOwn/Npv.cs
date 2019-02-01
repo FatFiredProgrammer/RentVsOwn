@@ -14,8 +14,6 @@ namespace RentVsOwn
         /// <returns></returns>
         public static decimal Calculate(decimal initialInvestment, IList<decimal> cashFlows, decimal rate)
         {
-            //Guard.IsInRange(rate, "rate", 0, 100);
-
             decimal npv = 0;
             for (var i = 0; i < cashFlows.Count; i++)
             {
