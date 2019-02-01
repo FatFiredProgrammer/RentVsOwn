@@ -60,13 +60,14 @@ namespace RentVsOwn
 
         private void Process(Simulation simulation, IOutput output)
         {
+            var expense = 0m;
             if (simulation.OwnerLoanBalance > 0)
             {
                 var loanPayment = simulation.OwnerMonthlyPayment;
                 var interest = (simulation.OwnerLoanBalance * simulation.OwnerInterestRate / 12).ToDollars();
                 var principal = Math.Min(loanPayment - interest, simulation.OwnerLoanBalance).ToDollars();
 
-                _totalSpent += principal + interest;
+                expense += principal + interest;
                 output.WriteLine($"* Loan payment of {loanPayment:C0} ({principal:C0} principal / {interest:C0} interest)");
 
                 simulation.OwnerLoanBalance -= principal;
@@ -74,23 +75,26 @@ namespace RentVsOwn
             }
 
             var propertyTax = (simulation.OwnerHomeValue * simulation.PropertyTaxPercentage / 12).ToDollars();
-            _totalSpent += propertyTax;
+            expense += propertyTax;
             output.WriteLine($"* Spent {propertyTax:C0} on property tax");
             if (simulation.InsurancePerMonth > 0)
             {
-                _totalSpent += simulation.InsurancePerMonth;
+                expense += simulation.InsurancePerMonth;
                 output.WriteLine($"* Spent {simulation.InsurancePerMonth:C0} on insurance");
             }
 
             if (simulation.HoaPerMonth > 0)
             {
-                _totalSpent += simulation.HoaPerMonth;
+                expense += simulation.HoaPerMonth;
                 output.WriteLine($"* Spent {simulation.HoaPerMonth:C0} on HOA");
             }
 
             var homeMaintenance = (simulation.OwnerHomeValue * simulation.HomeMaintenancePercentagePerYear / 12).ToDollars();
-            _totalSpent += homeMaintenance;
+            expense += homeMaintenance;
             output.WriteLine($"* Spent {homeMaintenance:C0} on home maintenance");
+
+            output.WriteLine($"* Total expense this month {expense:C0}");
+            _totalSpent += expense;
         }
 
         /// <inheritdoc />

@@ -30,6 +30,14 @@ namespace RentVsOwn
                     Name = "Default Simulator",
                     LandlordManagementFeePercentage = .1m,
                     HoaPerMonth = 0,
+                    Rent = null,
+                    LandlordDownPaymentPercentage = null,
+                    LandlordInterestRate = null,
+                    LandlordLoanYears = null,
+                    RentChangePerYearPercentage = 0m,
+                    PropertyTaxPercentage = .0042m,
+                    InsurancePerMonth = 100,
+                    HomeMaintenancePercentagePerYear = .01m,
                 };
 
                 simulator.Run(output);

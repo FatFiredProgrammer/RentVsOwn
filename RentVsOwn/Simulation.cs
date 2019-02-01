@@ -36,11 +36,6 @@ namespace RentVsOwn
             LandlordLoanYears = Math.Max(1, simulator.LandlordLoanYears ?? OwnerLoanYears);
             LandlordMonthlyPayment = PaymentCalculator.CalculatePayment(LandlordLoanAmount, LandlordInterestRate, LandlordLoanYears);
 
-            RentChangePerYearPercentage = Math.Min(Math.Max(0m, simulator.RentChangePerYearPercentage), 100).ToPercent();
-            Rent = Math.Max(1m, simulator.Rent).ToDollars();
-            RentersInsurancePerMonth = Math.Max(0m, simulator.RentersInsurancePerMonth).ToDollarCents();
-            RentSecurityDepositMonths = Math.Max(0, simulator.RentSecurityDepositMonths);
-
             DiscountRate = Math.Min(Math.Max(0m, simulator.DiscountRate), 100).ToPercent();
             CapitalGainsRate = Math.Min(Math.Max(0m, simulator.CapitalGainsRate), 100).ToPercent();
             MarginalTaxRate = Math.Min(Math.Max(0m, simulator.MarginalTaxRate), 100).ToPercent();
@@ -57,6 +52,17 @@ namespace RentVsOwn
             SalesFixedCosts = Math.Max(0m, simulator.SalesFixedCosts).ToDollars();
             DepreciationYears = Math.Max(1, simulator.DepreciationYears).ToValue();
             DepreciablePercentage = Math.Min(Math.Max(0m, simulator.DepreciablePercentage), 100).ToPercent();
+
+            RentChangePerYearPercentage = Math.Min(Math.Max(0m, simulator.RentChangePerYearPercentage ?? HomeAppreciationPercentagePerYear), 100).ToPercent();
+            var defaultRent =
+                OwnerMonthlyPayment +
+                InsurancePerMonth +
+                HoaPerMonth +
+                HomePurchaseAmount * PropertyTaxPercentage / 12 +
+                HomePurchaseAmount * HomeMaintenancePercentagePerYear / 12;
+            Rent = Math.Max(1m, simulator.Rent ?? defaultRent).ToDollars();
+            RentersInsurancePerMonth = Math.Max(0m, simulator.RentersInsurancePerMonth).ToDollarCents();
+            RentSecurityDepositMonths = Math.Max(0, simulator.RentSecurityDepositMonths);
         }
 
         public string Name { get; }

@@ -29,7 +29,7 @@ namespace RentVsOwn
         ///     Gets or sets the initial rent.
         /// </summary>
         /// <value>The initial rent.</value>
-        public decimal Rent { get; set; } = 2300;
+        public decimal? Rent { get; set; }
 
         /// <summary>
         ///     Gets or sets the rent security deposit months.
@@ -47,7 +47,7 @@ namespace RentVsOwn
         ///     Gets or sets the rent percentage change per year.
         /// </summary>
         /// <value>The rent percentage per year.</value>
-        public decimal RentChangePerYearPercentage { get; set; } = .035m;
+        public decimal? RentChangePerYearPercentage { get; set; }
 
         /// <summary>
         ///     Gets or sets the home purchase amount.
@@ -136,7 +136,7 @@ namespace RentVsOwn
         ///     Gets or sets the home maintenance percentage per year.
         /// </summary>
         /// <value>The home maintenance percentage per year.</value>
-        public decimal HomeMaintenancePercentagePerYear { get; set; } = .01m;
+        public decimal HomeMaintenancePercentagePerYear { get; set; } = .015m;
 
         /// <summary>
         ///     Gets or sets the sales commission percentage.
