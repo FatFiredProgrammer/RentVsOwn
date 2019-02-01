@@ -33,6 +33,7 @@ namespace RentVsOwn
                 proceeds -= simulation.OwnerLoanBalance;
                 simulation.OwnerLoanBalance = 0;
             }
+
             simulation.OwnerHomeValue = 0;
 
             output.WriteLine($"* Home sale proceeds of {proceeds:C0}");
@@ -57,6 +58,9 @@ namespace RentVsOwn
             output.WriteLine($"* Total initial investment of {_initialInvestment:C0}");
             output.WriteLine($"* Initial loan balance of {simulation.OwnerLoanBalance:C0}");
         }
+
+        /// <inheritdoc />
+        public string NpvData() => string.Empty;
 
         private void Process(Simulation simulation, IOutput output)
         {

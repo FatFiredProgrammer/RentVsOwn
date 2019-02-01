@@ -22,6 +22,7 @@ namespace RentVsOwn
         private decimal _averageSpent;
 
         private decimal _initialSecurityDeposit;
+
         private decimal _securityDeposit;
 
         private void Finalize(Simulation simulation, IOutput output)
@@ -62,6 +63,9 @@ namespace RentVsOwn
             output.WriteLine($"* Invested  {_invested:C0}");
         }
 
+        /// <inheritdoc />
+        public string NpvData() => string.Empty;
+
         private void Process(Simulation simulation, IOutput output)
         {
             var growth = (_invested * simulation.DiscountRate / 12).ToDollarCents();
@@ -101,7 +105,8 @@ namespace RentVsOwn
         public override string ToString()
         {
             var text = new StringBuilder();
-            text.AppendLine($"{Name} spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has net worth of {NetWorth:C0} on initial investment of {_basis:C0} + security deposit of {_initialSecurityDeposit:C0}");
+            text.AppendLine(
+                $"{Name} spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has net worth of {NetWorth:C0} on initial investment of {_basis:C0} + security deposit of {_initialSecurityDeposit:C0}");
             return text.ToString().TrimEnd();
         }
     }

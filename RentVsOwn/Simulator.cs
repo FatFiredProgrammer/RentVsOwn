@@ -225,6 +225,12 @@ namespace RentVsOwn
             {
                 output.WriteLine(Separator);
                 output.WriteLine(c.ToString().TrimEnd());
+                var npvData = c.NpvData();
+                if (!string.IsNullOrWhiteSpace(npvData))
+                {
+                    output.WriteLine(Separator);
+                    output.WriteLine(npvData.TrimEnd());
+                }
             });
         }
     }

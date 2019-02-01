@@ -6,6 +6,8 @@
 
         decimal NetWorth { get; }
 
+        string NpvData();
+
         void Simulate(Simulation simulation, IOutput output);
     }
 }
