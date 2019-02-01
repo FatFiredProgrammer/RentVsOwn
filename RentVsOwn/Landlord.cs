@@ -28,12 +28,6 @@ namespace RentVsOwn
             /// </summary>
             /// <value>The cash.</value>
             public decimal Cash { get; set; }
-
-            /// <summary>
-            ///     Gets or sets the personal loan taken this month.
-            /// </summary>
-            /// <value>The personal loan.</value>
-            public decimal PersonalLoan { get; set; }
         }
 
         /// <inheritdoc />
@@ -73,9 +67,11 @@ namespace RentVsOwn
         /// </summary>
         private decimal _currentYearTaxableIncome;
 
-        private decimal? _npv;
+        private double? _npv;
 
-        private List<decimal> _cashFlows = new List<decimal>();
+        private double? _irr;
+
+        private List<double> _cashFlows = new List<double>();
 
         private void CalculateExpenses(Monthly monthly, Simulation simulation, IOutput output)
         {
@@ -181,11 +177,13 @@ namespace RentVsOwn
             output.WriteLine($"* Total cash on hand of {_cash:C0}");
 
             // Add in this very last cash flow
-            _cashFlows[_cashFlows.Count - 1] += proceeds;
+            _cashFlows[_cashFlows.Count - 1] += (double)proceeds;
             output.WriteLine($"* Adjusted NPV cash flow of {_cashFlows[_cashFlows.Count - 1]:C0} accounting for sale proceeds of {proceeds:C0}");
 
-            _npv = Npv.Calculate(_initialInvestment, _cashFlows, simulation.DiscountRate / 12);
+            _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRate / 12);
             output.WriteLine($"* Net present value of {_npv:C0}");
+            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows) * 12;
+            output.WriteLine($"* Internal rate of return of {_irr:P2}");
         }
 
         private void Initialize(Simulation simulation, IOutput output)
@@ -200,8 +198,9 @@ namespace RentVsOwn
             _totalUsedDepreciation = 0;
             _personalLoan = 0;
             _currentYearTaxableIncome = 0;
-            _cashFlows = new List<decimal>();
+            _cashFlows = new List<double>();
             _npv = null;
+            _irr= null;
 
             _basis = simulation.LandlordHomeValue;
             output.WriteLine($"* Down payment of {simulation.LandlordDownPayment:C0}");
@@ -344,7 +343,7 @@ namespace RentVsOwn
             }
 
             var cashFlow = monthly.NetIncome;
-            _cashFlows.Add(cashFlow);
+            _cashFlows.Add((double)cashFlow);
             output.WriteLine($"* NPV cash flow of {cashFlow:C0}");
         }
 
@@ -412,6 +411,8 @@ namespace RentVsOwn
                 $"{Name} received total rent of {_totalRent:C0} (average of {_averageRent:C0} / month), total expenses of {_totalExpenses:C0} (average of {_averageExpenses:C0} / month), and has net worth of {NetWorth:C0} on initial investment of {_initialInvestment:C0}");
             if (_npv.HasValue)
                 text.AppendLine($"Net present value of {_npv:C0}");
+            if (_irr.HasValue)
+                text.AppendLine($"Internal rate of return of {_irr:P2}");
 
             return text.ToString().TrimEnd();
         }

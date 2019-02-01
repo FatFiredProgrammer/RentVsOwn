@@ -6,15 +6,15 @@ namespace RentVsOwn
     public static class Npv
     {
         /// <summary>
-        ///     Calculates the NPV for a series of cashflows
+        ///     Calculates the NPV for a series of cash flows
         /// </summary>
         /// <param name="initialInvestment"></param>
         /// <param name="cashFlows"></param>
         /// <param name="rate"></param>
         /// <returns></returns>
-        public static decimal Calculate(decimal initialInvestment, IList<decimal> cashFlows, decimal rate)
+        public static double Calculate(double initialInvestment, IList<double> cashFlows, double rate)
         {
-            decimal npv = 0;
+            double npv = 0;
             for (var i = 0; i < cashFlows.Count; i++)
             {
                 npv += CalculatePresentValue(cashFlows[i], rate, i + 1);
@@ -27,9 +27,9 @@ namespace RentVsOwn
         /// <summary>
         ///     Calculate the Present value of a cashFlow
         /// </summary>
-        private static decimal CalculatePresentValue(decimal cashFlow, decimal rate, double exponent)
+        private static double CalculatePresentValue(double cashFlow, double rate, double exponent)
         {
-            var pv = cashFlow / (decimal)Math.Pow((double)(1 + rate), exponent);
+            var pv = cashFlow / Math.Pow(1 + rate, exponent);
             return pv;
         }
     }
