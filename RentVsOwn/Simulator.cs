@@ -195,31 +195,39 @@ namespace RentVsOwn
         /// <param name="output">The output.</param>
         public void Run(IOutput output)
         {
+            // Make sure we have someplace to white the output
             output = output ?? new DebugOutput();
 
+            // Create the simulation data and dump it to output.
             var simulation = new Simulation(this);
             output.WriteLine(Separator);
             output.WriteLine(simulation.ToString().TrimEnd());
 
+            // Create the various entries we are simulating
             var people = new List<IPerson>
             {
                 new Owner(),
                 new Renter(),
                 new Landlord(),
             };
+
             do
             {
+                // Simulate this month for each entry
                 people.ForEach(c =>
                 {
                     output.WriteLine(Separator);
                     c.Simulate(simulation, output);
                 });
-            }
-            while (simulation.Next(output));
 
+            }
+            while (simulation.Next(output)); // Move to next month.
+
+            // Write the final results.
             output.WriteLine(Separator);
             output.WriteLine(simulation.ToString().TrimEnd());
 
+            // Write the results for each entity plus any NPV data
             // ReSharper disable once ImplicitlyCapturedClosure
             people.ForEach(c =>
             {
