@@ -39,6 +39,7 @@ namespace RentVsOwn
                     // InsurancePerMonth = 100,
                     // HomeMaintenancePercentagePerYear = .01m,
                 };
+                simulator.HomeAppreciationPercentagePerYear = simulator.InflationRate;
 
                 simulator.Run(output);
             }
