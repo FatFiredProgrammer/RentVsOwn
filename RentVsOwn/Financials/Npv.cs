@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RentVsOwn.Financial
+namespace RentVsOwn.Financials
 {
     public static class Npv
     {
@@ -20,7 +20,6 @@ namespace RentVsOwn.Financial
                 npv += CalculatePresentValue(cashFlows[i], rate, i + 1);
             }
 
-            // Subtract initial investment. Example 2: http://office.microsoft.com/en-au/excel-help/npv-HP005209199.aspx
             return npv - initialInvestment;
         }
 

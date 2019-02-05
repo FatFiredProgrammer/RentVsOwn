@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using RentVsOwn.Financial;
+using RentVsOwn.Financials;
 using RentVsOwn.Output;
 
 namespace RentVsOwn

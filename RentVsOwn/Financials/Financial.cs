@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace RentVsOwn.Financial
+namespace RentVsOwn.Financials
 {
-    public sealed class Financials
+    public sealed class Financial
     {
         public double? Npv { get; private set; }
         public double? Irr { get; private set; }
@@ -34,8 +34,8 @@ namespace RentVsOwn.Financial
         {
             if (_cashFlows.Count >= 1)
             {
-                Npv = Financial.Npv.Calculate(InitialInvestment, _cashFlows, (double)DiscountRate / 12);
-                Irr = Financial.Irr.Calculate(InitialInvestment, _cashFlows, (double)DiscountRate / 12) * 12;
+                Npv = Financials.Npv.Calculate(InitialInvestment, _cashFlows, (double)DiscountRate / 12);
+                Irr = Financials.Irr.Calculate(InitialInvestment, _cashFlows, (double)DiscountRate / 12) * 12;
             }
             else
             {

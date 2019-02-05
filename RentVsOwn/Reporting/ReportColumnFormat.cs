@@ -1,5 +1,13 @@
-﻿using System;
-
-namespace RentVsOwn
+﻿namespace RentVsOwn.Reporting
 {
+    public enum ReportColumnFormat
+    {
+        Number,
+
+        Currency,
+
+        Percentage,
+
+        Text,
+    }
 }

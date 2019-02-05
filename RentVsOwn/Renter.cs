@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using RentVsOwn.Financial;
+using RentVsOwn.Financials;
 using RentVsOwn.Output;
 
 namespace RentVsOwn
@@ -25,7 +25,8 @@ namespace RentVsOwn
 
         private decimal _securityDeposit;
 
-        private Financials _financials = new Financials();
+        private Financial _financial = new Financial();
+
         private void Finalize(Simulation simulation, IOutput output)
         {
             var capitalGains = (_invested - _basis).ToDollars();
@@ -45,8 +46,11 @@ namespace RentVsOwn
             _securityDeposit = 0;
             output.WriteLine($"* Cash on hand of {_cash:C0}");
             output.WriteLine($"* Total spent {_totalSpent:C0}");
-            _financials.Calculate();
+            _financial.Calculate();
         }
+
+        /// <inheritdoc />
+        public string GenerateReport() => string.Empty;
 
         private void Initialize(Simulation simulation, IOutput output)
         {
@@ -63,15 +67,12 @@ namespace RentVsOwn
             _basis = Math.Max(0, initialCash - _securityDeposit);
             _invested = _basis;
             output.WriteLine($"* Invested  {_invested:C0}");
-            _financials = new Financials
+            _financial = new Financial
             {
                 InitialInvestment = (double)initialCash,
                 DiscountRate = (double)simulation.DiscountRate,
             };
         }
-
-        /// <inheritdoc />
-        public string GenerateReport() => string.Empty;
 
         private void Process(Simulation simulation, IOutput output)
         {
@@ -114,7 +115,7 @@ namespace RentVsOwn
             var text = new StringBuilder();
             text.AppendLine(
                 $"{Name} spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has net worth of {NetWorth:C0} on initial investment of {_basis:C0} + security deposit of {_initialSecurityDeposit:C0}");
-            text.Append(_financials);
+            text.Append(_financial);
             return text.ToString().TrimEnd();
         }
     }

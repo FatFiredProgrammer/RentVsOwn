@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text;
 using RentVsOwn.Output;
+using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
@@ -66,20 +66,32 @@ namespace RentVsOwn
             RentSecurityDepositMonths = Math.Max(0, simulator.RentSecurityDepositMonths);
         }
 
+        [ReportColumn("Name of Simulation", Format = ReportColumnFormat.Text)]
         public string Name { get; }
 
+        [ReportColumn("Simulation Years", Format = ReportColumnFormat.Number, Precision = 1)]
         public decimal Years { get; }
 
+        [ReportColumn("Simulation Months", Format = ReportColumnFormat.Number, Precision = 0)]
         public int Months => Math.Max(1, (int)Math.Round(Years * 12, 0));
 
+        /// <summary>
+        /// Gets the current month.
+        /// </summary>
+        /// <value>The month.</value>
+        [ReportColumn(Ignore = true)]
         public int Month { get; private set; } = 1;
 
+        [ReportColumn(Ignore = true)]
         public bool IsInitial => Month == 1;
 
+        [ReportColumn(Ignore = true)]
         public bool IsFinal => Month == Months;
 
+        [ReportColumn(Ignore = true)]
         public bool IsNewYear => Month != 1 && (Month - 1) % 12 == 0;
 
+        [ReportColumn("Home Purchase Amount", Format = ReportColumnFormat.Currency, Precision = 0)]
         public decimal HomePurchaseAmount { get; }
 
         public decimal OwnerHomeValue { get; set; }
@@ -200,58 +212,6 @@ namespace RentVsOwn
 
         /// <inheritdoc />
         public override string ToString()
-        {
-            var text = new StringBuilder();
-            text.AppendLine($"|{Name}||");
-            text.AppendLine("| --- | --: |");
-            text.AppendLine($"|{nameof(Years)}|{Years:N2}|");
-            text.AppendLine($"|{nameof(Months)}|{Months:N0}|");
-            text.AppendLine($"|{nameof(HomePurchaseAmount)}|{HomePurchaseAmount:C0}|");
-
-            text.AppendLine($"|{nameof(OwnerInterestRate)}|{OwnerInterestRate:P2}|");
-            text.AppendLine($"|{nameof(OwnerLoanYears)}|{OwnerLoanYears:N0}|");
-            text.AppendLine($"|{nameof(OwnerDownPaymentPercentage)}|{OwnerDownPaymentPercentage:P2}|");
-            text.AppendLine($"|{nameof(OwnerDownPayment)}|{OwnerDownPayment:C0}|");
-            text.AppendLine($"|{nameof(OwnerLoanAmount)}|{OwnerLoanAmount:C0}|");
-            text.AppendLine($"|{nameof(OwnerHomeValue)}|{OwnerHomeValue:C0}|");
-            text.AppendLine($"|{nameof(OwnerLoanBalance)}|{OwnerLoanBalance:C0}|");
-            text.AppendLine($"|{nameof(OwnerMonthlyPayment)}|{OwnerMonthlyPayment:C0}|");
-
-            text.AppendLine($"|{nameof(RentChangePerYearPercentage)}|{RentChangePerYearPercentage:P2}|");
-            text.AppendLine($"|{nameof(Rent)}|{Rent:C0}|");
-            text.AppendLine($"|{nameof(RentSecurityDepositMonths)}|{RentSecurityDepositMonths:N0}|");
-            text.AppendLine($"|{nameof(RentersInsurancePerMonth)}|{RentersInsurancePerMonth:C0}|");
-
-            text.AppendLine($"|{nameof(LandlordInterestRate)}|{LandlordInterestRate:P2}|");
-            text.AppendLine($"|{nameof(LandlordLoanYears)}|{LandlordLoanYears:N0}|");
-            text.AppendLine($"|{nameof(LandlordDownPaymentPercentage)}|{LandlordDownPaymentPercentage:P2}|");
-            text.AppendLine($"|{nameof(LandlordDownPayment)}|{LandlordDownPayment:C0}|");
-            text.AppendLine($"|{nameof(LandlordLoanAmount)}|{LandlordLoanAmount:C0}|");
-            text.AppendLine($"|{nameof(LandlordHomeValue)}|{LandlordHomeValue:C0}|");
-            text.AppendLine($"|{nameof(LandlordLoanBalance)}|{LandlordLoanBalance:C0}|");
-            text.AppendLine($"|{nameof(LandlordMonthlyPayment)}|{LandlordMonthlyPayment:C0}|");
-            text.AppendLine($"|{nameof(LandlordManagementFeePercentage)}|{LandlordManagementFeePercentage:P2}|");
-            text.AppendLine($"|{nameof(DepreciationYears)}|{DepreciationYears:N2}|");
-            text.AppendLine($"|{nameof(DepreciablePercentage)}|{DepreciablePercentage:P2}|");
-
-            text.AppendLine($"|{nameof(ClosingFixedCosts)}|{ClosingFixedCosts:C0}|");
-            text.AppendLine($"|{nameof(ClosingVariableCostsPercentage)}|{ClosingVariableCostsPercentage:P2}|");
-
-            text.AppendLine($"|{nameof(PropertyTaxPercentage)}|{PropertyTaxPercentage:P2}|");
-            text.AppendLine($"|{nameof(InsurancePerMonth)}|{InsurancePerMonth:C0}|");
-            text.AppendLine($"|{nameof(HoaPerMonth)}|{HoaPerMonth:C0}|");
-            text.AppendLine($"|{nameof(HomeAppreciationPercentagePerYear)}|{HomeAppreciationPercentagePerYear:P2}|");
-            text.AppendLine($"|{nameof(HomeMaintenancePercentagePerYear)}|{HomeMaintenancePercentagePerYear:P2}|");
-
-            text.AppendLine($"|{nameof(SalesCommissionPercentage)}|{SalesCommissionPercentage:P2}|");
-            text.AppendLine($"|{nameof(SalesFixedCosts)}|{SalesFixedCosts:C0}|");
-
-            text.AppendLine($"|{nameof(DiscountRate)}|{DiscountRate:P2}|");
-            text.AppendLine($"|{nameof(CapitalGainsRate)}|{CapitalGainsRate:P2}|");
-            text.AppendLine($"|{nameof(MarginalTaxRate)}|{MarginalTaxRate:P2}|");
-            text.AppendLine($"|{nameof(InflationRate)}|{InflationRate:P2}|");
-
-            return text.ToString().TrimEnd();
-        }
+            => new Report<Simulation>(this).ToString().TrimEnd();
     }
 }

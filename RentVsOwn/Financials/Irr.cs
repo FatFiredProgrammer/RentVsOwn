@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RentVsOwn.Financial
+namespace RentVsOwn.Financials
 {
     /// <summary>
     ///     Internal rate of return calculator based on newton/raphson

@@ -1,11 +1,11 @@
-﻿using System;
-
-namespace RentVsOwn
+﻿namespace RentVsOwn.Reporting
 {
     public enum ReportFormat
     {
-        Markdown,
-        Csv,
         Parameters,
+
+        Markdown,
+
+        Csv,
     }
 }
