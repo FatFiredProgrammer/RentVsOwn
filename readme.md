@@ -3,12 +3,15 @@
 An application that simulates owning, renting and being a landlord of a property.
 
 https://fbe.unimelb.edu.au/__data/assets/pdf_file/0011/1497953/2011MayLiER_NPV_submission.pdf
+Check all .Value
 
 Monthly NPV discount rate (1+Rate)^(1/12)-1
 Monthly IRR to annual: (1+IRR)^12 - 1
+lose security deposit
 
 compounded future value: =-C9*(1+0.08/12)^A113
 Vacancy rate 5%
+Renter move years!
 1031 exchange
 Personal loan interest
 

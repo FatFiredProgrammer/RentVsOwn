@@ -2,9 +2,9 @@
 {
     public enum ReportColumnAlignment
     {
-        Left,
-
         Right,
+
+        Left,
 
         Center,
     }

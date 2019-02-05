@@ -61,7 +61,7 @@ namespace RentVsOwn
             _cash = 0;
             _totalSpent = 0;
             _averageSpent = 0;
-            _initialSecurityDeposit = (simulation.RentSecurityDepositMonths * simulation.Rent).ToDollars();
+            _initialSecurityDeposit = (simulation.RentSecurityDepositMonths * simulation.CurrentRent).ToDollars();
             _securityDeposit = _initialSecurityDeposit;
             output.WriteLine($"* Security deposit of {_securityDeposit:C0}");
             _basis = Math.Max(0, initialCash - _securityDeposit);
@@ -70,18 +70,18 @@ namespace RentVsOwn
             _financial = new Financial
             {
                 InitialInvestment = (double)initialCash,
-                DiscountRate = (double)simulation.DiscountRate,
+                DiscountRate = (double)simulation.AnnualDiscountRate,
             };
         }
 
         private void Process(Simulation simulation, IOutput output)
         {
-            var growth = (_invested * simulation.DiscountRate / 12).ToDollarCents();
+            var growth = (_invested * simulation.AnnualDiscountRate / 12).ToDollarCents();
             _invested += growth;
-            output.WriteLine($"* Investment of {_invested:C0} grew by {growth:C0} ({simulation.DiscountRate / 12:P2})");
+            output.WriteLine($"* Investment of {_invested:C0} grew by {growth:C0} ({simulation.AnnualDiscountRate / 12:P2})");
 
-            _totalSpent += simulation.Rent;
-            output.WriteLine($"* Spent {simulation.Rent:C0} on rent");
+            _totalSpent += simulation.CurrentRent;
+            output.WriteLine($"* Spent {simulation.CurrentRent:C0} on rent");
 
             if (simulation.RentersInsurancePerMonth > 0)
             {

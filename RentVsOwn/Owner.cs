@@ -70,9 +70,9 @@ namespace RentVsOwn
             output.WriteLine($"* Adjusted NPV cash flow of {_cashFlows[_cashFlows.Count - 1]:C0} accounting for sale proceeds of {proceeds:C0}");
             monthly.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1];
 
-            _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRate / 12);
+            _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.AnnualDiscountRate / 12);
             output.WriteLine($"* Net present value of {_npv:C0}");
-            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRate / 12) * 12;
+            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.AnnualDiscountRate / 12) * 12;
             output.WriteLine($"* Internal rate of return of {_irr:P2}");
             Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1);
         }

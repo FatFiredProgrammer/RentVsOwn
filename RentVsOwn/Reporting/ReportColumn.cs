@@ -16,7 +16,23 @@ namespace RentVsOwn.Reporting
             if (propertyInfo.GetCustomAttributes(typeof(ReportColumnAttribute), false).FirstOrDefault() is ReportColumnAttribute attribute)
             {
                 if (!string.IsNullOrWhiteSpace(attribute.Description))
-                    Description = attribute.Description;
+                {
+                    Description = string.Empty;
+                    var nextUpperIsWordSeparator = false;
+                    foreach (var letter in attribute.Description)
+                    {
+                        if (char.IsUpper(letter) && nextUpperIsWordSeparator)
+                        {
+                            Description += " ";
+                            nextUpperIsWordSeparator = false;
+                        }
+                        else
+                            nextUpperIsWordSeparator = true;
+
+                        Description += letter;
+                    }
+                }
+
                 Alignment = attribute.Alignment;
                 Format = attribute.Format;
                 Precision = attribute.Precision;

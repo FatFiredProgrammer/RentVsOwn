@@ -10,14 +10,16 @@ namespace RentVsOwn.Financials
         /// </summary>
         /// <param name="initialInvestment"></param>
         /// <param name="cashFlows"></param>
-        /// <param name="rate"></param>
+        /// <param name="annualDiscountRate"></param>
         /// <returns></returns>
-        public static double Calculate(double initialInvestment, IList<double> cashFlows, double rate)
+        public static double Calculate(double initialInvestment, IList<double> cashFlows, double annualDiscountRate)
         {
-            double npv = 0;
+            var monthlyDiscountRate = Math.Pow(1 + annualDiscountRate, 1d / 12d) - 1;
+
+            var npv = 0d;
             for (var i = 0; i < cashFlows.Count; i++)
             {
-                npv += CalculatePresentValue(cashFlows[i], rate, i + 1);
+                npv += CalculatePresentValue(cashFlows[i], monthlyDiscountRate, i + 1);
             }
 
             return npv - initialInvestment;
@@ -26,9 +28,9 @@ namespace RentVsOwn.Financials
         /// <summary>
         ///     Calculate the Present value of a cashFlow
         /// </summary>
-        private static double CalculatePresentValue(double cashFlow, double rate, double exponent)
+        private static double CalculatePresentValue(double cashFlow, double monthlyDiscountRate, double exponent)
         {
-            var pv = cashFlow / Math.Pow(1 + rate, exponent);
+            var pv = cashFlow / Math.Pow(1 + monthlyDiscountRate, exponent);
             return pv;
         }
     }

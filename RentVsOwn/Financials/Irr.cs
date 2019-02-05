@@ -18,24 +18,26 @@ namespace RentVsOwn.Financials
 
         private int _iterationCount;
 
-        private double _initialGuess;
+        private double _initialAprGuess;
 
-        private readonly List<double> _cashFlows = new List<double>();
+        private readonly List<double> _monthlyCashFlows = new List<double>();
 
-        public static double Calculate(double initialInvestment, IList<double> cashFlows, double initialGuess)
+        public static double Calculate(double initialInvestment, IList<double> monthlyCashFlows, double initialAprGuess)
         {
             if (initialInvestment <= 0)
                 throw new ArgumentException("initialInvestment <= 0", nameof(initialInvestment));
-            if (cashFlows == null || cashFlows.Count < 1)
-                throw new ArgumentException("cashFlows.Count < 1", nameof(cashFlows));
+            if (monthlyCashFlows == null || monthlyCashFlows.Count < 1)
+                throw new ArgumentException("monthlyCashFlows.Count < 1", nameof(monthlyCashFlows));
 
             var irr = new Irr
             {
-                _initialGuess = initialGuess
+                _initialAprGuess = initialAprGuess
             };
-            irr._cashFlows.Add(-initialInvestment);
-            irr._cashFlows.AddRange(cashFlows);
-            return irr.Calculate();
+            irr._monthlyCashFlows.Add(-initialInvestment);
+            irr._monthlyCashFlows.AddRange(monthlyCashFlows);
+            var monthlyRate = irr.Calculate();
+            var apr = Math.Pow(1d + monthlyRate, 12) - 1;
+            return apr;
         }
 
         private double Calculate(double estimatedReturn)
@@ -52,7 +54,7 @@ namespace RentVsOwn.Financials
 
         private double Calculate()
         {
-            var result = Calculate(_initialGuess);
+            var result = Calculate(_initialAprGuess);
             if (result > 1)
                 throw new Exception("IRR calculation failed to converge.");
 
@@ -69,9 +71,9 @@ namespace RentVsOwn.Financials
             var sumOfDerivative = 0d;
             if (IsValidIterationBounds(estimatedReturnRate))
             {
-                for (var i = 1; i < _cashFlows.Count; i++)
+                for (var i = 1; i < _monthlyCashFlows.Count; i++)
                 {
-                    sumOfDerivative += _cashFlows[i] * i / Math.Pow(1 + estimatedReturnRate, i);
+                    sumOfDerivative += _monthlyCashFlows[i] * i / Math.Pow(1 + estimatedReturnRate, i);
                 }
             }
 
@@ -95,9 +97,9 @@ namespace RentVsOwn.Financials
             var sumOfPolynomial = 0d;
             if (IsValidIterationBounds(estimatedReturnRate))
             {
-                for (var j = 0; j < _cashFlows.Count; j++)
+                for (var j = 0; j < _monthlyCashFlows.Count; j++)
                 {
-                    sumOfPolynomial += _cashFlows[j] / Math.Pow(1 + estimatedReturnRate, j);
+                    sumOfPolynomial += _monthlyCashFlows[j] / Math.Pow(1 + estimatedReturnRate, j);
                 }
             }
 

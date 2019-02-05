@@ -84,7 +84,7 @@ namespace RentVsOwn
         {
             if (simulation.LandlordManagementFeePercentage > 0)
             {
-                var managementFee = simulation.Rent * simulation.LandlordManagementFeePercentage;
+                var managementFee = simulation.CurrentRent * simulation.LandlordManagementFeePercentage;
                 monthly.Expenses += managementFee;
                 monthly.Cash -= managementFee;
                 output.WriteLine($"* Management fee of {managementFee:C0}");
@@ -123,7 +123,7 @@ namespace RentVsOwn
             // If we have a personal loan, pay interest on it.
             if (_personalLoan > 0)
             {
-                var personalLoanInterest = (_personalLoan * simulation.DiscountRate / 12).ToDollars();
+                var personalLoanInterest = (_personalLoan * simulation.AnnualDiscountRate / 12).ToDollars();
                 monthly.Expenses += personalLoanInterest;
                 monthly.Cash -= personalLoanInterest;
                 output.WriteLine($"* Spent {personalLoanInterest:C0} on interest on personal loan");
@@ -206,11 +206,26 @@ namespace RentVsOwn
             output.WriteLine($"* Adjusted NPV cash flow of {_cashFlows[_cashFlows.Count - 1]:C0} accounting for sale proceeds of {proceeds:C0}");
             monthly.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1];
 
-            _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRate / 12);
+            _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.AnnualDiscountRate / 12);
             output.WriteLine($"* Net present value of {_npv:C0}");
-            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRate / 12) * 12;
+            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.AnnualDiscountRate / 12) * 12;
             output.WriteLine($"* Internal rate of return of {_irr:P2}");
             Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1);
+        }
+
+        public string GenerateReport()
+        {
+            var text = new StringBuilder();
+            text.AppendLine("Month|Cash Flow|Rent|Expenses|Principal|Interest|Net Income|Personal Loan|");
+            text.AppendLine("| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |");
+            text.AppendLine($"|0|{-_initialInvestment:C0}|||||");
+            var which = 1;
+            foreach (var month in _months)
+            {
+                text.AppendLine($"|{which++:N0}|{month.NpvCashFlow:C0}|{month.Rent:C0}|{month.Expenses:C0}|{month.Principal:C0}|{month.Interest:C0}|{month.NetIncome:C0}|{month.PersonalLoan:C0}|");
+            }
+
+            return text.ToString().TrimEnd();
         }
 
         private void Initialize(Simulation simulation, IOutput output)
@@ -250,11 +265,11 @@ namespace RentVsOwn
             // Set up our monthly ledger
             var monthly = new Monthly
             {
-                Rent = simulation.Rent,
+                Rent = simulation.CurrentRent,
                 Interest = 0,
                 Principal = 0,
                 Expenses = 0,
-                Cash = simulation.Rent,
+                Cash = simulation.CurrentRent,
                 PersonalLoan = 0,
             };
 
@@ -265,7 +280,7 @@ namespace RentVsOwn
             if (simulation.LandlordLoanBalance > 0)
             {
                 var loanPayment = simulation.LandlordMonthlyPayment;
-                monthly.Interest = (simulation.LandlordLoanBalance * simulation.LandlordInterestRate / 12).ToDollars();
+                monthly.Interest = (simulation.LandlordLoanBalance * (simulation.LandlordInterestRate ?? 0m) / 12).ToDollars();
                 monthly.Principal = Math.Min(loanPayment - monthly.Interest, simulation.LandlordLoanBalance).ToDollars();
 
                 output.WriteLine($"* Loan payment of {loanPayment:C0} ({monthly.Principal:C0} principal / {monthly.Interest:C0} interest)");
@@ -279,21 +294,6 @@ namespace RentVsOwn
             }
 
             return monthly;
-        }
-
-        public string GenerateReport()
-        {
-            var text = new StringBuilder();
-            text.AppendLine("Month|Cash Flow|Rent|Expenses|Principal|Interest|Net Income|Personal Loan|");
-            text.AppendLine("| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |");
-            text.AppendLine($"|0|{-_initialInvestment:C0}|||||");
-            var which = 1;
-            foreach (var month in _months)
-            {
-                text.AppendLine($"|{which++:N0}|{month.NpvCashFlow:C0}|{month.Rent:C0}|{month.Expenses:C0}|{month.Principal:C0}|{month.Interest:C0}|{month.NetIncome:C0}|{month.PersonalLoan:C0}|");
-            }
-
-            return text.ToString().TrimEnd();
         }
 
         private static void PayDownLoan(Monthly monthly, Simulation simulation, IOutput output)
