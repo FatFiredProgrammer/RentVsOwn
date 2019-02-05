@@ -25,7 +25,7 @@ namespace RentVsOwn
                 return values[0];
 
             if (values.Count % 2 == 1)
-                return ((values[values.Count / 2] + values[values.Count / 2 + 1]) / 2);
+                return (values[values.Count / 2] + values[values.Count / 2 + 1]) / 2;
 
             return values[values.Count / 2];
         }

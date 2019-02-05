@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using JetBrains.Annotations;
+using RentVsOwn.Output;
 
 namespace RentVsOwn
 {
@@ -204,7 +205,7 @@ namespace RentVsOwn
             output.WriteLine(simulation.ToString().TrimEnd());
 
             // Create the various entries we are simulating
-            var people = new List<IPerson>
+            var people = new List<IEntity>
             {
                 new Owner(),
                 new Renter(),
@@ -224,8 +225,8 @@ namespace RentVsOwn
             while (simulation.Next(output)); // Move to next month.
 
             // Write the final results.
-            output.WriteLine(Separator);
-            output.WriteLine(simulation.ToString().TrimEnd());
+            output.VerboseLine(Separator);
+            output.VerboseLine(simulation.ToString().TrimEnd());
 
             // Write the results for each entity plus any NPV data
             // ReSharper disable once ImplicitlyCapturedClosure
@@ -233,11 +234,11 @@ namespace RentVsOwn
             {
                 output.WriteLine(Separator);
                 output.WriteLine(c.ToString().TrimEnd());
-                var npvData = c.NpvData();
-                if (!string.IsNullOrWhiteSpace(npvData))
+                var report = c.GenerateReport();
+                if (!string.IsNullOrWhiteSpace(report))
                 {
-                    output.WriteLine(Separator);
-                    output.WriteLine(npvData.TrimEnd());
+                    output.VerboseLine(Separator);
+                    output.VerboseLine(report.TrimEnd());
                 }
             });
         }

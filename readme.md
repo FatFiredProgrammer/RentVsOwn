@@ -12,6 +12,8 @@ Vacancy rate 5%
 1031 exchange
 Personal loan interest
 
+=D9/(1+$L$2/12)^A9
+
 Moving costs every 3 years.
 PV of NET CF =M11/(1+Home!$H$2/12)^Own!A11
 

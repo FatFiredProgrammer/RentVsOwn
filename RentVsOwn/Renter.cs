@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Text;
+using RentVsOwn.Financial;
+using RentVsOwn.Output;
 
 namespace RentVsOwn
 {
-    public sealed class Renter : IPerson
+    public sealed class Renter : IEntity
     {
-        /// <inheritdoc />
-        public string Name => nameof(Renter);
+        private string Name => nameof(Renter);
 
-        /// <inheritdoc />
-        public decimal NetWorth => _invested + _cash + _securityDeposit;
+        private decimal NetWorth => _invested + _cash + _securityDeposit;
 
         private decimal _basis;
 
@@ -25,6 +25,7 @@ namespace RentVsOwn
 
         private decimal _securityDeposit;
 
+        private Financials _financials = new Financials();
         private void Finalize(Simulation simulation, IOutput output)
         {
             var capitalGains = (_invested - _basis).ToDollars();
@@ -44,6 +45,7 @@ namespace RentVsOwn
             _securityDeposit = 0;
             output.WriteLine($"* Cash on hand of {_cash:C0}");
             output.WriteLine($"* Total spent {_totalSpent:C0}");
+            _financials.Calculate();
         }
 
         private void Initialize(Simulation simulation, IOutput output)
@@ -61,10 +63,15 @@ namespace RentVsOwn
             _basis = Math.Max(0, initialCash - _securityDeposit);
             _invested = _basis;
             output.WriteLine($"* Invested  {_invested:C0}");
+            _financials = new Financials
+            {
+                InitialInvestment = (double)initialCash,
+                DiscountRate = (double)simulation.DiscountRate,
+            };
         }
 
         /// <inheritdoc />
-        public string NpvData() => string.Empty;
+        public string GenerateReport() => string.Empty;
 
         private void Process(Simulation simulation, IOutput output)
         {
@@ -107,6 +114,7 @@ namespace RentVsOwn
             var text = new StringBuilder();
             text.AppendLine(
                 $"{Name} spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has net worth of {NetWorth:C0} on initial investment of {_basis:C0} + security deposit of {_initialSecurityDeposit:C0}");
+            text.Append(_financials);
             return text.ToString().TrimEnd();
         }
     }

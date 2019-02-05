@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using RentVsOwn.Output;
 
 namespace RentVsOwn
 {
@@ -77,7 +78,7 @@ namespace RentVsOwn
 
         public bool IsFinal => Month == Months;
 
-        public bool IsNewYear => Month != 1 && ((Month - 1) % 12) == 0;
+        public bool IsNewYear => Month != 1 && (Month - 1) % 12 == 0;
 
         public decimal HomePurchaseAmount { get; }
 

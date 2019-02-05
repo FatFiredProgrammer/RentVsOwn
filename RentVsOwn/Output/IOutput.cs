@@ -1,4 +1,4 @@
-﻿namespace RentVsOwn
+﻿namespace RentVsOwn.Output
 {
     /// <summary>
     ///     Interface defining our output method.

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using RentVsOwn.Financial;
+using RentVsOwn.Output;
 
 namespace RentVsOwn
 {
-    public sealed class Owner : IPerson
+    public sealed class Owner : IEntity
     {
         private sealed class Monthly
         {
@@ -22,11 +24,9 @@ namespace RentVsOwn
             public decimal HomeValue { get; set; }
         }
 
-        /// <inheritdoc />
-        public string Name => nameof(Owner);
+        private string Name => nameof(Owner);
 
-        /// <inheritdoc />
-        public decimal NetWorth { get; private set; }
+        private decimal _netWorth;
 
         private decimal _initialInvestment;
 
@@ -100,10 +100,10 @@ namespace RentVsOwn
         }
 
         /// <inheritdoc />
-        public string NpvData()
+        public string GenerateReport()
         {
             var text = new StringBuilder();
-            text.AppendLine($"Month,Cash Flow,Total,Expenses,Principal,Interest,Home Value");
+            text.AppendLine("Month,Cash Flow,Total,Expenses,Principal,Interest,Home Value");
             text.AppendLine($"0,\"{-_initialInvestment:C0}\"");
             var which = 1;
             foreach (var month in _months)
@@ -192,7 +192,7 @@ namespace RentVsOwn
             if (simulation.IsFinal)
                 Finalize(monthly, simulation, output);
 
-            NetWorth = _cash + simulation.OwnerHomeValue - simulation.OwnerLoanBalance;
+            _netWorth = _cash + simulation.OwnerHomeValue - simulation.OwnerLoanBalance;
             _averageSpent = (_totalSpent / simulation.Months).ToDollars();
         }
 
@@ -200,7 +200,7 @@ namespace RentVsOwn
         public override string ToString()
         {
             var text = new StringBuilder();
-            text.AppendLine($"{Name} spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has net worth of {NetWorth:C0} on initial investment of {_initialInvestment:C0}");
+            text.AppendLine($"{Name} spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has net worth of {_netWorth:C0} on initial investment of {_initialInvestment:C0}");
             if (_npv.HasValue)
                 text.AppendLine($"Net present value of {_npv:C0}");
             if (_irr.HasValue)

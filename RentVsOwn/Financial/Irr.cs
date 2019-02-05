@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RentVsOwn
+namespace RentVsOwn.Financial
 {
     /// <summary>
     ///     Internal rate of return calculator based on newton/raphson
@@ -17,6 +17,7 @@ namespace RentVsOwn
         public static double Tolerance { get; set; } = 0.00000001;
 
         private int _iterationCount;
+
         private double _initialGuess;
 
         private readonly List<double> _cashFlows = new List<double>();
@@ -70,7 +71,7 @@ namespace RentVsOwn
             {
                 for (var i = 1; i < _cashFlows.Count; i++)
                 {
-                    sumOfDerivative += _cashFlows[i] * (i) / Math.Pow((1 + estimatedReturnRate), i);
+                    sumOfDerivative += _cashFlows[i] * i / Math.Pow(1 + estimatedReturnRate, i);
                 }
             }
 
@@ -96,7 +97,7 @@ namespace RentVsOwn
             {
                 for (var j = 0; j < _cashFlows.Count; j++)
                 {
-                    sumOfPolynomial += _cashFlows[j] / (Math.Pow((1 + estimatedReturnRate), j));
+                    sumOfPolynomial += _cashFlows[j] / Math.Pow(1 + estimatedReturnRate, j);
                 }
             }
 

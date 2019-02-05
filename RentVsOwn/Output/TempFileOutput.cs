@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using JetBrains.Annotations;
 
-namespace RentVsOwn
+namespace RentVsOwn.Output
 {
     /// <summary>
     ///     Output to console/debug.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using RentVsOwn.Output;
 
 namespace RentVsOwn
 {

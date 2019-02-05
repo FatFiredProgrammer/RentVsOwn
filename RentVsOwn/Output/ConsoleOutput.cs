@@ -2,14 +2,14 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 
-namespace RentVsOwn
+namespace RentVsOwn.Output
 {
     /// <summary>
-    ///     Output to verbose console/debug.
+    ///     Output to console/debug.
     ///     Our standard output method.
     /// </summary>
     [PublicAPI]
-    public sealed class VerboseOutput : IOutput
+    public sealed class ConsoleOutput : IOutput
     {
         /// <inheritdoc />
         public void Flush()
@@ -19,8 +19,6 @@ namespace RentVsOwn
         /// <inheritdoc />
         public void VerboseLine(string text)
         {
-            Console.WriteLine(text ?? string.Empty);
-            Debug.WriteLine(text ?? string.Empty);
         }
 
         /// <inheritdoc />

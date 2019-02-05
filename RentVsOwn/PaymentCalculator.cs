@@ -39,11 +39,11 @@ namespace RentVsOwn
                 if (InterestRate > 0)
                 {
                     var rate = (double)InterestRate / 12;
-                    var factor = (decimal)(rate + (rate / (Math.Pow(rate + 1, Years * 12) - 1)));
-                    payment = (LoanAmount * factor);
+                    var factor = (decimal)(rate + rate / (Math.Pow(rate + 1, Years * 12) - 1));
+                    payment = LoanAmount * factor;
                 }
                 else
-                    payment = (LoanAmount / Years * 12);
+                    payment = LoanAmount / Years * 12;
 
                 return payment.ToDollarCents();
             }

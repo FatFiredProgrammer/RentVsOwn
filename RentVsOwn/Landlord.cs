@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using RentVsOwn.Financial;
+using RentVsOwn.Output;
 
 namespace RentVsOwn
 {
-    public sealed class Landlord : IPerson
+    public sealed class Landlord : IEntity
     {
         /// <summary>
         ///     A class to help with monthly calculations.
@@ -35,11 +37,9 @@ namespace RentVsOwn
             public decimal NpvCashFlow { get; set; }
         }
 
-        /// <inheritdoc />
-        public string Name => nameof(Landlord);
+        private string Name => nameof(Landlord);
 
-        /// <inheritdoc />
-        public decimal NetWorth { get; private set; }
+        private decimal _netWorth;
 
         private decimal _initialInvestment;
 
@@ -281,11 +281,10 @@ namespace RentVsOwn
             return monthly;
         }
 
-        /// <inheritdoc />
-        public string NpvData()
+        public string GenerateReport()
         {
             var text = new StringBuilder();
-            text.AppendLine($"Month|Cash Flow|Rent|Expenses|Principal|Interest|Net Income|Personal Loan|");
+            text.AppendLine("Month|Cash Flow|Rent|Expenses|Principal|Interest|Net Income|Personal Loan|");
             text.AppendLine("| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |");
             text.AppendLine($"|0|{-_initialInvestment:C0}|||||");
             var which = 1;
@@ -440,7 +439,7 @@ namespace RentVsOwn
 
             _averageRent = (_totalRent / simulation.Months).ToDollars();
             _averageExpenses = (_totalExpenses / simulation.Months).ToDollars();
-            NetWorth = _cash - _personalLoan + simulation.LandlordHomeValue - simulation.LandlordLoanBalance;
+            _netWorth = _cash - _personalLoan + simulation.LandlordHomeValue - simulation.LandlordLoanBalance;
         }
 
         private void TakePersonalLoan(Monthly monthly, IOutput output)
@@ -461,7 +460,7 @@ namespace RentVsOwn
         {
             var text = new StringBuilder();
             text.AppendLine(
-                $"{Name} received total rent of {_totalRent:C0} (average of {_averageRent:C0} / month), total expenses of {_totalExpenses:C0} (average of {_averageExpenses:C0} / month), and has net worth of {NetWorth:C0} on initial investment of {_initialInvestment:C0}");
+                $"{Name} received total rent of {_totalRent:C0} (average of {_averageRent:C0} / month), total expenses of {_totalExpenses:C0} (average of {_averageExpenses:C0} / month), and has net worth of {_netWorth:C0} on initial investment of {_initialInvestment:C0}");
             if (_npv.HasValue)
                 text.AppendLine($"Net present value of {_npv:C0}");
             if (_irr.HasValue)
