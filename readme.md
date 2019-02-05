@@ -2,6 +2,26 @@
 
 An application that simulates owning, renting and being a landlord of a property.
 
+https://fbe.unimelb.edu.au/__data/assets/pdf_file/0011/1497953/2011MayLiER_NPV_submission.pdf
+
+Monthly NPV discount rate (1+Rate)^(1/12)-1
+Monthly IRR to annual: (1+IRR)^12 - 1
+
+compounded future value: =-C9*(1+0.08/12)^A113
+Vacancy rate 5%
+1031 exchange
+Personal loan interest
+
+Moving costs every 3 years.
+PV of NET CF =M11/(1+Home!$H$2/12)^Own!A11
+
+Gross Income(including vacancy allowance) - Operating Expenses = EBITDA(Earnings before interest, taxes, depreciation and amortization)
+EBITDA - Interest Expenses - Depreciation = EBTA
+EBTA x Marginal Tax Rate =  Estimated Property Income Taxes
+EBTA - Estimate Property Income Taxes = Net Income
+Net Income + Depreciation - Mortgage Principal Payments = Net Cash Flow
+
+
 ## Sample Run
 
 
