@@ -35,11 +35,11 @@ namespace RentVsOwn
                     // LandlordInterestRate = null,
                     // LandlordLoanYears = null,
                     // RentChangePerYearPercentage = 0m,
-                    // PropertyTaxPercentage = .0084m,
+                    // PropertyTaxPercentagePerYear = .0084m,
                     // InsurancePerMonth = 100,
                     // HomeMaintenancePercentagePerYear = .01m,
                 };
-                simulator.HomeAppreciationPercentagePerYear = simulator.InflationRate;
+                simulator.HomeAppreciationPercentagePerYear = simulator.InflationRatePerYear;
 
                 simulator.Run(output);
             }

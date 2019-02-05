@@ -77,8 +77,8 @@ namespace RentVsOwn.Reporting
                 if (first)
                     first = false;
                 else
-                    text.Append("\t");
-                text.Append($"\"{column.Description}\"");
+                    text.Append(",");
+                text.Append($"\"{column.Name}\"");
             }
 
             text.AppendLine();
@@ -91,8 +91,8 @@ namespace RentVsOwn.Reporting
                     if (first)
                         first = false;
                     else
-                        text.Append("\t");
-                    text.Append($"{column.GetFormattedValue(item)}");
+                        text.Append(",");
+                    text.Append($"\"{column.GetFormattedValue(item)}\"");
                 }
 
                 text.AppendLine();
@@ -108,7 +108,7 @@ namespace RentVsOwn.Reporting
             text.Append("|");
             foreach (var column in columns)
             {
-                text.Append($"{column.Description}|");
+                text.Append($"{column.Name}|");
             }
 
             text.AppendLine();
@@ -132,8 +132,6 @@ namespace RentVsOwn.Reporting
                     default:
                         throw new ArgumentOutOfRangeException(nameof(column.Alignment), column.Alignment.ToString());
                 }
-
-                text.Append($"{column.Description}");
             }
 
             text.AppendLine();
@@ -159,11 +157,11 @@ namespace RentVsOwn.Reporting
 
             var item = _data[0];
             var text = new StringBuilder();
-            text.AppendLine("|Parameter|Value|");
-            text.AppendLine("| :--- | ---: |");
+            text.AppendLine("|Parameter|Value|Notes|");
+            text.AppendLine("| :--- | ---: | :--- |");
             foreach (var column in columns)
             {
-                text.AppendLine($"|{column.Description}|{column.GetFormattedValue(item)}|");
+                text.AppendLine($"|{column.Name}|{column.GetFormattedValue(item)}|{column.Notes}|");
             }
 
             return text.ToString();

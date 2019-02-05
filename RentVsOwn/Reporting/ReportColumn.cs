@@ -11,43 +11,64 @@ namespace RentVsOwn.Reporting
             if (propertyInfo == null)
                 throw new ArgumentNullException(nameof(propertyInfo));
 
-            Description = propertyInfo.Name;
+            Notes = string.Empty;
+            var description = propertyInfo.Name;
             PropertyInfo = propertyInfo;
             if (propertyInfo.GetCustomAttributes(typeof(ReportColumnAttribute), false).FirstOrDefault() is ReportColumnAttribute attribute)
             {
-                if (!string.IsNullOrWhiteSpace(attribute.Description))
-                {
-                    Description = string.Empty;
-                    var nextUpperIsWordSeparator = false;
-                    foreach (var letter in attribute.Description)
-                    {
-                        if (char.IsUpper(letter) && nextUpperIsWordSeparator)
-                        {
-                            Description += " ";
-                            nextUpperIsWordSeparator = false;
-                        }
-                        else
-                            nextUpperIsWordSeparator = true;
-
-                        Description += letter;
-                    }
-                }
+                if (!string.IsNullOrWhiteSpace(attribute.Name))
+                    description = attribute.Name;
 
                 Alignment = attribute.Alignment;
                 Format = attribute.Format;
-                Precision = attribute.Precision;
+                Precision = attribute.Precision < 0 ? GetDefaultPrecision(Format) : attribute.Precision;
+                Notes = attribute.Notes;
+            }
+
+            Name = string.Empty;
+            var nextUpperIsWordSeparator = false;
+            foreach (var letter in description)
+            {
+                if (char.IsUpper(letter) && nextUpperIsWordSeparator)
+                {
+                    Name += " ";
+                    nextUpperIsWordSeparator = false;
+                }
+                else
+                    nextUpperIsWordSeparator = true;
+
+                Name += letter;
             }
         }
 
-        public string Description { get; set; }
+        public string Name { get; }
 
-        public ReportColumnAlignment Alignment { get; set; }
+        public string Notes { get; }
 
-        public ReportColumnFormat Format { get; set; }
+        public ReportColumnAlignment Alignment { get; }
 
-        public int Precision { get; set; }
+        public ReportColumnFormat Format { get; }
 
-        public PropertyInfo PropertyInfo { get; set; }
+        public int Precision { get; }
+
+        public PropertyInfo PropertyInfo { get; }
+
+        private static int GetDefaultPrecision(ReportColumnFormat format)
+        {
+            switch (format)
+            {
+                case ReportColumnFormat.Number:
+                    return 0;
+                case ReportColumnFormat.Currency:
+                    return 0;
+                case ReportColumnFormat.Percentage:
+                    return 2;
+                case ReportColumnFormat.Text:
+                    return 0;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(format), format, null);
+            }
+        }
 
         public string GetFormattedValue(object data)
         {

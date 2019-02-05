@@ -44,7 +44,7 @@ namespace RentVsOwn
 
         private List<Monthly> _months = new List<Monthly>();
 
-        private void Finalize(Monthly monthly, Simulation simulation, IOutput output)
+        private void Finalize(Monthly monthly, ISimulation simulation, IOutput output)
         {
             var homeValue = simulation.OwnerHomeValue;
             output.WriteLine($"* Sold home for {homeValue:C0}");
@@ -70,14 +70,14 @@ namespace RentVsOwn
             output.WriteLine($"* Adjusted NPV cash flow of {_cashFlows[_cashFlows.Count - 1]:C0} accounting for sale proceeds of {proceeds:C0}");
             monthly.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1];
 
-            _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.AnnualDiscountRate / 12);
+            _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRatePerYear / 12);
             output.WriteLine($"* Net present value of {_npv:C0}");
-            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.AnnualDiscountRate / 12) * 12;
+            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRatePerYear / 12) * 12;
             output.WriteLine($"* Internal rate of return of {_irr:P2}");
             Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1);
         }
 
-        private void Initialize(Simulation simulation, IOutput output)
+        private void Initialize(ISimulation simulation, IOutput output)
         {
             _initialInvestment = 0;
             _cash = 0;
@@ -114,7 +114,7 @@ namespace RentVsOwn
             return text.ToString().TrimEnd();
         }
 
-        private Monthly Process(Simulation simulation, IOutput output)
+        private Monthly Process(ISimulation simulation, IOutput output)
         {
             var monthly = new Monthly
             {
@@ -130,7 +130,7 @@ namespace RentVsOwn
             {
                 var loanPayment = simulation.OwnerMonthlyPayment;
                 monthly.Total = loanPayment;
-                monthly.Interest = (simulation.OwnerLoanBalance * simulation.OwnerInterestRate / 12).ToDollars();
+                monthly.Interest = (simulation.OwnerLoanBalance * simulation.OwnerInterestRatePerYear / 12).ToDollars();
                 monthly.Principal = Math.Min(loanPayment - monthly.Interest, simulation.OwnerLoanBalance).ToDollars();
 
                 expense += monthly.Principal + monthly.Interest;
@@ -140,7 +140,7 @@ namespace RentVsOwn
                 output.WriteLine($"* New loan balance of {simulation.OwnerLoanBalance:C0}");
             }
 
-            var propertyTax = (simulation.OwnerHomeValue * simulation.PropertyTaxPercentage / 12).ToDollars();
+            var propertyTax = (simulation.OwnerHomeValue * simulation.PropertyTaxPercentagePerYear / 12).ToDollars();
             expense += propertyTax;
             output.WriteLine($"* Spent {propertyTax:C0} on property tax");
             if (simulation.InsurancePerMonth > 0)
@@ -177,7 +177,7 @@ namespace RentVsOwn
         }
 
         /// <inheritdoc />
-        public void Simulate(Simulation simulation, IOutput output)
+        public void Simulate(ISimulation simulation, IOutput output)
         {
             if (simulation == null)
                 throw new ArgumentNullException(nameof(simulation));
@@ -186,14 +186,14 @@ namespace RentVsOwn
 
             output.WriteLine($"{Name} in month # {simulation.Month}{Environment.NewLine}");
 
-            if (simulation.IsInitial)
+            if (simulation.IsInitialMonth)
                 Initialize(simulation, output);
             var monthly = Process(simulation, output);
-            if (simulation.IsFinal)
+            if (simulation.IsFinalMonth)
                 Finalize(monthly, simulation, output);
 
             _netWorth = _cash + simulation.OwnerHomeValue - simulation.OwnerLoanBalance;
-            _averageSpent = (_totalSpent / simulation.Months).ToDollars();
+            _averageSpent = (_totalSpent / simulation.Month).ToDollars();
         }
 
         /// <inheritdoc />

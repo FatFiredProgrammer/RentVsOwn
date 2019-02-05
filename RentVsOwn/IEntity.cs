@@ -6,6 +6,6 @@ namespace RentVsOwn
     {
         string GenerateReport();
 
-        void Simulate(Simulation simulation, IOutput output);
+        void Simulate(ISimulation simulation, IOutput output);
     }
 }

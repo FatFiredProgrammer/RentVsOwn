@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RentVsOwn
+namespace RentVsOwn.Financials
 {
     /// <summary>
     ///     Class to calculate loan payments
@@ -15,7 +15,7 @@ namespace RentVsOwn
         /// <summary>
         ///     The annual interest rate to be charged on the loan
         /// </summary>
-        public decimal InterestRate { get; set; }
+        public decimal InterestRatePerYear { get; set; }
 
         /// <summary>
         ///     The term of the loan in years. This is the number of years
@@ -28,7 +28,7 @@ namespace RentVsOwn
         ///     settings.
         /// </summary>
         /// <returns>Returns the monthly payment amount</returns>
-        public decimal Payment
+        public decimal PaymentPerMonth
         {
             get
             {
@@ -36,9 +36,9 @@ namespace RentVsOwn
                 if (Years <= 0)
                     return payment;
 
-                if (InterestRate > 0)
+                if (InterestRatePerYear > 0)
                 {
-                    var rate = (double)InterestRate / 12;
+                    var rate = (double)InterestRatePerYear / 12;
                     var factor = (decimal)(rate + rate / (Math.Pow(rate + 1, Years * 12) - 1));
                     payment = LoanAmount * factor;
                 }
@@ -54,10 +54,10 @@ namespace RentVsOwn
             var calculator = new PaymentCalculator
             {
                 Years = years,
-                InterestRate = interestRate,
+                InterestRatePerYear = interestRate,
                 LoanAmount = loanAmount,
             };
-            return calculator.Payment;
+            return calculator.PaymentPerMonth;
         }
     }
 }

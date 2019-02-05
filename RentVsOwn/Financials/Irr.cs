@@ -18,26 +18,28 @@ namespace RentVsOwn.Financials
 
         private int _iterationCount;
 
-        private double _initialAprGuess;
+        private double _discountRatePerMonthGuess;
 
         private readonly List<double> _monthlyCashFlows = new List<double>();
 
-        public static double Calculate(double initialInvestment, IList<double> monthlyCashFlows, double initialAprGuess)
+        public static double Calculate(double initialInvestment, IList<double> monthlyCashFlows, double discountRatePerYearGuess)
         {
             if (initialInvestment <= 0)
                 throw new ArgumentException("initialInvestment <= 0", nameof(initialInvestment));
             if (monthlyCashFlows == null || monthlyCashFlows.Count < 1)
                 throw new ArgumentException("monthlyCashFlows.Count < 1", nameof(monthlyCashFlows));
 
+            var discountRatePerMonthGuess = Math.Pow(1 + discountRatePerYearGuess, 1d / 12d) - 1;
+
             var irr = new Irr
             {
-                _initialAprGuess = initialAprGuess
+                _discountRatePerMonthGuess = discountRatePerMonthGuess
             };
             irr._monthlyCashFlows.Add(-initialInvestment);
             irr._monthlyCashFlows.AddRange(monthlyCashFlows);
-            var monthlyRate = irr.Calculate();
-            var apr = Math.Pow(1d + monthlyRate, 12) - 1;
-            return apr;
+            var irrPerMonth = irr.Calculate();
+            var irrPerYear = Math.Pow(1d + irrPerMonth, 12) - 1;
+            return irrPerYear;
         }
 
         private double Calculate(double estimatedReturn)
@@ -54,7 +56,7 @@ namespace RentVsOwn.Financials
 
         private double Calculate()
         {
-            var result = Calculate(_initialAprGuess);
+            var result = Calculate(_discountRatePerMonthGuess);
             if (result > 1)
                 throw new Exception("IRR calculation failed to converge.");
 

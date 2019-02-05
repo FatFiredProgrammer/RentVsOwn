@@ -10,15 +10,17 @@ namespace RentVsOwn.Reporting
         }
 
         public ReportColumnAttribute(string description)
-            => Description = description;
+            => Name = description;
 
-        public string Description { get; set; }
+        public string Name { get; set; }
+
+        public string Notes { get; set; }
 
         public ReportColumnAlignment Alignment { get; set; }
 
         public ReportColumnFormat Format { get; set; }
 
-        public int Precision { get; set; }
+        public int Precision { get; set; } = -1;
 
         public bool Ignore { get; set; }
     }

@@ -3,11 +3,17 @@
 An application that simulates owning, renting and being a landlord of a property.
 
 https://fbe.unimelb.edu.au/__data/assets/pdf_file/0011/1497953/2011MayLiER_NPV_submission.pdf
-Check all .Value
+
+Owner: Fixed closing cost of 2 pmts and $5000 are way out of line.
+1/2 title insurance + 1/2 appraisal + 1/2 termite + lender fee ($200) + settlement + doc + origination.
 
 Monthly NPV discount rate (1+Rate)^(1/12)-1
 Monthly IRR to annual: (1+IRR)^12 - 1
 lose security deposit
+
+Remove unused values in ISimulation
+
+USe DAta/Reports to report averages.
 
 compounded future value: =-C9*(1+0.08/12)^A113
 Vacancy rate 5%

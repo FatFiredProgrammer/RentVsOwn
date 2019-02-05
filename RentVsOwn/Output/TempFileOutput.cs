@@ -36,6 +36,7 @@ namespace RentVsOwn.Output
         public void VerboseLine(string text)
         {
             _text.AppendLine(text ?? string.Empty);
+            Debug.WriteLine(text ?? string.Empty);
         }
 
         /// <inheritdoc />

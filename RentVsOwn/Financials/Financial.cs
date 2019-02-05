@@ -5,6 +5,15 @@ namespace RentVsOwn.Financials
 {
     public sealed class Financial
     {
+        public Financial()
+        {
+            
+        }
+        public Financial(double initialInvestment, double discountRatePerMonth)
+        {
+
+        }
+
         public double? Npv { get; private set; }
         public double? Irr { get; private set; }
 
@@ -12,7 +21,7 @@ namespace RentVsOwn.Financials
         /// Gets or sets the discount rate per annum.
         /// </summary>
         /// <value>The rate.</value>
-        public double DiscountRate { get; set; } = .08d;
+        public double DiscountRatePerMonth { get; set; } = .08d;
         public double InitialInvestment { get; set; }
 
         private List<double> _cashFlows = new List<double>();
@@ -34,8 +43,8 @@ namespace RentVsOwn.Financials
         {
             if (_cashFlows.Count >= 1)
             {
-                Npv = Financials.Npv.Calculate(InitialInvestment, _cashFlows, (double)DiscountRate / 12);
-                Irr = Financials.Irr.Calculate(InitialInvestment, _cashFlows, (double)DiscountRate / 12) * 12;
+                Npv = Financials.Npv.Calculate(InitialInvestment, _cashFlows, (double)DiscountRatePerMonth / 12);
+                Irr = Financials.Irr.Calculate(InitialInvestment, _cashFlows, (double)DiscountRatePerMonth / 12) * 12;
             }
             else
             {
