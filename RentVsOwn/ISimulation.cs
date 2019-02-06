@@ -2,8 +2,6 @@
 {
     public interface ISimulation
     {
-        string Name { get; }
-
         int Month { get; }
 
         bool IsInitialMonth { get; }
@@ -15,10 +13,6 @@
         decimal HomePurchaseAmount { get; }
 
         decimal OwnerInterestRatePerYear { get; }
-
-        int OwnerLoanYears { get; }
-
-        decimal OwnerDownPaymentPercentage { get; }
 
         decimal OwnerDownPayment { get; }
 

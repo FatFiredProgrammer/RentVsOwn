@@ -97,9 +97,9 @@ namespace RentVsOwn
             var people = new List<IEntity>
             {
                 // new Renter(this, output),
-                new Owner(this, output),
+                // new Owner(this, output),
 
-                // new Landlord(this, output),
+                new Landlord(this, output),
             };
 
             do

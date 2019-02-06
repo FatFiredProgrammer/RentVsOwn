@@ -80,7 +80,7 @@ namespace RentVsOwn
 
             if (_loanBalance > 0)
             {
-                WriteLine($"* {_loanBalance:C0} loan balance");
+                WriteLine($"* {_loanBalance:C0} loan balance paid");
                 proceeds -= _loanBalance;
                 _loanBalance = 0;
             }
@@ -118,7 +118,7 @@ namespace RentVsOwn
             WriteLine($"* {buyerVariableCosts:C0} buyer variable costs of {Simulation.BuyerVariableCostsPercentage:P2}");
             var buyerCosts = buyerFixedCosts + buyerVariableCosts;
             _initialCash += buyerCosts;
-            _report.AddNote(WriteLine($"* {buyerCosts:C0} buyer costs"));
+            _report.AddNote(WriteLine($"* {buyerCosts:C0} total buyer costs"));
 
             _report.AddNote(WriteLine($"* {_initialCash:C0} starting cash"));
 
