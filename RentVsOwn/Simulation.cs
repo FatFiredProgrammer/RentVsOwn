@@ -70,7 +70,6 @@ namespace RentVsOwn
                 HomePurchaseAmount * HomeMaintenancePercentagePerYear / 12;
 
             RentPerMonth = Math.Max(1m, RentPerMonth ?? defaultRent).ToDollars();
-            CurrentRentPerMonth = RentPerMonth.Value;
             RentersInsurancePerMonth = Math.Max(0m, RentersInsurancePerMonth).ToDollarCents();
             RentSecurityDepositMonths = Math.Max(0, RentSecurityDepositMonths);
         }
@@ -84,39 +83,7 @@ namespace RentVsOwn
                 return false;
 
             ++Month;
-            if (IsNewYear)
-                NextYear(output);
-
             return true;
-        }
-
-        private void NextYear(IOutput output)
-        {
-            output.WriteLine(Separator);
-            output.WriteLine($"Year # {Month / 12}{Environment.NewLine}");
-            if (RentChangePerYearPercentage > 0)
-            {
-                CurrentRentPerMonth = (CurrentRentPerMonth + CurrentRentPerMonth * (RentChangePerYearPercentage ?? 0m)).ToDollars();
-                output.WriteLine($"* Rent increased {RentChangePerYearPercentage:P2} to {CurrentRentPerMonth:C0}");
-            }
-
-            if (HomeAppreciationPercentagePerYear > 0)
-            {
-                OwnerHomeValue = (OwnerHomeValue + OwnerHomeValue * HomeAppreciationPercentagePerYear).ToDollars();
-                output.WriteLine($"* Owner Home value increased {HomeAppreciationPercentagePerYear:P2} to {OwnerHomeValue:C0}");
-                LandlordHomeValue = (LandlordHomeValue + LandlordHomeValue * HomeAppreciationPercentagePerYear).ToDollars();
-                output.WriteLine($"* Landlord Home value increased {HomeAppreciationPercentagePerYear:P2} to {LandlordHomeValue:C0}");
-            }
-
-            if (InflationRatePerYear > 0)
-            {
-                RentersInsurancePerMonth = (RentersInsurancePerMonth + RentersInsurancePerMonth * InflationRatePerYear).ToDollarCents();
-                output.WriteLine($"* Renters insurance increased {InflationRatePerYear:P2} to {RentersInsurancePerMonth:C2}");
-                InsurancePerMonth = (InsurancePerMonth + InsurancePerMonth * InflationRatePerYear).ToDollarCents();
-                output.WriteLine($"* Home owner's insurance increased {InflationRatePerYear:P2} to {InsurancePerMonth:C2}");
-                HoaPerMonth = (HoaPerMonth + HoaPerMonth * InflationRatePerYear).ToDollarCents();
-                output.WriteLine($"* HOA increased {InflationRatePerYear:P2} to {HoaPerMonth:C2}");
-            }
         }
 
         /// <summary>
@@ -136,9 +103,9 @@ namespace RentVsOwn
             // Create the various entries we are simulating
             var people = new List<IEntity>
             {
-                new Owner(),
                 new Renter(),
-                new Landlord(),
+                // new Owner(),
+                // new Landlord(),
             };
 
             do
@@ -146,15 +113,14 @@ namespace RentVsOwn
                 // Simulate this month for each entry
                 people.ForEach(c =>
                 {
+                    if (IsNewYear)
+                        c.NextYear(this, output);
+
                     output.WriteLine(Separator);
                     c.Simulate(this, output);
                 });
             }
             while (Next(output)); // Move to next month.
-
-            // Write the final results.
-            output.VerboseLine(Separator);
-            output.VerboseLine(GetSummary().TrimEnd());
 
             // Write the results for each entity plus any NPV data
             // ReSharper disable once ImplicitlyCapturedClosure
@@ -368,9 +334,6 @@ namespace RentVsOwn
         public decimal? RentChangePerYearPercentage { get; set; } = .03m;
 
         decimal ISimulation.RentChangePerYearPercentage => RentChangePerYearPercentage ?? 0m;
-
-        [ReportColumn(Ignore = true)]
-        public decimal CurrentRentPerMonth { get; private set; }
         #endregion
 
         #region Buy / Sell

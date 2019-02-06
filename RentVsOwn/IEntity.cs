@@ -9,6 +9,8 @@ namespace RentVsOwn
 
         string GenerateReport(ReportGrouping grouping, ReportFormat format);
 
+        void NextYear(ISimulation simulation, IOutput output);
+
         void Simulate(ISimulation simulation, IOutput output);
     }
 }

@@ -41,6 +41,10 @@ namespace RentVsOwn
 
         private readonly Report<Data> _report = new Report<Data>();
 
+        private decimal _rentersInsurancePerMonth;
+
+        private decimal _rentPerMonth;
+
         private void Finalize(Data data, ISimulation simulation, IOutput output)
         {
             _cash += _invested;
@@ -73,6 +77,9 @@ namespace RentVsOwn
 
         private void Initialize(ISimulation simulation, IOutput output)
         {
+            _rentersInsurancePerMonth = simulation.RentersInsurancePerMonth;
+            _rentPerMonth = simulation.RentPerMonth;
+
             _initialCash =
                 simulation.OwnerDownPayment +
                 simulation.BuyerFixedCosts +
@@ -91,27 +98,46 @@ namespace RentVsOwn
             _report.AddNote(output.WriteLine($"* {_invested:C0} invested @ {simulation.DiscountRatePerYear:P2}"));
 
             _report.DiscountRatePerYear = simulation.DiscountRatePerYear;
-            _report.AddNote(output.WriteLine($"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
+            _report.AddNote(output.WriteLine(
+                $"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
             _report.Add(new Data
             {
                 CashFlow = -_initialCash,
             });
         }
 
+        /// <inheritdoc />
+        public void NextYear(ISimulation simulation, IOutput output)
+        {
+            output.WriteLine(Simulation.Separator);
+            output.WriteLine($"{Name} Year # {simulation.Month / 12}{Environment.NewLine}");
+            if (simulation.RentChangePerYearPercentage > 0)
+            {
+                _rentPerMonth = (_rentPerMonth + _rentPerMonth * simulation.RentChangePerYearPercentage).ToDollars();
+                output.WriteLine($"* Rent increased {simulation.RentChangePerYearPercentage:P2} to {_rentPerMonth:C0}");
+            }
+
+            if (simulation.InflationRatePerYear > 0)
+            {
+                _rentersInsurancePerMonth = (_rentersInsurancePerMonth + _rentersInsurancePerMonth * simulation.InflationRatePerYear).ToDollarCents();
+                output.WriteLine($"* Renters insurance increased {simulation.InflationRatePerYear:P2} to {_rentersInsurancePerMonth:C2}");
+            }
+        }
+
         private Data Process(ISimulation simulation, IOutput output)
         {
             var data = new Data
             {
-                Rent = simulation.CurrentRentPerMonth,
-                CashFlow = -simulation.CurrentRentPerMonth,
+                Rent = _rentPerMonth,
+                CashFlow = -_rentPerMonth,
             };
-            output.WriteLine($"* {simulation.CurrentRentPerMonth:C0} rent");
+            output.WriteLine($"* {_rentPerMonth:C0} rent");
 
-            if (simulation.RentersInsurancePerMonth > 0)
+            if (_rentersInsurancePerMonth > 0)
             {
-                data.RentersInsurance = simulation.RentersInsurancePerMonth;
+                data.RentersInsurance = _rentersInsurancePerMonth;
                 data.CashFlow -= data.RentersInsurance;
-                output.WriteLine($"* {simulation.RentersInsurancePerMonth:C0} renter's insurance");
+                output.WriteLine($"* {_rentersInsurancePerMonth:C0} renter's insurance");
             }
 
             var growth = (_invested * simulation.DiscountRatePerYear / 12).ToDollarCents();

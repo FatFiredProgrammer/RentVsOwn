@@ -14,8 +14,6 @@
 
         decimal HomePurchaseAmount { get; }
 
-        decimal OwnerHomeValue { get; set; }
-
         decimal OwnerInterestRatePerYear { get; }
 
         int OwnerLoanYears { get; }
@@ -26,11 +24,7 @@
 
         decimal OwnerLoanAmount { get; }
 
-        decimal OwnerLoanBalance { get; set; }
-
         decimal OwnerMonthlyPayment { get; }
-
-        decimal CurrentRentPerMonth { get; }
 
         decimal RentPerMonth { get; }
 
@@ -48,8 +42,6 @@
 
         decimal MarginalTaxRatePerYear { get; }
 
-        decimal LandlordHomeValue { get; set; }
-
         decimal LandlordInterestRate { get; }
 
         decimal LandlordDownPaymentPercentage { get; }
@@ -57,8 +49,6 @@
         decimal LandlordDownPayment { get; }
 
         decimal LandlordLoanAmount { get; }
-
-        decimal LandlordLoanBalance { get; set; }
 
         decimal LandlordMonthlyPayment { get; }
 

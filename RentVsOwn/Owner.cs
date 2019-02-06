@@ -1,7 +1,11 @@
-﻿using System;
+﻿#if false
+// TODO: Code needs work
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using JetBrains.Annotations;
 using RentVsOwn.Financials;
 using RentVsOwn.Output;
 using RentVsOwn.Reporting;
@@ -10,6 +14,22 @@ namespace RentVsOwn
 {
     public sealed class Owner : IEntity
     {
+        [PublicAPI]
+        private sealed class Data
+        {
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+            public decimal Expenses => Rent + RentersInsurance;
+
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+            public decimal Rent { get; set; }
+
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+            public decimal RentersInsurance { get; set; }
+
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateNpv = true, CalculateIrr = true)]
+            public decimal CashFlow { get; set; }
+        }
+
         private sealed class Monthly
         {
             public decimal Total { get; set; }
@@ -44,6 +64,7 @@ namespace RentVsOwn
         private List<double> _cashFlows = new List<double>();
 
         private List<Monthly> _months = new List<Monthly>();
+        private readonly Report<Data> _report = new Report<Data>();
 
         private void Finalize(Monthly monthly, ISimulation simulation, IOutput output)
         {
@@ -103,21 +124,49 @@ namespace RentVsOwn
             _initialInvestment += variableClosingCosts;
             output.WriteLine($"* Total initial investment of {_initialInvestment:C0}");
             output.WriteLine($"* Initial loan balance of {simulation.OwnerLoanBalance:C0}");
+#if false
+     Report.AddNotes
+            _report.DiscountRatePerYear = simulation.DiscountRatePerYear;
+            _report.AddNote(output.WriteLine($"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
+            _report.Add(new Data
+            {
+                CashFlow = -_initialCash,
+            }); 
+#endif
         }
 
         /// <inheritdoc />
         public string GenerateReport(ReportGrouping grouping, ReportFormat format)
+            => _report.Generate(grouping, format);
+
+        /// <inheritdoc />
+        public void NextYear(ISimulation simulation, IOutput output)
         {
-            var text = new StringBuilder();
-            text.AppendLine("Month,Cash Flow,Total,Expenses,Principal,Interest,Home Value");
-            text.AppendLine($"0,\"{-_initialInvestment:C0}\"");
-            var which = 1;
-            foreach (var month in _months)
+            output.WriteLine(Simulation.Separator);
+            output.WriteLine($"{Name} Year # {Month / 12}{Environment.NewLine}");
+            if (RentChangePerYearPercentage > 0)
             {
-                text.AppendLine($"\"{which++:N0}\",\"{month.NpvCashFlow:C0}\",\"{month.Total:C0}\",\"{month.Expenses:C0}\",\"{month.Principal:C0}\",\"{month.Interest:C0}\",\"{month.HomeValue:C0}\"");
+                CurrentRentPerMonth = (CurrentRentPerMonth + CurrentRentPerMonth * (RentChangePerYearPercentage ?? 0m)).ToDollars();
+                output.WriteLine($"* Rent increased {RentChangePerYearPercentage:P2} to {CurrentRentPerMonth:C0}");
             }
 
-            return text.ToString().TrimEnd();
+            if (HomeAppreciationPercentagePerYear > 0)
+            {
+                OwnerHomeValue = (OwnerHomeValue + OwnerHomeValue * HomeAppreciationPercentagePerYear).ToDollars();
+                output.WriteLine($"* Owner Home value increased {HomeAppreciationPercentagePerYear:P2} to {OwnerHomeValue:C0}");
+                LandlordHomeValue = (LandlordHomeValue + LandlordHomeValue * HomeAppreciationPercentagePerYear).ToDollars();
+                output.WriteLine($"* Landlord Home value increased {HomeAppreciationPercentagePerYear:P2} to {LandlordHomeValue:C0}");
+            }
+
+            if (InflationRatePerYear > 0)
+            {
+                RentersInsurancePerMonth = (RentersInsurancePerMonth + RentersInsurancePerMonth * InflationRatePerYear).ToDollarCents();
+                output.WriteLine($"* Renters insurance increased {InflationRatePerYear:P2} to {RentersInsurancePerMonth:C2}");
+                InsurancePerMonth = (InsurancePerMonth + InsurancePerMonth * InflationRatePerYear).ToDollarCents();
+                output.WriteLine($"* Home owner's insurance increased {InflationRatePerYear:P2} to {InsurancePerMonth:C2}");
+                HoaPerMonth = (HoaPerMonth + HoaPerMonth * InflationRatePerYear).ToDollarCents();
+                output.WriteLine($"* HOA increased {InflationRatePerYear:P2} to {HoaPerMonth:C2}");
+            }
         }
 
         private Monthly Process(ISimulation simulation, IOutput output)
@@ -198,6 +247,12 @@ namespace RentVsOwn
             if (simulation.IsFinalMonth)
                 Finalize(monthly, simulation, output);
 
+
+            // TODO: Code needs work
+#if false
+                 _report.Add(data); 
+#endif
+
             _netWorth = _cash + simulation.OwnerHomeValue - simulation.OwnerLoanBalance;
             _averageSpent = (_totalSpent / simulation.Month).ToDollars();
         }
@@ -215,3 +270,4 @@ namespace RentVsOwn
         }
     }
 }
+#endif
