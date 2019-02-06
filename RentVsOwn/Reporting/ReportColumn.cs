@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using RentVsOwn.Financials;
 
 namespace RentVsOwn.Reporting
 {
@@ -24,7 +27,11 @@ namespace RentVsOwn.Reporting
                 Grouping = attribute.Grouping;
                 Format = attribute.Format;
                 Precision = attribute.Precision < 0 ? GetDefaultPrecision(Format) : attribute.Precision;
-                Notes = attribute.Notes;
+                CalculateAverage = attribute.CalculateAverage;
+                CalculateSum = attribute.CalculateSum;
+                IncludePeriod0 = attribute.IncludePeriod0;
+                CalculateNpv = attribute.CalculateNpv;
+                CalculateIrr = attribute.CalculateIrr;
             }
 
             Name = FormatName(name);
@@ -44,8 +51,68 @@ namespace RentVsOwn.Reporting
 
         public PropertyInfo PropertyInfo { get; }
 
-        public void Accumulate(ReportColumn column)
+        public bool CalculateAverage { get; }
+
+        public bool CalculateSum { get; }
+
+        public bool IncludePeriod0 { get; }
+
+        public bool CalculateNpv { get; }
+
+        public bool CalculateIrr { get; }
+
+        public int Count { get; private set; }
+
+        public decimal Sum { get; private set; }
+
+        public decimal Average { get; private set; }
+
+        public decimal Irr { get; private set; }
+
+        public decimal Npv { get; private set; }
+
+        private readonly List<double> _cashFlows = new List<double>();
+
+        public void Accumulate<T>(ReportGroup<T> @group)
+            where T : class
         {
+            if (!CalculateAverage && !CalculateSum && !CalculateIrr && !CalculateNpv)
+                return;
+
+            if (!IncludePeriod0 && !CalculateIrr && !CalculateNpv && @group.Period == 0)
+                return;
+
+            foreach (var data in @group.Data)
+            {
+                Count++;
+                var value = GetDecimalValue(data);
+                Sum += value;
+                if (CalculateIrr || CalculateNpv)
+                    _cashFlows.Add((double)value);
+            }
+
+            Average = Sum / Count;
+        }
+
+        public void Calculate(ReportGrouping grouping, double discountRatePerYear)
+        {
+            // The underlying data is always monthly
+            var discountRate = Financial.ConvertDiscountRateYearToMonth(discountRatePerYear);
+            if (CalculateNpv)
+                Npv = (decimal)Financials.Npv.Calculate(_cashFlows, discountRate);
+            if (CalculateIrr)
+            {
+                Trace.WriteLine($"{discountRate:F6}");
+                foreach (var cashFlow in _cashFlows)
+                {
+                    Trace.WriteLine($"{cashFlow:F6}");
+                }
+                Irr = (decimal)Financials.Irr.Calculate(_cashFlows, discountRate);
+            }
+
+            // If we ask for yearly, convert the resulting IRR
+            if (grouping == ReportGrouping.Yearly)
+                Irr = Financial.ConvertDiscountRateMonthToYear(Irr);
         }
 
         private static string FormatName(string name)

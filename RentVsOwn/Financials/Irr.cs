@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RentVsOwn.Financials
 {
@@ -8,8 +9,15 @@ namespace RentVsOwn.Financials
     /// </summary>
     public class Irr
     {
-        private Irr()
+        private Irr(IList<double> cashFlows, double guess)
         {
+            if (cashFlows == null || cashFlows.Count < 2)
+                throw new ArgumentException("cashFlows.Count < 2", nameof(cashFlows));
+            if (cashFlows[0] >= 0)
+                throw new ArgumentException("cashFlows[0] >= 0", nameof(cashFlows));
+
+            _guess = guess;
+            _cashFlows = cashFlows.ToList();
         }
 
         public static int MaxIterations { get; set; } = 50000;
@@ -18,23 +26,13 @@ namespace RentVsOwn.Financials
 
         private int _iterationCount;
 
-        private double _guess;
+        private readonly double _guess;
 
-        private readonly List<double> _cashFlows = new List<double>();
+        private readonly List<double> _cashFlows;
 
-        public static double Calculate(double initialInvestment, IList<double> cashFlows, double guess)
+        public static double Calculate(IList<double> cashFlows, double guess)
         {
-            if (initialInvestment <= 0)
-                throw new ArgumentException("initialInvestment <= 0", nameof(initialInvestment));
-            if (cashFlows == null || cashFlows.Count < 1)
-                throw new ArgumentException("cashFlows.Count < 1", nameof(cashFlows));
-
-            var irr = new Irr
-            {
-                _guess = guess
-            };
-            irr._cashFlows.Add(-initialInvestment);
-            irr._cashFlows.AddRange(cashFlows);
+            var irr = new Irr(cashFlows, guess);
             var discountRate = irr.Calculate();
             return discountRate;
         }

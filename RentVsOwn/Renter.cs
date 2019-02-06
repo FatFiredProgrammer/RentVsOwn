@@ -12,20 +12,17 @@ namespace RentVsOwn
         [PublicAPI]
         private sealed class Data
         {
-            [ReportColumn(Format = ReportColumnFormat.Number)]
-            public int Month { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency)]
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum)]
             public decimal Rent { get; set; }
 
-            [ReportColumn(Format = ReportColumnFormat.Currency)]
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateNpv = true, CalculateIrr = true)]
             public decimal CashFlow { get; set; }
 
-            [ReportColumn(Format = ReportColumnFormat.Currency)]
+            [ReportColumn(Format = ReportColumnFormat.Currency,Grouping = ReportColumnGrouping.Sum)]
             public decimal CashFlowPresentValue { get; set; }
         }
 
-        private string Name => nameof(Renter);
+        public string Name => nameof(Renter);
 
         private decimal NetWorth => _invested + _cash + _securityDeposit;
 
@@ -34,10 +31,6 @@ namespace RentVsOwn
         private decimal _invested;
 
         private decimal _cash;
-
-        private decimal _totalSpent;
-
-        private decimal _averageSpent;
 
         private decimal _initialSecurityDeposit;
 
@@ -54,21 +47,20 @@ namespace RentVsOwn
                 var capitalGainsTax = (simulation.CapitalGainsRate * capitalGains).ToDollars();
                 output.WriteLine($"* Capital gains tax of {capitalGainsTax:C0}");
                 _cash -= capitalGainsTax;
-
-                data.CashFlow += capitalGains - capitalGainsTax;
+                data.CashFlow -= capitalGainsTax;
             }
 
             output.WriteLine($"* Cashed out investment of {_invested:C0}");
             _cash += _invested;
+            data.CashFlow += _invested;
             _invested = 0;
+
             output.WriteLine($"* Returned security deposit of {_securityDeposit:C0}");
             _cash += _securityDeposit;
+            data.CashFlow += _invested;
             _securityDeposit = 0;
-            output.WriteLine($"* Cash on hand of {_cash:C0}");
-            output.WriteLine($"* Total spent {_totalSpent:C0}");
 
-            // TODO: NO, after adjust for npv!
-            // _financial.Calculate();
+            output.WriteLine($"* Cash on hand of {_cash:C0}");
         }
 
         /// <inheritdoc />
@@ -88,20 +80,9 @@ namespace RentVsOwn
             _invested = _basis;
             output.WriteLine($"* Invested  {_invested:C0}");
 
-
-            // TODO: Code needs work
-#if false
-                 _financial = new Financial
-            {
-                InitialInvestment = (double)initialCashFlow,
-                DiscountRatePerMonth = (double)simulation.DiscountRatePerMonth,
-            }; 
-#endif
-
-
+            _report.DiscountRatePerYear = simulation.DiscountRatePerYear;
             _report.Add(new Data
             {
-                Month = 0,
                 Rent = 0m,
                 CashFlow = -initialCashFlow,
                 CashFlowPresentValue = -initialCashFlow,
@@ -112,18 +93,17 @@ namespace RentVsOwn
         {
             var data = new Data
             {
-                Month = simulation.Month,
                 Rent = simulation.CurrentRentPerMonth,
                 CashFlow = -simulation.CurrentRentPerMonth,
             };
 
 
-            _totalSpent += simulation.CurrentRentPerMonth;
             output.WriteLine($"* {simulation.CurrentRentPerMonth:C0} rent");
 
             if (simulation.RentersInsurancePerMonth > 0)
             {
-                _totalSpent += simulation.RentersInsurancePerMonth;
+                // TODO: 
+                data.CashFlow = -simulation.CurrentRentPerMonth;
                 output.WriteLine($"* {simulation.RentersInsurancePerMonth:C0} renter's insurance");
             }
 
@@ -152,8 +132,6 @@ namespace RentVsOwn
 
             data.CashFlowPresentValue = Npv.CalculatePresentValue(data.CashFlow, simulation.DiscountRatePerMonth, simulation.Month);
             _report.Add(data);
-
-            _averageSpent = (_totalSpent / simulation.Month).ToDollars();
         }
 
         /// <inheritdoc />
@@ -161,13 +139,7 @@ namespace RentVsOwn
         {
             var text = new StringBuilder();
             text.AppendLine(
-                $"{Name} spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has net worth of {NetWorth:C0} on initial investment of {_basis:C0} + security deposit of {_initialSecurityDeposit:C0}");
-
-            // TODO: Code needs work
-#if false
-                 text.Append(_financial); 
-#endif
-
+                $"{Name} has net worth of {NetWorth:C0} on initial investment of {_basis:C0} + security deposit of {_initialSecurityDeposit:C0}");
             return text.ToString().TrimEnd();
         }
     }

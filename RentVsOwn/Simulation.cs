@@ -382,7 +382,7 @@ namespace RentVsOwn
             // Create the simulation data and dump it to output.
             Initialize();
             output.WriteLine(Separator);
-            output.WriteLine(ToString().TrimEnd());
+            output.WriteLine(GetSummary().TrimEnd());
 
             // Create the various entries we are simulating
             var people = new List<IEntity>
@@ -406,7 +406,7 @@ namespace RentVsOwn
 
             // Write the final results.
             output.VerboseLine(Separator);
-            output.VerboseLine(ToString().TrimEnd());
+            output.VerboseLine(GetSummary().TrimEnd());
 
             // Write the results for each entity plus any NPV data
             // ReSharper disable once ImplicitlyCapturedClosure
@@ -418,13 +418,20 @@ namespace RentVsOwn
                 if (!string.IsNullOrWhiteSpace(report))
                 {
                     output.VerboseLine(Separator);
+                    output.VerboseLine(string.Empty);
+                    output.VerboseLine($"{c.Name} Report");
+                    output.VerboseLine(string.Empty);
                     output.VerboseLine(report.TrimEnd());
                 }
             });
         }
 
-        /// <inheritdoc />
-        public override string ToString()
+        public string GetSummary()
             => new Report<Simulation>(this).ToString().TrimEnd();
+
+        /// <inheritdoc />
+        public override string ToString() 
+            => Name ?? "Default Simulation";
+
     }
 }

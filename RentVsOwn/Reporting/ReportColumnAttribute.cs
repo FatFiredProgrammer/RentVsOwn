@@ -24,6 +24,16 @@ namespace RentVsOwn.Reporting
 
         public ReportColumnGrouping Grouping { get; set; }
 
+        public bool CalculateAverage { get; set; }
+
+        public bool CalculateSum { get; set; }
+
+        public bool IncludePeriod0 { get; set; } = true;
+
+        public bool CalculateNpv { get; set; }
+
+        public bool CalculateIrr { get; set; }
+
         public bool Ignore { get; set; }
     }
 }

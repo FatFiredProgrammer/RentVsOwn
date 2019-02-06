@@ -11,6 +11,26 @@ namespace RentVsOwn.Reporting
     public sealed class Report<T>
         where T : class
     {
+        private sealed class Separators
+        {
+            public static readonly Separators Csv = new Separators("\"", "\",\"", "\"");
+
+            public static readonly Separators Markdown = new Separators("|", "|", "|");
+
+            private Separators(string first, string middle, string last)
+            {
+                First = first;
+                Middle = middle;
+                Last = last;
+            }
+
+            public string First { get; }
+
+            public string Middle { get; }
+
+            public string Last { get; }
+        }
+
         public Report()
         {
         }
@@ -19,6 +39,8 @@ namespace RentVsOwn.Reporting
         {
             Add(item);
         }
+
+        public decimal DiscountRatePerYear { get; set; }
 
         private List<T> _data = new List<T>();
 
@@ -54,6 +76,14 @@ namespace RentVsOwn.Reporting
             }
         }
 
+        private void GenerateCalculated(List<ReportColumn> columns)
+        {
+            foreach (var column in columns)
+            {
+                column.Calculate(Grouping, (double)DiscountRatePerYear);
+            }
+        }
+
         private IEnumerable<ReportColumn> GenerateColumns()
         {
             var propertyInfos = typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
@@ -72,12 +102,20 @@ namespace RentVsOwn.Reporting
         private string GenerateCsv(List<ReportColumn> columns)
         {
             var text = new StringBuilder();
-            GenerateCsvHeaders(text, columns);
+            GenerateHeaders(text, columns, Separators.Csv);
+            GenerateData(text, columns, Separators.Csv);
+            GenerateCalculated(columns);
+            GenerateFooters(text, columns, Separators.Csv);
+            return text.ToString();
+        }
 
+        private void GenerateData(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        {
             var groups = GetGroups().ToList();
             foreach (var @group in groups)
             {
                 var first = true;
+                text.Append(separators.First);
                 switch (Grouping)
                 {
                     case ReportGrouping.Monthly:
@@ -96,27 +134,173 @@ namespace RentVsOwn.Reporting
                     default:
                         throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
                 }
+
                 foreach (var column in columns)
                 {
                     if (first)
                         first = false;
                     else
-                        text.Append(",");
-                    text.Append($"\"{column.FormatValue(group.GetValue(column))}\"");
+                        text.Append(separators.Middle);
+                    text.Append($"{column.FormatValue(group.GetValue(column))}");
                     column.Accumulate(@group);
                 }
 
-                text.AppendLine();
-
+                text.AppendLine(separators.Last);
             }
-
-
-            return text.ToString();
         }
 
-        private void GenerateCsvHeaders(StringBuilder text, List<ReportColumn> columns)
+        private void GenerateFooterAverage(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        {
+            if (!columns.Any(c => c.CalculateAverage))
+                return;
+
+            var first = true;
+            text.Append(separators.First);
+            switch (Grouping)
+            {
+                case ReportGrouping.Monthly:
+                case ReportGrouping.Yearly:
+                    text.Append("Average");
+                    first = false;
+                    break;
+
+                case ReportGrouping.NotGrouped:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+            }
+
+            foreach (var column in columns)
+            {
+                if (first)
+                    first = false;
+                else
+                    text.Append(separators.Middle);
+                if (column.CalculateAverage)
+                    text.Append($"{column.FormatValue(column.Average)}");
+            }
+
+            text.AppendLine(separators.Last);
+        }
+
+        private void GenerateFooterIrr(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        {
+            if (!columns.Any(c => c.CalculateIrr))
+                return;
+
+            var first = true;
+            text.Append(separators.First);
+            switch (Grouping)
+            {
+                case ReportGrouping.Monthly:
+                case ReportGrouping.Yearly:
+                    text.Append("IRR");
+                    first = false;
+                    break;
+
+                case ReportGrouping.NotGrouped:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+            }
+
+            foreach (var column in columns)
+            {
+                if (first)
+                    first = false;
+                else
+                    text.Append(separators.Middle);
+                if (column.CalculateIrr)
+                    text.Append($"{ReportColumn.FormatValue(column.Irr, ReportColumnFormat.Percentage, 2)}");
+            }
+
+            text.AppendLine(separators.Last);
+        }
+
+        private void GenerateFooterNpv(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        {
+            if (!columns.Any(c => c.CalculateNpv))
+                return;
+
+            var first = true;
+            text.Append(separators.First);
+            switch (Grouping)
+            {
+                case ReportGrouping.Monthly:
+                case ReportGrouping.Yearly:
+                    text.Append("NPV");
+                    first = false;
+                    break;
+
+                case ReportGrouping.NotGrouped:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+            }
+
+            foreach (var column in columns)
+            {
+                if (first)
+                    first = false;
+                else
+                    text.Append(separators.Middle);
+                if (column.CalculateNpv)
+                    text.Append($"{ReportColumn.FormatValue(column.Npv, ReportColumnFormat.Currency, 0)}");
+            }
+
+            text.AppendLine(separators.Last);
+        }
+
+        private void GenerateFooters(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        {
+            GenerateFooterSum(text, columns, separators);
+            GenerateFooterAverage(text, columns, separators);
+            GenerateFooterNpv(text, columns, separators);
+            GenerateFooterIrr(text, columns, separators);
+        }
+
+        private void GenerateFooterSum(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        {
+            if (!columns.Any(c => c.CalculateSum))
+                return;
+
+            var first = true;
+            text.Append(separators.First);
+            switch (Grouping)
+            {
+                case ReportGrouping.Monthly:
+                case ReportGrouping.Yearly:
+                    text.Append("Sum");
+                    first = false;
+                    break;
+
+                case ReportGrouping.NotGrouped:
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+            }
+
+            foreach (var column in columns)
+            {
+                if (first)
+                    first = false;
+                else
+                    text.Append(separators.Middle);
+                if (column.CalculateSum)
+                    text.Append($"{column.FormatValue(column.Sum)}");
+            }
+
+            text.AppendLine(separators.Last);
+        }
+
+        private void GenerateHeaders(StringBuilder text, List<ReportColumn> columns, Separators separators)
         {
             var first = true;
+            text.Append(separators.First);
             switch (Grouping)
             {
                 case ReportGrouping.Monthly:
@@ -141,49 +325,35 @@ namespace RentVsOwn.Reporting
                 if (first)
                     first = false;
                 else
-                    text.Append(",");
-                text.Append($"\"{column.Name}\"");
+                    text.Append(separators.Middle);
+                text.Append($"{column.Name}");
             }
 
-            text.AppendLine();
+            text.AppendLine(separators.Last);
         }
 
         private string GenerateMarkdown(List<ReportColumn> columns)
         {
             var text = new StringBuilder();
-            GenerateMarkdownHeaders(text, columns);
-
-            // TODO: Code needs work
-#if false
-                 var groups = GetGroups().ToList();
-
-            foreach (var item in _data)
-            {
-                text.Append("|");
-                foreach (var column in columns)
-                {
-                    text.Append($"{column.GetFormattedValue(item)}|");
-                }
-
-                text.AppendLine();
-            } 
-#endif
-
-
+            GenerateHeaders(text, columns, Separators.Csv);
+            GenerateMarkdownAlignment(text, columns);
+            GenerateData(text, columns, Separators.Csv);
+            GenerateCalculated(columns);
+            GenerateFooters(text, columns, Separators.Csv);
             return text.ToString();
         }
 
-        private void GenerateMarkdownHeaders(StringBuilder text, List<ReportColumn> columns)
+        private void GenerateMarkdownAlignment(StringBuilder text, List<ReportColumn> columns)
         {
-            text.Append("|");
+            text.Append(Separators.Markdown.First);
+
+            var first = true;
             switch (Grouping)
             {
                 case ReportGrouping.Monthly:
-                    text.Append("Month|");
-                    break;
-
                 case ReportGrouping.Yearly:
-                    text.Append("Year|");
+                    text.Append(" ---: ");
+                    first = false;
                     break;
 
                 case ReportGrouping.NotGrouped:
@@ -195,50 +365,29 @@ namespace RentVsOwn.Reporting
 
             foreach (var column in columns)
             {
-                text.Append($"{column.Name}|");
-            }
-
-            text.AppendLine();
-
-            text.Append("|");
-            switch (Grouping)
-            {
-                case ReportGrouping.Monthly:
-                    text.Append(" ---: |");
-                    break;
-
-                case ReportGrouping.Yearly:
-                    text.Append(" ---: |");
-                    break;
-
-                case ReportGrouping.NotGrouped:
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
-            }
-
-            foreach (var column in columns)
-            {
+                if (first)
+                    first = false;
+                else
+                    text.Append(Separators.Markdown.Middle);
                 switch (column.Alignment)
                 {
                     case ReportColumnAlignment.Left:
-                        text.Append(" :--- |");
+                        text.Append(" :--- ");
                         break;
 
                     case ReportColumnAlignment.Right:
-                        text.Append(" ---: |");
+                        text.Append(" ---: ");
                         break;
 
                     case ReportColumnAlignment.Center:
-                        text.Append(" :---: |");
+                        text.Append(" :---: ");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(column.Alignment), column.Alignment.ToString());
                 }
             }
 
-            text.AppendLine();
+            text.AppendLine(Separators.Markdown.Last);
         }
 
         private string GenerateParameters(List<ReportColumn> columns)
@@ -252,7 +401,7 @@ namespace RentVsOwn.Reporting
             text.AppendLine("| :--- | ---: | :--- |");
             foreach (var column in columns)
             {
-                text.AppendLine($"|{column.Name}|{column.FormatValue(item)}|{column.Notes}|");
+                text.AppendLine($"|{column.Name}|{column.FormatValue(column.GetValue(item))}|{column.Notes}|");
             }
 
             return text.ToString();
@@ -304,74 +453,3 @@ namespace RentVsOwn.Reporting
             => Generate(ReportFormat.Parameters);
     }
 }
-#if false
-// TODO: Code needs work
-using System.Collections.Generic;
-using System.Text;
-
-namespace RentVsOwn.Financials
-{
-    public sealed class Financial
-    {
-        public Financial()
-        {
-        }
-        public Financial(double initialInvestment, double discountRatePerMonth)
-        {
-
-        }
-
-        public double? Npv { get; private set; }
-        public double? Irr { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the discount rate per annum.
-        /// </summary>
-        /// <value>The rate.</value>
-        public double DiscountRatePerMonth { get; set; } = .08d;
-        public double InitialInvestment { get; set; }
-
-        private List<double> _cashFlows = new List<double>();
-
-        public void Add(double cashFlow)
-        {
-            // TODO: Code needs work
-#if false
-                 monthly.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1];
-
-            output.WriteLine($"* Net present value of {_npv:C0}");
-            output.WriteLine($"* Internal rate of return of {_irr:P2}");
-            Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1); 
-#endif
-
-        }
-
-        public void Calculate()
-        {
-            if (_cashFlows.Count >= 1)
-            {
-                Npv = Financials.Npv.Calculate(InitialInvestment, _cashFlows, (double)DiscountRatePerMonth / 12);
-                Irr = Financials.Irr.Calculate(InitialInvestment, _cashFlows, (double)DiscountRatePerMonth / 12) * 12;
-            }
-            else
-            {
-                Npv = null;
-                Irr = null;
-            }
-
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            var text = new StringBuilder();
-            if (Npv.HasValue)
-                text.AppendLine($"Net present value of {Npv:C0}");
-            if (Irr.HasValue)
-                text.AppendLine($"Internal rate of return of {Irr:P2}");
-            return text.ToString().TrimEnd();
-        }
-    }
-}
-
-#endif

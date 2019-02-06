@@ -36,6 +36,8 @@ namespace RentVsOwn.Reporting
 
         private readonly List<T> _data;
 
+        public IEnumerable<T> Data => _data;
+
         public int Period { get; set; }
 
         public object GetValue(ReportColumn column)

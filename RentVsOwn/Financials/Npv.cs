@@ -8,19 +8,23 @@ namespace RentVsOwn.Financials
         /// <summary>
         ///     Calculates the NPV for a series of cash flows
         /// </summary>
-        /// <param name="initialInvestment"></param>
         /// <param name="cashFlows"></param>
         /// <param name="discountRate"></param>
         /// <returns></returns>
-        public static double Calculate(double initialInvestment, IList<double> cashFlows, double discountRate)
+        public static double Calculate(IList<double> cashFlows, double discountRate)
         {
+            if (cashFlows == null || cashFlows.Count < 2)
+                throw new ArgumentException("cashFlows.Count < 2", nameof(cashFlows));
+            if (cashFlows[0] >= 0)
+                throw new ArgumentException("cashFlows[0] >= 0", nameof(cashFlows));
+
             var npv = 0d;
-            for (var i = 0; i < cashFlows.Count; i++)
+            for (var i = 1; i < cashFlows.Count; i++)
             {
                 npv += CalculatePresentValue(cashFlows[i], discountRate, i + 1);
             }
 
-            return npv - initialInvestment;
+            return npv + cashFlows[0];
         }
 
         /// <summary>

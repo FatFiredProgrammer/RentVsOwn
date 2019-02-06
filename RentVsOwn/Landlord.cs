@@ -37,7 +37,7 @@ namespace RentVsOwn
             public decimal NpvCashFlow { get; set; }
         }
 
-        private string Name => nameof(Landlord);
+        public string Name => nameof(Landlord);
 
         private decimal _netWorth;
 
@@ -206,11 +206,15 @@ namespace RentVsOwn
             output.WriteLine($"* Adjusted NPV cash flow of {_cashFlows[_cashFlows.Count - 1]:C0} accounting for sale proceeds of {proceeds:C0}");
             monthly.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1];
 
-            _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRatePerYear / 12);
+            // TODO: Code needs work
+#if false
+                 _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRatePerYear / 12);
             output.WriteLine($"* Net present value of {_npv:C0}");
             _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRatePerYear / 12) * 12;
             output.WriteLine($"* Internal rate of return of {_irr:P2}");
-            Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1);
+            Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1); 
+#endif
+
         }
 
         public string GenerateReport()
