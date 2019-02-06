@@ -49,8 +49,8 @@ namespace RentVsOwn
         {
             var homeValue = simulation.OwnerHomeValue;
             output.WriteLine($"* Sold home for {homeValue:C0}");
-            var salesFixedCosts = simulation.SalesFixedCosts;
-            var salesCommission = (simulation.SalesCommissionPercentage * homeValue).ToDollars();
+            var salesFixedCosts = simulation.SellerFixedCosts;
+            var salesCommission = (simulation.SellerCommissionPercentage * homeValue).ToDollars();
             output.WriteLine($"* Fixed sales costs of {salesFixedCosts:C0} and commission of {salesCommission:C0}");
             var proceeds = homeValue - salesFixedCosts - salesCommission;
             if (simulation.OwnerLoanBalance > 0)
@@ -96,9 +96,9 @@ namespace RentVsOwn
 
             output.WriteLine($"* Down payment of {simulation.OwnerDownPayment:C0}");
             _initialInvestment += simulation.OwnerDownPayment;
-            output.WriteLine($"* Fixed closing costs of {simulation.PurchaseFixedCosts:C0}");
-            _initialInvestment += simulation.PurchaseFixedCosts;
-            var variableClosingCosts = simulation.OwnerLoanAmount * simulation.PurchaseVariableCostsPercentage;
+            output.WriteLine($"* Fixed closing costs of {simulation.BuyerFixedCosts:C0}");
+            _initialInvestment += simulation.BuyerFixedCosts;
+            var variableClosingCosts = simulation.OwnerLoanAmount * simulation.BuyerVariableCostsPercentage;
             output.WriteLine($"* Variable closing costs of {variableClosingCosts:C0}");
             _initialInvestment += variableClosingCosts;
             output.WriteLine($"* Total initial investment of {_initialInvestment:C0}");

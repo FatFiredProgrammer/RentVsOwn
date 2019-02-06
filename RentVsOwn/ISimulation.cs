@@ -44,9 +44,9 @@
 
         decimal DiscountRatePerMonth { get; }
 
-        decimal CapitalGainsRate { get; }
+        decimal CapitalGainsRatePerYear { get; }
 
-        decimal MarginalTaxRate { get; }
+        decimal MarginalTaxRatePerYear { get; }
 
         decimal LandlordHomeValue { get; set; }
 
@@ -62,11 +62,11 @@
 
         decimal LandlordMonthlyPayment { get; }
 
-        decimal LandlordManagementFeePercentage { get; }
+        decimal LandlordManagementFeePercentagePerMonth { get; }
 
-        decimal PurchaseFixedCosts { get; }
+        decimal BuyerFixedCosts { get; }
 
-        decimal PurchaseVariableCostsPercentage { get; }
+        decimal BuyerVariableCostsPercentage { get; }
 
         decimal PropertyTaxPercentagePerYear { get; }
 
@@ -78,9 +78,9 @@
 
         decimal HomeMaintenancePercentagePerYear { get; }
 
-        decimal SalesCommissionPercentage { get; }
+        decimal SellerCommissionPercentage { get; }
 
-        decimal SalesFixedCosts { get; }
+        decimal SellerFixedCosts { get; }
 
         decimal DepreciationYears { get; }
 

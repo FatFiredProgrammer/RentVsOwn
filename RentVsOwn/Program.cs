@@ -28,7 +28,7 @@ namespace RentVsOwn
             {
                 var simulator = new Simulation
                 {
-                    // LandlordManagementFeePercentage = .1m,
+                    // LandlordManagementFeePercentagePerMonth = .1m,
                     HoaPerMonth = 0,
 
                     // Rent = 2100,

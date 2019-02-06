@@ -51,7 +51,7 @@ namespace RentVsOwn
             output.WriteLine($"* Capital gains of {capitalGains:C0} on investment basis of {_basis:C0}");
             if (capitalGains > 0)
             {
-                var capitalGainsTax = (simulation.CapitalGainsRate * capitalGains).ToDollars();
+                var capitalGainsTax = (simulation.CapitalGainsRatePerYear * capitalGains).ToDollars();
                 _cash -= capitalGainsTax;
                 data.CashFlow -= capitalGainsTax;
                 _report.AddNote(output.WriteLine($"* {capitalGainsTax:C0} capital gains tax"));
@@ -75,14 +75,14 @@ namespace RentVsOwn
         {
             _initialCash =
                 simulation.OwnerDownPayment +
-                simulation.PurchaseFixedCosts +
+                simulation.BuyerFixedCosts +
                 simulation.OwnerLoanAmount *
-                simulation.PurchaseVariableCostsPercentage;
+                simulation.BuyerVariableCostsPercentage;
 
             _report.AddNote(output.WriteLine($"* {_initialCash:C0} starting cash"));
             output.VerboseLine($"    * {simulation.OwnerDownPayment:C0} down payment +  + )");
-            output.VerboseLine($"    * {simulation.PurchaseFixedCosts:C0} fixed closing costs");
-            output.VerboseLine($"    * {simulation.OwnerLoanAmount * simulation.PurchaseVariableCostsPercentage:C0} variable closing costs");
+            output.VerboseLine($"    * {simulation.BuyerFixedCosts:C0} fixed closing costs");
+            output.VerboseLine($"    * {simulation.OwnerLoanAmount * simulation.BuyerVariableCostsPercentage:C0} variable closing costs");
 
             _securityDeposit = (simulation.RentSecurityDepositMonths * simulation.RentPerMonth).ToDollars();
             _report.AddNote(output.WriteLine($"* {_securityDeposit:C0} security deposit"));

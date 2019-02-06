@@ -83,9 +83,9 @@ namespace RentVsOwn
 
         private void CalculateExpenses(Monthly monthly, ISimulation simulation, IOutput output)
         {
-            if (simulation.LandlordManagementFeePercentage > 0)
+            if (simulation.LandlordManagementFeePercentagePerMonth > 0)
             {
-                var managementFee = simulation.CurrentRentPerMonth * simulation.LandlordManagementFeePercentage;
+                var managementFee = simulation.CurrentRentPerMonth * simulation.LandlordManagementFeePercentagePerMonth;
                 monthly.Expenses += managementFee;
                 monthly.Cash -= managementFee;
                 output.WriteLine($"* Management fee of {managementFee:C0}");
@@ -133,7 +133,7 @@ namespace RentVsOwn
             // We pay the previous years taxes at the start of each new year.
             if (simulation.IsNewYear && _currentYearTaxableIncome > 0)
             {
-                var taxes = (_currentYearTaxableIncome * simulation.MarginalTaxRate).ToDollars();
+                var taxes = (_currentYearTaxableIncome * simulation.MarginalTaxRatePerYear).ToDollars();
                 if (taxes > 0)
                 {
                     monthly.Expenses += taxes;
@@ -243,10 +243,10 @@ namespace RentVsOwn
             _basis = simulation.LandlordHomeValue;
             output.WriteLine($"* Down payment of {simulation.LandlordDownPayment:C0}");
             _initialInvestment += simulation.LandlordDownPayment;
-            output.WriteLine($"* Fixed closing costs of {simulation.PurchaseFixedCosts:C0}");
-            _initialInvestment += simulation.PurchaseFixedCosts;
-            _basis -= simulation.PurchaseFixedCosts;
-            var variableClosingCosts = (simulation.LandlordLoanAmount * simulation.PurchaseVariableCostsPercentage).ToDollars();
+            output.WriteLine($"* Fixed closing costs of {simulation.BuyerFixedCosts:C0}");
+            _initialInvestment += simulation.BuyerFixedCosts;
+            _basis -= simulation.BuyerFixedCosts;
+            var variableClosingCosts = (simulation.LandlordLoanAmount * simulation.BuyerVariableCostsPercentage).ToDollars();
             output.WriteLine($"* Variable closing costs of {variableClosingCosts:C0}");
             _initialInvestment += variableClosingCosts;
             _basis -= variableClosingCosts;
@@ -319,7 +319,7 @@ namespace RentVsOwn
         {
             if (_currentYearTaxableIncome > 0)
             {
-                var taxes = (_currentYearTaxableIncome * simulation.MarginalTaxRate).ToDollars();
+                var taxes = (_currentYearTaxableIncome * simulation.MarginalTaxRatePerYear).ToDollars();
                 if (taxes > 0)
                 {
                     proceeds -= taxes;
@@ -340,7 +340,7 @@ namespace RentVsOwn
                 if (_totalUsedDepreciation > 0)
                 {
                     var reclaimedDepreciation = Math.Min(capitalGains, _totalUsedDepreciation).ToDollars();
-                    var reclaimedDepreciationTaxes = (reclaimedDepreciation * simulation.MarginalTaxRate).ToDollars();
+                    var reclaimedDepreciationTaxes = (reclaimedDepreciation * simulation.MarginalTaxRatePerYear).ToDollars();
                     if (reclaimedDepreciationTaxes > 0)
                     {
                         proceeds -= reclaimedDepreciationTaxes;
@@ -353,7 +353,7 @@ namespace RentVsOwn
 
                 if (capitalGains > 0)
                 {
-                    var capitalGainsTaxes = (capitalGains * simulation.CapitalGainsRate).ToDollars();
+                    var capitalGainsTaxes = (capitalGains * simulation.CapitalGainsRatePerYear).ToDollars();
                     proceeds -= capitalGainsTaxes;
                     _totalExpenses += capitalGainsTaxes;
                     output.WriteLine($"* Paid capital gains taxes of {capitalGainsTaxes:C0} on {capitalGains:C0}");
@@ -406,8 +406,8 @@ namespace RentVsOwn
         {
             var homeValue = simulation.LandlordHomeValue;
             output.WriteLine($"* Sold home for {homeValue:C0}");
-            var salesFixedCosts = simulation.SalesFixedCosts;
-            var salesCommission = simulation.SalesCommissionPercentage * homeValue;
+            var salesFixedCosts = simulation.SellerFixedCosts;
+            var salesCommission = simulation.SellerCommissionPercentage * homeValue;
             var proceeds = homeValue - (salesFixedCosts + salesCommission);
             output.WriteLine($"* Fixed sales costs of {salesFixedCosts:C0} and commission of {salesCommission:C0} leaving proceeds of {proceeds:C0}");
             _totalExpenses += salesFixedCosts + salesCommission;

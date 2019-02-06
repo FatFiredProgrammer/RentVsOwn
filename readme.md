@@ -37,6 +37,48 @@ EBTA x Marginal Tax Rate =  Estimated Property Income Taxes
 EBTA - Estimate Property Income Taxes = Net Income
 Net Income + Depreciation - Mortgage Principal Payments = Net Cash Flow
 
+# Simulation Parameters
+
+|Parameter|Value|Notes|
+| :--- | ---: | :--- |
+|Name of  Simulation|Default Simulation||
+|Years|8.7|Number of years the simulation runs. Default is 8.7; the national average for home ownership.|
+|Months|104|Number of months the simulation runs.|
+|Home Purchase Amount|$289,900|Home purchase amount. Default is $289,900.|
+|Home Appreciation Percentage Per Year|2.80%|Home appreciation per year. Default is 3.7% (historic average).|
+|Insurance Per Month|$150|Insurance costs per month. Default is $150.|
+|Hoa Per Month|$0|HOA fees per month. Default is $100.|
+|Home Maintenance Percentage Per Year|1.50%|Home maintenance percentage per year. Default is 1.5%.|
+|Owner Interest Rate Per Year|4.25%|Home owner's mortgage interest rate. Default is 4.25%.|
+|Owner Loan Years|30|Home owner's loan term. Default is 30 years.|
+|Owner Down Payment Percentage|20.00%|Home owner down payment percentage. Default is 20%.|
+|Owner Down Payment|$57,980|Home owner down payment. Calculated.|
+|Owner Loan Amount|$231,920|Home owner loan amount. Calculated.|
+|Owner Monthly Payment|$1,141|Home owner monthly payment. Calculated.|
+|Landlord Interest Rate|4.75%|Landlord's mortgage interest rate. Default is 4.75%. If null, use home owner's value.|
+|Landlord Loan Years|20|Landlord's loan term. Default is 20 years. If null, use home owner's value.|
+|Landlord Down Payment Percentage|25.00%|Landlord down payment percentage. Default is 25%. If null, use home owner's value.|
+|Landlord Down Payment|$72,475|Landlord down payment. Calculated.|
+|Landlord Loan Amount|$217,425|Landlord loan amount. Calculated.|
+|Landlord Monthly Payment|$1,405|Landlord monthly payment. Calculated.|
+|Landlord Management Fee Percentage Per Month|10.00%|Landlord property management fee as a percentage of monthly rent. Default is 10%.|
+|Rent Per Month|$2,165|Initial rent per month. Defaults is the home owners initial monthly expense.|
+|Rent Security Deposit Months|1|Number of months of rent retained as security deposit. Defaults is 1.|
+|Renters Insurance Per Month|$15|Renter's insurance cost per month. Default is $15.|
+|Rent Change Per Year Percentage|3.00%|The percentage increase in rent each year. Default is 3%.|
+|Buyer Fixed Costs|$1,500|Fixed closing costs like title insurance, inspection, appraisal, etc. Defaults is $1,500.|
+|Buyer Variable Costs Percentage|1.50%|Variable closing costs such as loan origination. Defaults is 1.5%.|
+|Seller Commission Percentage|6.00%|Commission percentage paid to sell a home. Default is 6% (Omaha).|
+|Seller Fixed Costs|$1,000|Fixed costs to sell a home. Title insurance, doc fees, etc. Default is $1000.|
+|Depreciation Years|27.50|Number of years to depreciate. Default is 27.5.|
+|Depreciable Percentage|80.00%|Percentage of the home which is depreciable versus land. Defaults is 80%.|
+|Capital Gains Rate Per Year|15.00%|Capital gains tax rate per year. Default is 15%.|
+|Marginal Tax Rate Per Year|24.00%|Marginal tax rate per year. Default is 24%.|
+|Property Tax Percentage Per Year|2.12%|Property tax percentage per year. Default is 2.12% (Omaha).|
+|Discount Rate Per Year|8.00%|Assumed rate of return per year for investments and also the rate assumed in NPV calculations. Defaults is 8%.|
+|Discount Rate Per Month|0.64%|Monthly discount rate.|
+|Inflation Rate Per Year|2.80%|The inflation percentage per year. Defaults is 2.8%.|
+
 
 ## Sample Run
 
