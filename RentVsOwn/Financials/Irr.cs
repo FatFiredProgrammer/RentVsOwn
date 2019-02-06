@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace RentVsOwn.Financials
@@ -20,11 +21,9 @@ namespace RentVsOwn.Financials
             _cashFlows = cashFlows.ToList();
         }
 
-        public static int MaxIterations { get; set; } = 50000;
+        public static int MaxIterations { get; set; } = 25;
 
-        public static double Tolerance { get; set; } = 0.00000001;
-
-        private int _iterationCount;
+        public static double Precision { get; set; } = 0.00000001;
 
         private readonly double _guess;
 
@@ -37,70 +36,51 @@ namespace RentVsOwn.Financials
             return discountRate;
         }
 
-        private double Calculate(double estimatedReturn)
+        private double Calculate(double guess)
         {
-            _iterationCount++;
-            var result = estimatedReturn - SumOfPolynomial(estimatedReturn) / CalculateDerivativeSum(estimatedReturn);
-            while (!HasConverged(result) && MaxIterations != _iterationCount)
+            var x0 = guess;
+            var i = 0;
+
+            while (i < MaxIterations && !double.IsInfinity(x0) && !double.IsNaN(x0))
             {
-                result = Calculate(result);
+                var npv = 0d;
+                var ddx = 0d;
+
+                var x2 = x0;
+                npv = Reduce(_cashFlows, (pv, pmt, t) => pv + pmt / Math.Pow(x2 + 1.0d, t), 0d);
+                var x3 = x0;
+                ddx = Reduce(_cashFlows, (pv, pmt, t) => pv + -t * pmt / Math.Pow(x3 + 1.0d, t + 1), 0d);
+                var x1 = x0 - npv / ddx;
+                if (double.IsInfinity(x1) || double.IsNaN(x1))
+                    break;
+
+                if (Math.Abs(x1 - x0) <= Precision)
+                    return x1;
+
+                x0 = x1;
+                ++i;
             }
 
-            return result;
+            return double.NaN;
         }
 
         private double Calculate()
         {
-            var result = Calculate(_guess);
-            if (result > 1)
-                throw new Exception("IRR calculation failed to converge.");
+            var value = Calculate(_guess);
+            if (!double.IsNaN(value))
+                return value;
 
-            return result;
+            value = Calculate(.1d);
+            if (!double.IsNaN(value))
+                return value;
+
+            return Calculate(-.1d);
         }
 
-        /// <summary>
-        ///     IRRs the derivative sum.
-        /// </summary>
-        /// <param name="estimatedReturnRate">The estimated return rate.</param>
-        /// <returns></returns>
-        private double CalculateDerivativeSum(double estimatedReturnRate)
+        private static double Reduce(IEnumerable<double> array, Func<double, double, int, double> fn, double initialValue)
         {
-            var sumOfDerivative = 0d;
-            if (IsValidIterationBounds(estimatedReturnRate))
-            {
-                for (var i = 1; i < _cashFlows.Count; i++)
-                {
-                    sumOfDerivative += _cashFlows[i] * i / Math.Pow(1 + estimatedReturnRate, i);
-                }
-            }
-
-            return sumOfDerivative * -1;
-        }
-
-        private bool HasConverged(double estimatedReturnRate)
-        {
-            //Check that the calculated value makes the IRR polynomial zero.
-            var isWithinTolerance = Math.Abs(SumOfPolynomial(estimatedReturnRate)) <= Tolerance;
-            return isWithinTolerance;
-        }
-
-        private static bool IsValidIterationBounds(double estimatedReturnRate) =>
-            Math.Abs(estimatedReturnRate + 1) > Tolerance &&
-            estimatedReturnRate < int.MaxValue &&
-            estimatedReturnRate > int.MinValue;
-
-        private double SumOfPolynomial(double estimatedReturnRate)
-        {
-            var sumOfPolynomial = 0d;
-            if (IsValidIterationBounds(estimatedReturnRate))
-            {
-                for (var j = 0; j < _cashFlows.Count; j++)
-                {
-                    sumOfPolynomial += _cashFlows[j] / Math.Pow(1 + estimatedReturnRate, j);
-                }
-            }
-
-            return sumOfPolynomial;
+            var index = 0;
+            return array.Aggregate(initialValue, (current, item) => fn(current, item, index++));
         }
     }
 }

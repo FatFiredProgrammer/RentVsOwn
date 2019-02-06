@@ -30,6 +30,7 @@ namespace RentVsOwn
                 {
                     // LandlordManagementFeePercentage = .1m,
                     HoaPerMonth = 0,
+
                     // Rent = 2100,
                     // LandlordDownPaymentPercentage = null,
                     // LandlordInterestRate = null,

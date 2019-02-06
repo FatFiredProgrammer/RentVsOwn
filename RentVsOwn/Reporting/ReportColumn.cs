@@ -102,10 +102,10 @@ namespace RentVsOwn.Reporting
                 Npv = (decimal)Financials.Npv.Calculate(_cashFlows, discountRate);
             if (CalculateIrr)
             {
-                Trace.WriteLine($"{discountRate:F6}");
+                Trace.WriteLine($"{discountRate:F6},");
                 foreach (var cashFlow in _cashFlows)
                 {
-                    Trace.WriteLine($"{cashFlow:F6}");
+                    Trace.WriteLine($"{cashFlow:F6},");
                 }
                 Irr = (decimal)Financials.Irr.Calculate(_cashFlows, discountRate);
             }
