@@ -45,6 +45,12 @@ namespace RentVsOwn
             public decimal HomeValue { get; set; }
         }
 
+        public Renter(ISimulation simulation, IOutput output)
+            :base(simulation, output)
+        {
+        }
+
+
         public string Name => nameof(Owner);
 
         private decimal _netWorth;
@@ -65,6 +71,11 @@ namespace RentVsOwn
 
         private List<Monthly> _months = new List<Monthly>();
         private readonly Report<Data> _report = new Report<Data>();
+        [ReportColumn(Ignore = true)]
+        public decimal OwnerLoanBalance { get; set; }
+
+        [ReportColumn(Ignore = true)]
+        public decimal OwnerHomeValue { get; set; }
 
         private void Finalize(Monthly monthly, ISimulation simulation, IOutput output)
         {
@@ -106,6 +117,9 @@ namespace RentVsOwn
 
         private void Initialize(ISimulation simulation, IOutput output)
         {
+            OwnerHomeValue = simulation.HomePurchaseAmount;
+            OwnerLoanBalance = simulation.OwnerLoanAmount;
+
             _initialInvestment = 0;
             _cash = 0;
             _totalSpent = 0;

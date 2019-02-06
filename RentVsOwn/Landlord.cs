@@ -56,8 +56,11 @@ namespace RentVsOwn
 
             public decimal NpvCashFlow { get; set; }
         }
+        public Renter(ISimulation simulation, IOutput output)
+            :base(simulation, output)
+        {
+        }
 
-        public string Name => nameof(Landlord);
 
         private decimal _netWorth;
 

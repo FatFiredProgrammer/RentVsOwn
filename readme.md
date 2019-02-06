@@ -4,6 +4,7 @@ An application that simulates owning, renting and being a landlord of a property
 
 https://fbe.unimelb.edu.au/__data/assets/pdf_file/0011/1497953/2011MayLiER_NPV_submission.pdf
 
+Check ISimulate parameter uisage.
 incorrect monthly discount rate calc!
 Not accouniting for loan balance
 large difference in monthly vs yearly npv calculations because of partial year?

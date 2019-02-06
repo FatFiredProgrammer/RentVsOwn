@@ -13,7 +13,7 @@ namespace RentVsOwn
         [ReportColumn("Name of Simulation", Format = ReportColumnFormat.Text)]
         public string Name { get; set; } = "Default Simulation";
 
-        public string GetSummary()
+        private string GetSummary()
             => new Report<Simulation>(this).ToString().TrimEnd();
 
         private void Initialize()
@@ -23,12 +23,10 @@ namespace RentVsOwn
 
             HomePurchaseAmount = Math.Max(1m, HomePurchaseAmount).ToDollars();
 
-            OwnerHomeValue = HomePurchaseAmount;
             OwnerDownPaymentPercentage = Math.Min(Math.Max(0m, OwnerDownPaymentPercentage), 100).ToPercent();
             OwnerDownPayment = (HomePurchaseAmount * OwnerDownPaymentPercentage).ToDollars();
             OwnerInterestRatePerYear = Math.Min(Math.Max(0m, OwnerInterestRatePerYear), 100).ToPercent();
             OwnerLoanAmount = HomePurchaseAmount - OwnerDownPayment;
-            OwnerLoanBalance = OwnerLoanAmount;
             OwnerLoanYears = Math.Max(1, OwnerLoanYears);
             OwnerMonthlyPayment = PaymentCalculator.CalculatePayment(OwnerLoanAmount, OwnerInterestRatePerYear, OwnerLoanYears);
 
@@ -74,11 +72,8 @@ namespace RentVsOwn
             RentSecurityDepositMonths = Math.Max(0, RentSecurityDepositMonths);
         }
 
-        public bool Next(IOutput output)
+        private bool Next()
         {
-            if (output == null)
-                throw new ArgumentNullException(nameof(output));
-
             if (Month >= Months)
                 return false;
 
@@ -103,9 +98,10 @@ namespace RentVsOwn
             // Create the various entries we are simulating
             var people = new List<IEntity>
             {
-                new Renter(),
-                // new Owner(),
-                // new Landlord(),
+                new Renter(this, output),
+
+                // new Owner(this, output),
+                // new Landlord(this, output),
             };
 
             do
@@ -114,13 +110,13 @@ namespace RentVsOwn
                 people.ForEach(c =>
                 {
                     if (IsNewYear)
-                        c.NextYear(this, output);
+                        c.NextYear();
 
                     output.WriteLine(Separator);
-                    c.Simulate(this, output);
+                    c.Simulate();
                 });
             }
-            while (Next(output)); // Move to next month.
+            while (Next()); // Move to next month.
 
             // Write the results for each entity plus any NPV data
             // ReSharper disable once ImplicitlyCapturedClosure
@@ -243,17 +239,9 @@ namespace RentVsOwn
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Notes = "Home owner monthly payment. Calculated.")]
         public decimal OwnerMonthlyPayment { get; private set; }
-
-        [ReportColumn(Ignore = true)]
-        public decimal OwnerLoanBalance { get; set; }
-
-        [ReportColumn(Ignore = true)]
-        public decimal OwnerHomeValue { get; set; }
-
         #endregion
 
         #region Landlord
-
         /// <summary>
         ///     Gets or sets the owner interest rate.
         /// </summary>
