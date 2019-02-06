@@ -12,7 +12,7 @@ using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
-    public sealed class Landlord : IEntity
+    public sealed class Landlord : Entity
     {
         [PublicAPI]
         private sealed class Data
@@ -56,7 +56,7 @@ namespace RentVsOwn
 
             public decimal NpvCashFlow { get; set; }
         }
-        public Renter(ISimulation simulation, IOutput output)
+        public Landlord(ISimulation simulation, IOutput output)
             :base(simulation, output)
         {
         }
@@ -64,7 +64,7 @@ namespace RentVsOwn
 
         private decimal _netWorth;
 
-        private decimal _initialInvestment;
+        private decimal _initialCash;
 
         /// <summary>
         ///     The basis in the home.
@@ -103,43 +103,48 @@ namespace RentVsOwn
 
         private List<Monthly> _months = new List<Monthly>();
         private readonly Report<Data> _report = new Report<Data>();
+        [ReportColumn(Ignore = true)]
+        public decimal LandlordLoanBalance { get; set; }
+
+        [ReportColumn(Ignore = true)]
+        public decimal LandlordHomeValue { get; set; }
 
 
-        private void CalculateExpenses(Monthly monthly, ISimulation simulation, IOutput output)
+        private void CalculateExpenses(Monthly monthly, )
         {
-            if (simulation.LandlordManagementFeePercentagePerMonth > 0)
+            if (Simulation.LandlordManagementFeePercentagePerMonth > 0)
             {
-                var managementFee = simulation.CurrentRentPerMonth * simulation.LandlordManagementFeePercentagePerMonth;
+                var managementFee = Simulation.CurrentRentPerMonth * Simulation.LandlordManagementFeePercentagePerMonth;
                 monthly.Expenses += managementFee;
                 monthly.Cash -= managementFee;
                 output.WriteLine($"* Management fee of {managementFee:C0}");
             }
 
-            if (simulation.PropertyTaxPercentagePerYear > 0)
+            if (Simulation.PropertyTaxPercentagePerYear > 0)
             {
-                var propertyTax = (simulation.LandlordHomeValue * simulation.PropertyTaxPercentagePerYear / 12).ToDollars();
+                var propertyTax = (Simulation.LandlordHomeValue * Simulation.PropertyTaxPercentagePerYear / 12).ToDollars();
                 monthly.Expenses += propertyTax;
                 monthly.Cash -= propertyTax;
                 output.WriteLine($"* Spent {propertyTax:C0} on property tax");
             }
 
-            if (simulation.InsurancePerMonth > 0)
+            if (Simulation.InsurancePerMonth > 0)
             {
-                monthly.Expenses += simulation.InsurancePerMonth;
-                monthly.Cash -= simulation.InsurancePerMonth;
-                output.WriteLine($"* Spent {simulation.InsurancePerMonth:C0} on insurance");
+                monthly.Expenses += Simulation.InsurancePerMonth;
+                monthly.Cash -= Simulation.InsurancePerMonth;
+                output.WriteLine($"* Spent {Simulation.InsurancePerMonth:C0} on insurance");
             }
 
-            if (simulation.HoaPerMonth > 0)
+            if (Simulation.HoaPerMonth > 0)
             {
-                monthly.Expenses += simulation.HoaPerMonth;
-                monthly.Cash -= simulation.HoaPerMonth;
-                output.WriteLine($"* Spent {simulation.HoaPerMonth:C0} on HOA");
+                monthly.Expenses += Simulation.HoaPerMonth;
+                monthly.Cash -= Simulation.HoaPerMonth;
+                output.WriteLine($"* Spent {Simulation.HoaPerMonth:C0} on HOA");
             }
 
-            if (simulation.HomeMaintenancePercentagePerYear > 0)
+            if (Simulation.HomeMaintenancePercentagePerYear > 0)
             {
-                var homeMaintenance = (simulation.LandlordHomeValue * simulation.HomeMaintenancePercentagePerYear / 12).ToDollars();
+                var homeMaintenance = (Simulation.LandlordHomeValue * Simulation.HomeMaintenancePercentagePerYear / 12).ToDollars();
                 monthly.Expenses += homeMaintenance;
                 monthly.Cash -= homeMaintenance;
                 output.WriteLine($"* Spent {homeMaintenance:C0} on home maintenance");
@@ -148,16 +153,16 @@ namespace RentVsOwn
             // If we have a personal loan, pay interest on it.
             if (_personalLoan > 0)
             {
-                var personalLoanInterest = (_personalLoan * simulation.DiscountRatePerYear / 12).ToDollars();
+                var personalLoanInterest = (_personalLoan * Simulation.DiscountRatePerYear / 12).ToDollars();
                 monthly.Expenses += personalLoanInterest;
                 monthly.Cash -= personalLoanInterest;
                 output.WriteLine($"* Spent {personalLoanInterest:C0} on interest on personal loan");
             }
 
             // We pay the previous years taxes at the start of each new year.
-            if (simulation.IsNewYear && _currentYearTaxableIncome > 0)
+            if (Simulation.IsNewYear && _currentYearTaxableIncome > 0)
             {
-                var taxes = (_currentYearTaxableIncome * simulation.MarginalTaxRatePerYear).ToDollars();
+                var taxes = (_currentYearTaxableIncome * Simulation.MarginalTaxRatePerYear).ToDollars();
                 if (taxes > 0)
                 {
                     monthly.Expenses += taxes;
@@ -172,7 +177,7 @@ namespace RentVsOwn
             _totalExpenses += monthly.Expenses;
         }
 
-        private void CalculateTaxableIncome(Monthly monthly, ISimulation simulation, IOutput output)
+        private void CalculateTaxableIncome(Monthly monthly, )
         {
             // My net income includes amount I have paid in principle.
             var taxableIncome = monthly.NetIncome.ToDollars();
@@ -180,7 +185,7 @@ namespace RentVsOwn
 
             // We now have a net income for the month.
             // Let's see what we can do about using depreciation
-            var depreciation = (simulation.HomePurchaseAmount * simulation.DepreciablePercentage / (simulation.DepreciationYears * 12)).ToDollars();
+            var depreciation = (Simulation.HomePurchaseAmount * Simulation.DepreciablePercentage / (Simulation.DepreciationYears * 12)).ToDollars();
             output.WriteLine($"* Allowed monthly depreciation of {depreciation:C0} + carry-over of {_carryOverDepreciation:C0}");
             _carryOverDepreciation += depreciation;
 
@@ -212,12 +217,12 @@ namespace RentVsOwn
             }
         }
 
-        private void Finalize(Monthly monthly, ISimulation simulation, IOutput output)
+        private void Finalize(Monthly monthly, )
         {
-            var proceeds = SellHome(simulation, output);
-            PayTaxesOnHomeSale(ref proceeds, simulation, output);
-            PayOffLoan(ref proceeds, simulation, output);
-            PayRemainingIncomeTax(ref proceeds, simulation, output);
+            var proceeds = SellHome();
+            PayTaxesOnHomeSale(ref proceeds, );
+            PayOffLoan(ref proceeds, );
+            PayRemainingIncomeTax(ref proceeds, );
             CloseOutPersonalLoan(ref proceeds, output);
             output.WriteLine($"* Net home sale proceeds of {proceeds:C0}");
 
@@ -232,14 +237,14 @@ namespace RentVsOwn
             monthly.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1];
         }
 
-        public string GenerateReport(ReportGrouping grouping, ReportFormat format)
+        public override string GenerateReport(ReportGrouping grouping, ReportFormat format)
             => _report.Generate(grouping, format);
 
         /// <inheritdoc />
-        public void NextYear(ISimulation simulation, IOutput output)
+        public override void NextYear()
         {
             output.WriteLine(Simulation.Separator);
-            output.WriteLine($"{Name} Year # {simulation.Month / 12}{Environment.NewLine}");
+            output.WriteLine($"{Name} Year # {Simulation.Month / 12}{Environment.NewLine}");
 
             if (HomeAppreciationPercentagePerYear > 0)
             {
@@ -260,9 +265,12 @@ namespace RentVsOwn
             }
         }
 
-        private void Initialize(ISimulation simulation, IOutput output)
+        private void Initialize()
         {
-            _initialInvestment = 0;
+            LandlordHomeValue = Simulation.HomePurchaseAmount;
+            LandlordLoanBalance = Simulation.LandlordLoanAmount;
+
+            _initialCash = 0;
             _cash = 0;
             _totalRent = 0;
             _averageRent = 0;
@@ -277,24 +285,24 @@ namespace RentVsOwn
             _npv = null;
             _irr = null;
 
-            _basis = simulation.LandlordHomeValue;
-            output.WriteLine($"* Down payment of {simulation.LandlordDownPayment:C0}");
-            _initialInvestment += simulation.LandlordDownPayment;
-            output.WriteLine($"* Fixed closing costs of {simulation.BuyerFixedCosts:C0}");
-            _initialInvestment += simulation.BuyerFixedCosts;
-            _basis -= simulation.BuyerFixedCosts;
-            var variableClosingCosts = (simulation.LandlordLoanAmount * simulation.BuyerVariableCostsPercentage).ToDollars();
+            _basis = Simulation.LandlordHomeValue;
+            output.WriteLine($"* Down payment of {Simulation.LandlordDownPayment:C0}");
+            _initialCash += Simulation.LandlordDownPayment;
+            output.WriteLine($"* Fixed closing costs of {Simulation.BuyerFixedCosts:C0}");
+            _initialCash += Simulation.BuyerFixedCosts;
+            _basis -= Simulation.BuyerFixedCosts;
+            var variableClosingCosts = (Simulation.LandlordLoanAmount * Simulation.BuyerVariableCostsPercentage).ToDollars();
             output.WriteLine($"* Variable closing costs of {variableClosingCosts:C0}");
-            _initialInvestment += variableClosingCosts;
+            _initialCash += variableClosingCosts;
             _basis -= variableClosingCosts;
-            output.WriteLine($"* Total initial investment of {_initialInvestment:C0}");
+            output.WriteLine($"* Total initial investment of {_initialCash:C0}");
             output.WriteLine($"* Basis in home purchase {_basis:C0}");
-            output.WriteLine($"* Initial loan balance of {simulation.LandlordLoanBalance:C0}");
+            output.WriteLine($"* Initial loan balance of {Simulation.LandlordLoanBalance:C0}");
 
             // TODO: Code needs work
 #if false
      Report.AddNotes
-            _report.DiscountRatePerYear = simulation.DiscountRatePerYear;
+            _report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
             _report.AddNote(output.WriteLine($"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
             _report.Add(new Data
             {
@@ -304,16 +312,16 @@ namespace RentVsOwn
 
         }
 
-        private Monthly InitializeMonthly(ISimulation simulation, IOutput output)
+        private Monthly InitializeMonthly()
         {
             // Set up our monthly ledger
             var monthly = new Monthly
             {
-                Rent = simulation.CurrentRentPerMonth,
+                Rent = Simulation.CurrentRentPerMonth,
                 Interest = 0,
                 Principal = 0,
                 Expenses = 0,
-                Cash = simulation.CurrentRentPerMonth,
+                Cash = Simulation.CurrentRentPerMonth,
                 PersonalLoan = 0,
             };
 
@@ -321,16 +329,16 @@ namespace RentVsOwn
             output.WriteLine($"* Received rent of {monthly.Rent:C0}");
 
             // See if we are still paying on loan.
-            if (simulation.LandlordLoanBalance > 0)
+            if (Simulation.LandlordLoanBalance > 0)
             {
-                var loanPayment = simulation.LandlordMonthlyPayment;
-                monthly.Interest = (simulation.LandlordLoanBalance * simulation.LandlordInterestRate / 12).ToDollars();
-                monthly.Principal = Math.Min(loanPayment - monthly.Interest, simulation.LandlordLoanBalance).ToDollars();
+                var loanPayment = Simulation.LandlordMonthlyPayment;
+                monthly.Interest = (Simulation.LandlordLoanBalance * Simulation.LandlordInterestRate / 12).ToDollars();
+                monthly.Principal = Math.Min(loanPayment - monthly.Interest, Simulation.LandlordLoanBalance).ToDollars();
 
                 output.WriteLine($"* Loan payment of {loanPayment:C0} ({monthly.Principal:C0} principal / {monthly.Interest:C0} interest)");
 
-                simulation.LandlordLoanBalance -= monthly.Principal;
-                output.WriteLine($"* New loan balance of {simulation.LandlordLoanBalance:C0}");
+                Simulation.LandlordLoanBalance -= monthly.Principal;
+                output.WriteLine($"* New loan balance of {Simulation.LandlordLoanBalance:C0}");
 
                 monthly.Cash -= monthly.Interest;
                 monthly.Expenses += monthly.Interest;
@@ -340,35 +348,35 @@ namespace RentVsOwn
             return monthly;
         }
 
-        private static void PayDownLoan(Monthly monthly, ISimulation simulation, IOutput output)
+        private static void PayDownLoan(Monthly monthly, )
         {
             // If we have any cash left, use it to pay down the mortgage balance.
-            if (monthly.Cash > 0 && simulation.LandlordLoanBalance > 0)
+            if (monthly.Cash > 0 && Simulation.LandlordLoanBalance > 0)
             {
-                var additionalPrincipal = Math.Min(simulation.LandlordLoanBalance, monthly.Cash);
-                simulation.LandlordLoanBalance -= additionalPrincipal;
+                var additionalPrincipal = Math.Min(Simulation.LandlordLoanBalance, monthly.Cash);
+                Simulation.LandlordLoanBalance -= additionalPrincipal;
                 monthly.Cash -= additionalPrincipal;
-                output.WriteLine($"* Paid additional principal of {additionalPrincipal:C0} leaving balance of {simulation.LandlordLoanBalance:C0} and cash of {monthly.Cash:C0}");
+                output.WriteLine($"* Paid additional principal of {additionalPrincipal:C0} leaving balance of {Simulation.LandlordLoanBalance:C0} and cash of {monthly.Cash:C0}");
             }
         }
 
-        private static void PayOffLoan(ref decimal proceeds, ISimulation simulation, IOutput output)
+        private static void PayOffLoan(ref decimal proceeds, )
         {
-            if (simulation.LandlordLoanBalance > 0)
+            if (Simulation.LandlordLoanBalance > 0)
             {
-                output.WriteLine($"* Paid off loan balance of {simulation.LandlordLoanBalance:C0}");
-                proceeds -= simulation.LandlordLoanBalance;
-                simulation.LandlordLoanBalance = 0;
+                output.WriteLine($"* Paid off loan balance of {Simulation.LandlordLoanBalance:C0}");
+                proceeds -= Simulation.LandlordLoanBalance;
+                Simulation.LandlordLoanBalance = 0;
             }
 
-            simulation.LandlordHomeValue = 0;
+            Simulation.LandlordHomeValue = 0;
         }
 
-        private void PayRemainingIncomeTax(ref decimal proceeds, ISimulation simulation, IOutput output)
+        private void PayRemainingIncomeTax(ref decimal proceeds, )
         {
             if (_currentYearTaxableIncome > 0)
             {
-                var taxes = (_currentYearTaxableIncome * simulation.MarginalTaxRatePerYear).ToDollars();
+                var taxes = (_currentYearTaxableIncome * Simulation.MarginalTaxRatePerYear).ToDollars();
                 if (taxes > 0)
                 {
                     proceeds -= taxes;
@@ -380,7 +388,7 @@ namespace RentVsOwn
             }
         }
 
-        private void PayTaxesOnHomeSale(ref decimal proceeds, ISimulation simulation, IOutput output)
+        private void PayTaxesOnHomeSale(ref decimal proceeds, )
         {
             var capitalGains = proceeds - _basis;
             if (capitalGains > 0)
@@ -389,7 +397,7 @@ namespace RentVsOwn
                 if (_totalUsedDepreciation > 0)
                 {
                     var reclaimedDepreciation = Math.Min(capitalGains, _totalUsedDepreciation).ToDollars();
-                    var reclaimedDepreciationTaxes = (reclaimedDepreciation * simulation.MarginalTaxRatePerYear).ToDollars();
+                    var reclaimedDepreciationTaxes = (reclaimedDepreciation * Simulation.MarginalTaxRatePerYear).ToDollars();
                     if (reclaimedDepreciationTaxes > 0)
                     {
                         proceeds -= reclaimedDepreciationTaxes;
@@ -402,7 +410,7 @@ namespace RentVsOwn
 
                 if (capitalGains > 0)
                 {
-                    var capitalGainsTaxes = (capitalGains * simulation.CapitalGainsRatePerYear).ToDollars();
+                    var capitalGainsTaxes = (capitalGains * Simulation.CapitalGainsRatePerYear).ToDollars();
                     proceeds -= capitalGainsTaxes;
                     _totalExpenses += capitalGainsTaxes;
                     output.WriteLine($"* Paid capital gains taxes of {capitalGainsTaxes:C0} on {capitalGains:C0}");
@@ -410,13 +418,13 @@ namespace RentVsOwn
             }
         }
 
-        private Monthly Process(ISimulation simulation, IOutput output)
+        private Monthly Process()
         {
-            var monthly = InitializeMonthly(simulation, output);
-            CalculateExpenses(monthly, simulation, output);
-            CalculateTaxableIncome(monthly, simulation, output);
+            var monthly = InitializeMonthly();
+            CalculateExpenses(monthly, );
+            CalculateTaxableIncome(monthly, );
             RepayPersonalLoan(monthly, output);
-            PayDownLoan(monthly, simulation, output);
+            PayDownLoan(monthly, );
             TakePersonalLoan(monthly, output);
             RecordCashFlow(monthly, output);
             return monthly;
@@ -451,12 +459,12 @@ namespace RentVsOwn
             }
         }
 
-        private decimal SellHome(ISimulation simulation, IOutput output)
+        private decimal SellHome()
         {
-            var homeValue = simulation.LandlordHomeValue;
+            var homeValue = Simulation.LandlordHomeValue;
             output.WriteLine($"* Sold home for {homeValue:C0}");
-            var salesFixedCosts = simulation.SellerFixedCosts;
-            var salesCommission = simulation.SellerCommissionPercentage * homeValue;
+            var salesFixedCosts = Simulation.SellerFixedCosts;
+            var salesCommission = Simulation.SellerCommissionPercentage * homeValue;
             var proceeds = homeValue - (salesFixedCosts + salesCommission);
             output.WriteLine($"* Fixed sales costs of {salesFixedCosts:C0} and commission of {salesCommission:C0} leaving proceeds of {proceeds:C0}");
             _totalExpenses += salesFixedCosts + salesCommission;
@@ -464,26 +472,26 @@ namespace RentVsOwn
         }
 
         /// <inheritdoc />
-        public void Simulate(ISimulation simulation, IOutput output)
+        public override void Simulate()
         {
             if (simulation == null)
                 throw new ArgumentNullException(nameof(simulation));
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
 
-            output.WriteLine($"{Name} in month # {simulation.Month}{Environment.NewLine}");
+            output.WriteLine($"{Name} in month # {Simulation.Month}{Environment.NewLine}");
 
-            if (simulation.IsInitialMonth)
-                Initialize(simulation, output);
-            var monthly = Process(simulation, output);
-            if (simulation.IsFinalMonth)
-                Finalize(monthly, simulation, output);
+            if (Simulation.IsInitialMonth)
+                Initialize();
+            var monthly = Process();
+            if (Simulation.IsFinalMonth)
+                Finalize(monthly, );
 
             _months.Add(monthly);
 
-            _averageRent = (_totalRent / simulation.Month).ToDollars();
-            _averageExpenses = (_totalExpenses / simulation.Month).ToDollars();
-            _netWorth = _cash - _personalLoan + simulation.LandlordHomeValue - simulation.LandlordLoanBalance;
+            _averageRent = (_totalRent / Simulation.Month).ToDollars();
+            _averageExpenses = (_totalExpenses / Simulation.Month).ToDollars();
+            _netWorth = _cash - _personalLoan + Simulation.LandlordHomeValue - Simulation.LandlordLoanBalance;
             // TODO: Code needs work
 #if false
                  _report.Add(data); 
@@ -508,7 +516,7 @@ namespace RentVsOwn
         {
             var text = new StringBuilder();
             text.AppendLine(
-                $"{Name} received total rent of {_totalRent:C0} (average of {_averageRent:C0} / month), total expenses of {_totalExpenses:C0} (average of {_averageExpenses:C0} / month), and has net worth of {_netWorth:C0} on initial investment of {_initialInvestment:C0}");
+                $"{Name} received total rent of {_totalRent:C0} (average of {_averageRent:C0} / month), total expenses of {_totalExpenses:C0} (average of {_averageExpenses:C0} / month), and has net worth of {_netWorth:C0} on initial investment of {_initialCash:C0}");
             if (_npv.HasValue)
                 text.AppendLine($"Net present value of {_npv:C0}");
             if (_irr.HasValue)

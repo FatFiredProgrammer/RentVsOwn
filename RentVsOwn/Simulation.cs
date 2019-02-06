@@ -30,7 +30,6 @@ namespace RentVsOwn
             OwnerLoanYears = Math.Max(1, OwnerLoanYears);
             OwnerMonthlyPayment = PaymentCalculator.CalculatePayment(OwnerLoanAmount, OwnerInterestRatePerYear, OwnerLoanYears);
 
-            LandlordHomeValue = HomePurchaseAmount;
             LandlordDownPaymentPercentage = LandlordDownPaymentPercentage ?? OwnerDownPaymentPercentage;
             LandlordDownPaymentPercentage = Math.Min(Math.Max(0m, LandlordDownPaymentPercentage.Value), 100).ToPercent();
             LandlordDownPayment = (HomePurchaseAmount * LandlordDownPaymentPercentage.Value).ToDollars();
@@ -38,7 +37,6 @@ namespace RentVsOwn
             LandlordInterestRate = Math.Min(Math.Max(0m, LandlordInterestRate.Value), 100).ToPercent();
             LandlordManagementFeePercentagePerMonth = Math.Min(Math.Max(0m, LandlordManagementFeePercentagePerMonth), 100).ToPercent();
             LandlordLoanAmount = HomePurchaseAmount - LandlordDownPayment;
-            LandlordLoanBalance = LandlordLoanAmount;
             LandlordLoanYears = Math.Max(1, LandlordLoanYears ?? OwnerLoanYears);
             LandlordMonthlyPayment = PaymentCalculator.CalculatePayment(LandlordLoanAmount, LandlordInterestRate.Value, LandlordLoanYears.Value);
 
@@ -98,9 +96,9 @@ namespace RentVsOwn
             // Create the various entries we are simulating
             var people = new List<IEntity>
             {
-                new Renter(this, output),
+                // new Renter(this, output),
+                new Owner(this, output),
 
-                // new Owner(this, output),
                 // new Landlord(this, output),
             };
 
@@ -125,7 +123,7 @@ namespace RentVsOwn
                 output.WriteLine(Separator);
                 output.WriteLine(c.ToString().TrimEnd());
 
-                const ReportFormat format = ReportFormat.Markdown;
+                const ReportFormat format = ReportFormat.Csv;
                 var yearly = c.GenerateReport(ReportGrouping.Yearly, format);
                 if (!string.IsNullOrWhiteSpace(yearly))
                 {
@@ -282,12 +280,6 @@ namespace RentVsOwn
         /// <value>The management fee percentage.</value>
         [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Landlord property management fee as a percentage of monthly rent. Default is 10%.")]
         public decimal LandlordManagementFeePercentagePerMonth { get; set; } = .1m;
-
-        [ReportColumn(Ignore = true)]
-        public decimal LandlordLoanBalance { get; set; }
-
-        [ReportColumn(Ignore = true)]
-        public decimal LandlordHomeValue { get; set; }
         #endregion
 
         #region Rent

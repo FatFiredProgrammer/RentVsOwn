@@ -13,13 +13,13 @@ namespace RentVsOwn
         private sealed class Data
         {
             [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Expenses => Rent + RentersInsurance;
+            public decimal Expenses => Rent + Insurance;
 
             [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
             public decimal Rent { get; set; }
 
             [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal RentersInsurance { get; set; }
+            public decimal Insurance { get; set; }
 
             [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateNpv = true, CalculateIrr = true)]
             public decimal CashFlow { get; set; }
@@ -138,8 +138,8 @@ namespace RentVsOwn
 
             if (_rentersInsurancePerMonth > 0)
             {
-                data.RentersInsurance = _rentersInsurancePerMonth;
-                data.CashFlow -= data.RentersInsurance;
+                data.Insurance = _rentersInsurancePerMonth;
+                data.CashFlow -= data.Insurance;
                 WriteLine($"* {_rentersInsurancePerMonth:C0} renter's insurance");
             }
 
