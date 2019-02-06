@@ -17,6 +17,8 @@ namespace RentVsOwn.Reporting
 
             public static readonly Separators Markdown = new Separators("|", "|", "|");
 
+            public static readonly Separators None = new Separators(string.Empty, string.Empty, string.Empty);
+
             private Separators(string first, string middle, string last)
             {
                 First = first;
@@ -44,7 +46,7 @@ namespace RentVsOwn.Reporting
 
         private List<T> _data = new List<T>();
 
-        public ReportGrouping Grouping { get; set; }
+        private List<string> _notes = new List<string>();
 
         public void Add(T item)
         {
@@ -54,7 +56,15 @@ namespace RentVsOwn.Reporting
             _data.Add(item);
         }
 
-        public string Generate(ReportFormat format)
+        public void AddNote(string note)
+        {
+            if (note == null)
+                throw new ArgumentNullException(nameof(note));
+
+            _notes.Add(note);
+        }
+
+        public string Generate(ReportGrouping grouping, ReportFormat format)
         {
             var columns = GenerateColumns().ToList();
             if (columns.Count == 0)
@@ -63,24 +73,24 @@ namespace RentVsOwn.Reporting
             switch (format)
             {
                 case ReportFormat.Markdown:
-                    return GenerateMarkdown(columns);
+                    return GenerateNotes(format, Separators.None) + GenerateMarkdown(grouping, columns);
 
                 case ReportFormat.Csv:
-                    return GenerateCsv(columns);
+                    return GenerateNotes(format, Separators.Csv) + GenerateCsv(grouping, columns);
 
                 case ReportFormat.Parameters:
-                    return GenerateParameters(columns);
+                    return GenerateNotes(format, Separators.None) + GenerateParameters(columns);
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(format), format, null);
             }
         }
 
-        private void GenerateCalculated(List<ReportColumn> columns)
+        private void GenerateCalculated(ReportGrouping grouping, List<ReportColumn> columns)
         {
             foreach (var column in columns)
             {
-                column.Calculate(Grouping, (double)DiscountRatePerYear);
+                column.Calculate(grouping, (double)DiscountRatePerYear);
             }
         }
 
@@ -99,24 +109,24 @@ namespace RentVsOwn.Reporting
             }
         }
 
-        private string GenerateCsv(List<ReportColumn> columns)
+        private string GenerateCsv(ReportGrouping grouping, List<ReportColumn> columns)
         {
             var text = new StringBuilder();
-            GenerateHeaders(text, columns, Separators.Csv);
-            GenerateData(text, columns, Separators.Csv);
-            GenerateCalculated(columns);
-            GenerateFooters(text, columns, Separators.Csv);
+            GenerateHeaders(text, grouping, columns, Separators.Csv);
+            GenerateData(text, grouping, columns, Separators.Csv);
+            GenerateCalculated(grouping, columns);
+            GenerateFooters(text, grouping, columns, Separators.Csv);
             return text.ToString();
         }
 
-        private void GenerateData(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        private void GenerateData(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns, Separators separators)
         {
-            var groups = GetGroups().ToList();
+            var groups = GetGroups(grouping).ToList();
             foreach (var @group in groups)
             {
                 var first = true;
                 text.Append(separators.First);
-                switch (Grouping)
+                switch (grouping)
                 {
                     case ReportGrouping.Monthly:
                         text.Append($"{@group.Period}");
@@ -132,7 +142,7 @@ namespace RentVsOwn.Reporting
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+                        throw new ArgumentOutOfRangeException(nameof(grouping), grouping.ToString());
                 }
 
                 foreach (var column in columns)
@@ -149,14 +159,14 @@ namespace RentVsOwn.Reporting
             }
         }
 
-        private void GenerateFooterAverage(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        private void GenerateFooterAverage(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns, Separators separators)
         {
             if (!columns.Any(c => c.CalculateAverage))
                 return;
 
             var first = true;
             text.Append(separators.First);
-            switch (Grouping)
+            switch (grouping)
             {
                 case ReportGrouping.Monthly:
                 case ReportGrouping.Yearly:
@@ -168,7 +178,7 @@ namespace RentVsOwn.Reporting
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+                    throw new ArgumentOutOfRangeException(nameof(grouping), grouping.ToString());
             }
 
             foreach (var column in columns)
@@ -184,14 +194,14 @@ namespace RentVsOwn.Reporting
             text.AppendLine(separators.Last);
         }
 
-        private void GenerateFooterIrr(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        private void GenerateFooterIrr(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns, Separators separators)
         {
             if (!columns.Any(c => c.CalculateIrr))
                 return;
 
             var first = true;
             text.Append(separators.First);
-            switch (Grouping)
+            switch (grouping)
             {
                 case ReportGrouping.Monthly:
                 case ReportGrouping.Yearly:
@@ -203,7 +213,7 @@ namespace RentVsOwn.Reporting
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+                    throw new ArgumentOutOfRangeException(nameof(grouping), grouping.ToString());
             }
 
             foreach (var column in columns)
@@ -219,14 +229,14 @@ namespace RentVsOwn.Reporting
             text.AppendLine(separators.Last);
         }
 
-        private void GenerateFooterNpv(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        private void GenerateFooterNpv(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns, Separators separators)
         {
             if (!columns.Any(c => c.CalculateNpv))
                 return;
 
             var first = true;
             text.Append(separators.First);
-            switch (Grouping)
+            switch (grouping)
             {
                 case ReportGrouping.Monthly:
                 case ReportGrouping.Yearly:
@@ -238,7 +248,7 @@ namespace RentVsOwn.Reporting
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+                    throw new ArgumentOutOfRangeException(nameof(grouping), grouping.ToString());
             }
 
             foreach (var column in columns)
@@ -254,22 +264,22 @@ namespace RentVsOwn.Reporting
             text.AppendLine(separators.Last);
         }
 
-        private void GenerateFooters(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        private void GenerateFooters(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns, Separators separators)
         {
-            GenerateFooterSum(text, columns, separators);
-            GenerateFooterAverage(text, columns, separators);
-            GenerateFooterNpv(text, columns, separators);
-            GenerateFooterIrr(text, columns, separators);
+            GenerateFooterSum(text, grouping, columns, separators);
+            GenerateFooterAverage(text, grouping, columns, separators);
+            GenerateFooterNpv(text, grouping, columns, separators);
+            GenerateFooterIrr(text, grouping, columns, separators);
         }
 
-        private void GenerateFooterSum(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        private void GenerateFooterSum(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns, Separators separators)
         {
             if (!columns.Any(c => c.CalculateSum))
                 return;
 
             var first = true;
             text.Append(separators.First);
-            switch (Grouping)
+            switch (grouping)
             {
                 case ReportGrouping.Monthly:
                 case ReportGrouping.Yearly:
@@ -281,7 +291,7 @@ namespace RentVsOwn.Reporting
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+                    throw new ArgumentOutOfRangeException(nameof(grouping), grouping.ToString());
             }
 
             foreach (var column in columns)
@@ -297,11 +307,11 @@ namespace RentVsOwn.Reporting
             text.AppendLine(separators.Last);
         }
 
-        private void GenerateHeaders(StringBuilder text, List<ReportColumn> columns, Separators separators)
+        private void GenerateHeaders(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns, Separators separators)
         {
             var first = true;
             text.Append(separators.First);
-            switch (Grouping)
+            switch (grouping)
             {
                 case ReportGrouping.Monthly:
                     text.Append("Month");
@@ -317,7 +327,7 @@ namespace RentVsOwn.Reporting
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+                    throw new ArgumentOutOfRangeException(nameof(grouping), grouping.ToString());
             }
 
             foreach (var column in columns)
@@ -332,23 +342,23 @@ namespace RentVsOwn.Reporting
             text.AppendLine(separators.Last);
         }
 
-        private string GenerateMarkdown(List<ReportColumn> columns)
+        private string GenerateMarkdown(ReportGrouping grouping, List<ReportColumn> columns)
         {
             var text = new StringBuilder();
-            GenerateHeaders(text, columns, Separators.Csv);
-            GenerateMarkdownAlignment(text, columns);
-            GenerateData(text, columns, Separators.Csv);
-            GenerateCalculated(columns);
-            GenerateFooters(text, columns, Separators.Csv);
+            GenerateHeaders(text, grouping, columns, Separators.Markdown);
+            GenerateMarkdownAlignment(text, grouping, columns);
+            GenerateData(text, grouping, columns, Separators.Markdown);
+            GenerateCalculated(grouping, columns);
+            GenerateFooters(text, grouping, columns, Separators.Markdown);
             return text.ToString();
         }
 
-        private void GenerateMarkdownAlignment(StringBuilder text, List<ReportColumn> columns)
+        private void GenerateMarkdownAlignment(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns)
         {
             text.Append(Separators.Markdown.First);
 
             var first = true;
-            switch (Grouping)
+            switch (grouping)
             {
                 case ReportGrouping.Monthly:
                 case ReportGrouping.Yearly:
@@ -360,7 +370,7 @@ namespace RentVsOwn.Reporting
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+                    throw new ArgumentOutOfRangeException(nameof(grouping), grouping.ToString());
             }
 
             foreach (var column in columns)
@@ -390,6 +400,23 @@ namespace RentVsOwn.Reporting
             text.AppendLine(Separators.Markdown.Last);
         }
 
+        private string GenerateNotes(ReportFormat format, Separators separators)
+        {
+            if (_notes.Count == 0)
+                return string.Empty;
+
+            var text = new StringBuilder();
+            foreach (var note in _notes)
+            {
+                text.Append(separators.First);
+                text.Append(note);
+                text.AppendLine(separators.Last);
+            }
+
+            text.AppendLine();
+            return text.ToString();
+        }
+
         private string GenerateParameters(List<ReportColumn> columns)
         {
             if (_data.Count != 1)
@@ -407,9 +434,9 @@ namespace RentVsOwn.Reporting
             return text.ToString();
         }
 
-        private IEnumerable<ReportGroup<T>> GetGroups()
+        private IEnumerable<ReportGroup<T>> GetGroups(ReportGrouping grouping)
         {
-            switch (Grouping)
+            switch (grouping)
             {
                 case ReportGrouping.Monthly:
                     var month = 0;
@@ -444,12 +471,12 @@ namespace RentVsOwn.Reporting
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(Grouping), Grouping.ToString());
+                    throw new ArgumentOutOfRangeException(nameof(grouping), grouping.ToString());
             }
         }
 
         /// <inheritdoc />
         public override string ToString()
-            => Generate(ReportFormat.Parameters);
+            => Generate(ReportGrouping.NotGrouped, ReportFormat.Parameters);
     }
 }

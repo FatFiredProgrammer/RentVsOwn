@@ -1,27 +1,26 @@
-﻿using RentVsOwn.Output;
-
-namespace RentVsOwn
+﻿namespace RentVsOwn
 {
     public interface ISimulation
     {
         string Name { get; }
 
-
-        int Month { get;  }
+        int Month { get; }
 
         bool IsInitialMonth { get; }
-    
+
         bool IsFinalMonth { get; }
 
-    bool IsNewYear { get; }
+        bool IsNewYear { get; }
 
-    decimal HomePurchaseAmount { get; } 
+        decimal HomePurchaseAmount { get; }
+
         decimal OwnerHomeValue { get; set; }
 
-        decimal OwnerInterestRatePerYear { get; } 
+        decimal OwnerInterestRatePerYear { get; }
 
-        int OwnerLoanYears { get; } 
-        decimal OwnerDownPaymentPercentage { get; } 
+        int OwnerLoanYears { get; }
+
+        decimal OwnerDownPaymentPercentage { get; }
 
         decimal OwnerDownPayment { get; }
 
@@ -29,63 +28,63 @@ namespace RentVsOwn
 
         decimal OwnerLoanBalance { get; set; }
 
-        decimal OwnerMonthlyPayment { get;  }
+        decimal OwnerMonthlyPayment { get; }
 
-        decimal CurrentRentPerMonth { get;  }
+        decimal CurrentRentPerMonth { get; }
 
         decimal RentPerMonth { get; }
 
-        int RentSecurityDepositMonths { get; } 
+        int RentSecurityDepositMonths { get; }
 
-        decimal RentersInsurancePerMonth { get; } 
+        decimal RentersInsurancePerMonth { get; }
 
         decimal RentChangePerYearPercentage { get; }
 
-        decimal DiscountRatePerYear { get; } 
+        decimal DiscountRatePerYear { get; }
 
-        decimal DiscountRatePerMonth { get; } 
+        decimal DiscountRatePerMonth { get; }
 
-        decimal CapitalGainsRate { get; } 
+        decimal CapitalGainsRate { get; }
 
-        decimal MarginalTaxRate { get; } 
+        decimal MarginalTaxRate { get; }
 
         decimal LandlordHomeValue { get; set; }
 
-        decimal LandlordInterestRate { get; } 
+        decimal LandlordInterestRate { get; }
 
-        decimal LandlordDownPaymentPercentage { get; } 
+        decimal LandlordDownPaymentPercentage { get; }
 
-        decimal LandlordDownPayment { get;  }
+        decimal LandlordDownPayment { get; }
 
-        decimal LandlordLoanAmount { get;  }
+        decimal LandlordLoanAmount { get; }
 
         decimal LandlordLoanBalance { get; set; }
 
-        decimal LandlordMonthlyPayment { get;  }
+        decimal LandlordMonthlyPayment { get; }
 
-        decimal LandlordManagementFeePercentage { get; } 
+        decimal LandlordManagementFeePercentage { get; }
 
-        decimal ClosingFixedCosts { get; } 
+        decimal PurchaseFixedCosts { get; }
 
-        decimal ClosingVariableCostsPercentage { get; } 
+        decimal PurchaseVariableCostsPercentage { get; }
 
-        decimal PropertyTaxPercentagePerYear { get; } 
+        decimal PropertyTaxPercentagePerYear { get; }
 
-        decimal InsurancePerMonth { get; } 
+        decimal InsurancePerMonth { get; }
 
-        decimal HoaPerMonth { get; } 
+        decimal HoaPerMonth { get; }
 
-        decimal HomeAppreciationPercentagePerYear { get; } 
+        decimal HomeAppreciationPercentagePerYear { get; }
 
-        decimal HomeMaintenancePercentagePerYear { get; } 
+        decimal HomeMaintenancePercentagePerYear { get; }
 
-        decimal SalesCommissionPercentage { get; } 
+        decimal SalesCommissionPercentage { get; }
 
-        decimal SalesFixedCosts { get; } 
+        decimal SalesFixedCosts { get; }
 
-        decimal DepreciationYears { get; } 
+        decimal DepreciationYears { get; }
 
-        decimal DepreciablePercentage { get; } 
+        decimal DepreciablePercentage { get; }
 
         decimal InflationRatePerYear { get; }
     }

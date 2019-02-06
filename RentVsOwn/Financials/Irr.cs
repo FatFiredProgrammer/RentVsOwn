@@ -73,8 +73,13 @@ namespace RentVsOwn.Financials
             value = Calculate(.1d);
             if (!double.IsNaN(value))
                 return value;
-
-            return Calculate(-.1d);
+            value = Calculate(-.1d);
+            if (!double.IsNaN(value))
+                return value;
+            value = Calculate(.2d);
+            if (!double.IsNaN(value))
+                return value;
+            return Calculate(-.2d);
         }
 
         private static double Reduce(IEnumerable<double> array, Func<double, double, int, double> fn, double initialValue)

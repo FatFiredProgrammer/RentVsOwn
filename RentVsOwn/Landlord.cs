@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using RentVsOwn.Financials;
 using RentVsOwn.Output;
+using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
@@ -205,19 +206,9 @@ namespace RentVsOwn
             _cashFlows[_cashFlows.Count - 1] += (double)proceeds;
             output.WriteLine($"* Adjusted NPV cash flow of {_cashFlows[_cashFlows.Count - 1]:C0} accounting for sale proceeds of {proceeds:C0}");
             monthly.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1];
-
-            // TODO: Code needs work
-#if false
-                 _npv = Npv.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRatePerYear / 12);
-            output.WriteLine($"* Net present value of {_npv:C0}");
-            _irr = Irr.Calculate((double)_initialInvestment, _cashFlows, (double)simulation.DiscountRatePerYear / 12) * 12;
-            output.WriteLine($"* Internal rate of return of {_irr:P2}");
-            Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1); 
-#endif
-
         }
 
-        public string GenerateReport()
+        public string GenerateReport(ReportGrouping grouping, ReportFormat format)
         {
             var text = new StringBuilder();
             text.AppendLine("Month|Cash Flow|Rent|Expenses|Principal|Interest|Net Income|Personal Loan|");
@@ -252,10 +243,10 @@ namespace RentVsOwn
             _basis = simulation.LandlordHomeValue;
             output.WriteLine($"* Down payment of {simulation.LandlordDownPayment:C0}");
             _initialInvestment += simulation.LandlordDownPayment;
-            output.WriteLine($"* Fixed closing costs of {simulation.ClosingFixedCosts:C0}");
-            _initialInvestment += simulation.ClosingFixedCosts;
-            _basis -= simulation.ClosingFixedCosts;
-            var variableClosingCosts = (simulation.LandlordLoanAmount * simulation.ClosingVariableCostsPercentage).ToDollars();
+            output.WriteLine($"* Fixed closing costs of {simulation.PurchaseFixedCosts:C0}");
+            _initialInvestment += simulation.PurchaseFixedCosts;
+            _basis -= simulation.PurchaseFixedCosts;
+            var variableClosingCosts = (simulation.LandlordLoanAmount * simulation.PurchaseVariableCostsPercentage).ToDollars();
             output.WriteLine($"* Variable closing costs of {variableClosingCosts:C0}");
             _initialInvestment += variableClosingCosts;
             _basis -= variableClosingCosts;

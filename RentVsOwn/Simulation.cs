@@ -174,15 +174,15 @@ namespace RentVsOwn
         ///     Gets or sets the closing fixed costs.
         /// </summary>
         /// <value>The closing fixed costs.</value>
-        [ReportColumn(Format = ReportColumnFormat.Currency)]
-        public decimal ClosingFixedCosts { get; set; } = 1500m;
+        [ReportColumn(Format = ReportColumnFormat.Currency, Notes = "Fixed closing costs like title insurance, inspection, appraisal, etc.")]
+        public decimal PurchaseFixedCosts { get; set; } = 1500m;
 
         /// <summary>
         ///     Gets or sets the closing variable costs percentage.
         /// </summary>
         /// <value>The closing variable costs percentage.</value>
-        [ReportColumn(Format = ReportColumnFormat.Percentage)]
-        public decimal ClosingVariableCostsPercentage { get; set; } = .015m;
+        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Variable closing costs such as loan origination.")]
+        public decimal PurchaseVariableCostsPercentage { get; set; } = .015m;
 
         /// <summary>
         ///     Gets or sets the property tax percentage.
@@ -264,8 +264,8 @@ namespace RentVsOwn
         [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "This is the assumed rate of return for investments and also the rate assumed in NPV calculations.")]
         public decimal DiscountRatePerYear { get; set; } = .08m;
 
-        [ReportColumn(Ignore = true)]
-        public decimal DiscountRatePerMonth => (decimal)Math.Pow(1 + (double)DiscountRatePerYear, 1d / 12d) - 1;
+        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Monthly discount rate.")]
+        public decimal DiscountRatePerMonth => Financial.ConvertDiscountRateYearToMonth(DiscountRatePerYear);
 
         private void Initialize()
         {
@@ -300,8 +300,8 @@ namespace RentVsOwn
             MarginalTaxRate = Math.Min(Math.Max(0m, MarginalTaxRate), 100).ToPercent();
             InflationRatePerYear = Math.Min(Math.Max(0m, InflationRatePerYear), 100).ToPercent();
 
-            ClosingFixedCosts = Math.Max(0m, ClosingFixedCosts).ToDollars();
-            ClosingVariableCostsPercentage = Math.Min(Math.Max(0m, ClosingVariableCostsPercentage), 100).ToPercent();
+            PurchaseFixedCosts = Math.Max(0m, PurchaseFixedCosts).ToDollars();
+            PurchaseVariableCostsPercentage = Math.Min(Math.Max(0m, PurchaseVariableCostsPercentage), 100).ToPercent();
             PropertyTaxPercentagePerYear = Math.Min(Math.Max(0m, PropertyTaxPercentagePerYear), 100).ToPercent();
             InsurancePerMonth = Math.Max(0m, InsurancePerMonth).ToDollarCents();
             HoaPerMonth = Math.Max(0m, HoaPerMonth).ToDollarCents();
@@ -414,14 +414,23 @@ namespace RentVsOwn
             {
                 output.WriteLine(Separator);
                 output.WriteLine(c.ToString().TrimEnd());
-                var report = c.GenerateReport();
-                if (!string.IsNullOrWhiteSpace(report))
+
+                const ReportFormat format = ReportFormat.Markdown;
+                var yearly = c.GenerateReport(ReportGrouping.Yearly, format);
+                if (!string.IsNullOrWhiteSpace(yearly))
                 {
                     output.VerboseLine(Separator);
+                    output.VerboseLine($"{c.Name} Yearly Report");
                     output.VerboseLine(string.Empty);
-                    output.VerboseLine($"{c.Name} Report");
+                    output.VerboseLine(yearly.TrimEnd());
+                }
+                var monthly = c.GenerateReport(ReportGrouping.Monthly, format);
+                if (!string.IsNullOrWhiteSpace(monthly))
+                {
+                    output.VerboseLine(Separator);
+                    output.VerboseLine($"{c.Name} Monthly Report");
                     output.VerboseLine(string.Empty);
-                    output.VerboseLine(report.TrimEnd());
+                    output.VerboseLine(monthly.TrimEnd());
                 }
             });
         }

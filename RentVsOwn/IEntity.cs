@@ -1,4 +1,5 @@
 ﻿using RentVsOwn.Output;
+using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
@@ -6,7 +7,7 @@ namespace RentVsOwn
     {
         string Name { get; }
 
-        string GenerateReport();
+        string GenerateReport(ReportGrouping grouping, ReportFormat format);
 
         void Simulate(ISimulation simulation, IOutput output);
     }

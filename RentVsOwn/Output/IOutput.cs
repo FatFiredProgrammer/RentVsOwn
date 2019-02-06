@@ -11,12 +11,12 @@
         ///     Informative text
         /// </summary>
         /// <param name="text">The text.</param>
-        void VerboseLine(string text);
+        string VerboseLine(string text);
 
         /// <summary>
         ///     The succinct text which describes the basics of the simulation.
         /// </summary>
         /// <param name="text">The text.</param>
-        void WriteLine(string text);
+        string WriteLine(string text);
     }
 }

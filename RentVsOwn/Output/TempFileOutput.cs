@@ -33,18 +33,22 @@ namespace RentVsOwn.Output
         }
 
         /// <inheritdoc />
-        public void VerboseLine(string text)
+        public string VerboseLine(string text)
         {
-            _text.AppendLine(text ?? string.Empty);
-            Debug.WriteLine(text ?? string.Empty);
+            text = text ?? string.Empty;
+            _text.AppendLine(text);
+            Debug.WriteLine(text);
+            return text;
         }
 
         /// <inheritdoc />
-        public void WriteLine(string text)
+        public string WriteLine(string text)
         {
-            _text.AppendLine(text ?? string.Empty);
-            Console.WriteLine(text ?? string.Empty);
-            Debug.WriteLine(text ?? string.Empty);
+            text = text ?? string.Empty;
+            _text.AppendLine(text);
+            Console.WriteLine(text);
+            Debug.WriteLine(text);
+            return text;
         }
     }
 }

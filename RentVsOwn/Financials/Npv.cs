@@ -21,7 +21,7 @@ namespace RentVsOwn.Financials
             var npv = 0d;
             for (var i = 1; i < cashFlows.Count; i++)
             {
-                npv += CalculatePresentValue(cashFlows[i], discountRate, i + 1);
+                npv += CalculatePresentValue(cashFlows[i], discountRate, i);
             }
 
             return npv + cashFlows[0];

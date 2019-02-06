@@ -24,6 +24,7 @@ namespace RentVsOwn.Reporting
                     name = attribute.Name;
 
                 Alignment = attribute.Alignment;
+                Notes = attribute.Notes;
                 Grouping = attribute.Grouping;
                 Format = attribute.Format;
                 Precision = attribute.Precision < 0 ? GetDefaultPrecision(Format) : attribute.Precision;
@@ -82,36 +83,34 @@ namespace RentVsOwn.Reporting
             if (!IncludePeriod0 && !CalculateIrr && !CalculateNpv && @group.Period == 0)
                 return;
 
+            Count++;
+            var cashFlow = 0d;
             foreach (var data in @group.Data)
             {
-                Count++;
                 var value = GetDecimalValue(data);
                 Sum += value;
                 if (CalculateIrr || CalculateNpv)
-                    _cashFlows.Add((double)value);
+                    cashFlow += (double)value;
             }
-
+            if (CalculateIrr || CalculateNpv)
+                _cashFlows.Add(cashFlow);
             Average = Sum / Count;
         }
 
         public void Calculate(ReportGrouping grouping, double discountRatePerYear)
         {
             // The underlying data is always monthly
-            var discountRate = Financial.ConvertDiscountRateYearToMonth(discountRatePerYear);
+            var discountRate = grouping == ReportGrouping.Yearly ? discountRatePerYear: Financial.ConvertDiscountRateYearToMonth(discountRatePerYear);
             if (CalculateNpv)
                 Npv = (decimal)Financials.Npv.Calculate(_cashFlows, discountRate);
             if (CalculateIrr)
             {
-                Trace.WriteLine($"{discountRate:F6},");
-                foreach (var cashFlow in _cashFlows)
-                {
-                    Trace.WriteLine($"{cashFlow:F6},");
-                }
-                Irr = (decimal)Financials.Irr.Calculate(_cashFlows, discountRate);
+                var irr = Financials.Irr.Calculate(_cashFlows, discountRate);
+                Irr = double.IsNaN(irr) ? 0m : (decimal)irr;
             }
 
             // If we ask for yearly, convert the resulting IRR
-            if (grouping == ReportGrouping.Yearly)
+            if (grouping == ReportGrouping.Monthly)
                 Irr = Financial.ConvertDiscountRateMonthToYear(Irr);
         }
 

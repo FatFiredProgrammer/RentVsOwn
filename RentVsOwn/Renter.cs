@@ -12,19 +12,24 @@ namespace RentVsOwn
         [PublicAPI]
         private sealed class Data
         {
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum)]
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+            public decimal Expenses => Rent + RentersInsurance;
+
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
             public decimal Rent { get; set; }
+
+            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+            public decimal RentersInsurance { get; set; }
 
             [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateNpv = true, CalculateIrr = true)]
             public decimal CashFlow { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency,Grouping = ReportColumnGrouping.Sum)]
-            public decimal CashFlowPresentValue { get; set; }
         }
 
         public string Name => nameof(Renter);
 
         private decimal NetWorth => _invested + _cash + _securityDeposit;
+
+        private decimal _initialCash;
 
         private decimal _basis;
 
@@ -32,60 +37,64 @@ namespace RentVsOwn
 
         private decimal _cash;
 
-        private decimal _initialSecurityDeposit;
-
         private decimal _securityDeposit;
 
         private readonly Report<Data> _report = new Report<Data>();
 
         private void Finalize(Data data, ISimulation simulation, IOutput output)
         {
+            _cash += _invested;
+            data.CashFlow += _invested;
+            _report.AddNote(output.WriteLine($"* {_invested:C0} investment closed out"));
+
             var capitalGains = (_invested - _basis).ToDollars();
-            output.WriteLine($"* Capital gains of {capitalGains:C0} on initial investment of {_basis:C0}");
+            output.WriteLine($"* Capital gains of {capitalGains:C0} on investment basis of {_basis:C0}");
             if (capitalGains > 0)
             {
                 var capitalGainsTax = (simulation.CapitalGainsRate * capitalGains).ToDollars();
-                output.WriteLine($"* Capital gains tax of {capitalGainsTax:C0}");
                 _cash -= capitalGainsTax;
                 data.CashFlow -= capitalGainsTax;
+                _report.AddNote(output.WriteLine($"* {capitalGainsTax:C0} capital gains tax"));
             }
 
-            output.WriteLine($"* Cashed out investment of {_invested:C0}");
-            _cash += _invested;
-            data.CashFlow += _invested;
             _invested = 0;
 
-            output.WriteLine($"* Returned security deposit of {_securityDeposit:C0}");
             _cash += _securityDeposit;
-            data.CashFlow += _invested;
+            data.CashFlow += _securityDeposit;
+            output.WriteLine($"* {_securityDeposit:C0} security deposit returned");
             _securityDeposit = 0;
 
-            output.WriteLine($"* Cash on hand of {_cash:C0}");
+            output.WriteLine($"* {_cash:C0} cash on hand");
         }
 
         /// <inheritdoc />
-        public string GenerateReport()
-            => _report.Generate(ReportFormat.Csv);
+        public string GenerateReport(ReportGrouping grouping, ReportFormat format)
+            => _report.Generate(grouping, format);
 
         private void Initialize(ISimulation simulation, IOutput output)
         {
-            var initialCashFlow = simulation.OwnerDownPayment + simulation.ClosingFixedCosts + simulation.OwnerLoanAmount * simulation.ClosingVariableCostsPercentage;
-            output.WriteLine(
-                $"* Starting cash of {initialCashFlow:C0} ({simulation.OwnerDownPayment:C0} owner down payment + {simulation.ClosingFixedCosts:C0} owner fixed closing costs + {simulation.OwnerLoanAmount * simulation.ClosingVariableCostsPercentage:C0} owner variable closing costs)");
+            _initialCash =
+                simulation.OwnerDownPayment +
+                simulation.PurchaseFixedCosts +
+                simulation.OwnerLoanAmount *
+                simulation.PurchaseVariableCostsPercentage;
 
-            _initialSecurityDeposit = (simulation.RentSecurityDepositMonths * simulation.CurrentRentPerMonth).ToDollars();
-            _securityDeposit = _initialSecurityDeposit;
-            output.WriteLine($"* Security deposit of {_securityDeposit:C0}");
-            _basis = Math.Max(0, initialCashFlow - _securityDeposit);
-            _invested = _basis;
-            output.WriteLine($"* Invested  {_invested:C0}");
+            _report.AddNote(output.WriteLine($"* {_initialCash:C0} starting cash"));
+            output.VerboseLine($"    * {simulation.OwnerDownPayment:C0} down payment +  + )");
+            output.VerboseLine($"    * {simulation.PurchaseFixedCosts:C0} fixed closing costs");
+            output.VerboseLine($"    * {simulation.OwnerLoanAmount * simulation.PurchaseVariableCostsPercentage:C0} variable closing costs");
+
+            _securityDeposit = (simulation.RentSecurityDepositMonths * simulation.RentPerMonth).ToDollars();
+            _report.AddNote(output.WriteLine($"* {_securityDeposit:C0} security deposit"));
+            _invested = Math.Max(0, _initialCash - _securityDeposit);
+            _basis = _invested;
+            _report.AddNote(output.WriteLine($"* {_invested:C0} invested @ {simulation.DiscountRatePerYear:P2}"));
 
             _report.DiscountRatePerYear = simulation.DiscountRatePerYear;
+            _report.AddNote(output.WriteLine($"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
             _report.Add(new Data
             {
-                Rent = 0m,
-                CashFlow = -initialCashFlow,
-                CashFlowPresentValue = -initialCashFlow,
+                CashFlow = -_initialCash,
             });
         }
 
@@ -96,14 +105,12 @@ namespace RentVsOwn
                 Rent = simulation.CurrentRentPerMonth,
                 CashFlow = -simulation.CurrentRentPerMonth,
             };
-
-
             output.WriteLine($"* {simulation.CurrentRentPerMonth:C0} rent");
 
             if (simulation.RentersInsurancePerMonth > 0)
             {
-                // TODO: 
-                data.CashFlow = -simulation.CurrentRentPerMonth;
+                data.RentersInsurance = simulation.RentersInsurancePerMonth;
+                data.CashFlow -= data.RentersInsurance;
                 output.WriteLine($"* {simulation.RentersInsurancePerMonth:C0} renter's insurance");
             }
 
@@ -130,7 +137,6 @@ namespace RentVsOwn
             if (simulation.IsFinalMonth)
                 Finalize(data, simulation, output);
 
-            data.CashFlowPresentValue = Npv.CalculatePresentValue(data.CashFlow, simulation.DiscountRatePerMonth, simulation.Month);
             _report.Add(data);
         }
 
@@ -138,8 +144,7 @@ namespace RentVsOwn
         public override string ToString()
         {
             var text = new StringBuilder();
-            text.AppendLine(
-                $"{Name} has net worth of {NetWorth:C0} on initial investment of {_basis:C0} + security deposit of {_initialSecurityDeposit:C0}");
+            text.AppendLine($"{Name} has net worth of {NetWorth:C0} on initial cash of {_initialCash:C0}");
             return text.ToString().TrimEnd();
         }
     }

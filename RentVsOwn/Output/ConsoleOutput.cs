@@ -17,15 +17,16 @@ namespace RentVsOwn.Output
         }
 
         /// <inheritdoc />
-        public void VerboseLine(string text)
-        {
-        }
+        public string VerboseLine(string text)
+            => text ?? string.Empty;
 
         /// <inheritdoc />
-        public void WriteLine(string text)
+        public string WriteLine(string text)
         {
-            Console.WriteLine(text ?? string.Empty);
-            Debug.WriteLine(text ?? string.Empty);
+            text = text ?? string.Empty;
+            Console.WriteLine(text);
+            Debug.WriteLine(text);
+            return text;
         }
     }
 }

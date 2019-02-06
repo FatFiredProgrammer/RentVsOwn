@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using RentVsOwn.Financials;
 using RentVsOwn.Output;
+using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
@@ -95,9 +96,9 @@ namespace RentVsOwn
 
             output.WriteLine($"* Down payment of {simulation.OwnerDownPayment:C0}");
             _initialInvestment += simulation.OwnerDownPayment;
-            output.WriteLine($"* Fixed closing costs of {simulation.ClosingFixedCosts:C0}");
-            _initialInvestment += simulation.ClosingFixedCosts;
-            var variableClosingCosts = simulation.OwnerLoanAmount * simulation.ClosingVariableCostsPercentage;
+            output.WriteLine($"* Fixed closing costs of {simulation.PurchaseFixedCosts:C0}");
+            _initialInvestment += simulation.PurchaseFixedCosts;
+            var variableClosingCosts = simulation.OwnerLoanAmount * simulation.PurchaseVariableCostsPercentage;
             output.WriteLine($"* Variable closing costs of {variableClosingCosts:C0}");
             _initialInvestment += variableClosingCosts;
             output.WriteLine($"* Total initial investment of {_initialInvestment:C0}");
@@ -105,7 +106,7 @@ namespace RentVsOwn
         }
 
         /// <inheritdoc />
-        public string GenerateReport()
+        public string GenerateReport(ReportGrouping grouping, ReportFormat format)
         {
             var text = new StringBuilder();
             text.AppendLine("Month,Cash Flow,Total,Expenses,Principal,Interest,Home Value");
