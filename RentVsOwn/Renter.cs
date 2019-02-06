@@ -43,8 +43,6 @@ namespace RentVsOwn
 
         private decimal _securityDeposit;
 
-        private Financial _financial = new Financial();
-
         private readonly Report<Data> _report = new Report<Data>();
 
         private void Finalize(Data data, ISimulation simulation, IOutput output)
@@ -70,7 +68,7 @@ namespace RentVsOwn
             output.WriteLine($"* Total spent {_totalSpent:C0}");
 
             // TODO: NO, after adjust for npv!
-            _financial.Calculate();
+            // _financial.Calculate();
         }
 
         /// <inheritdoc />
@@ -89,11 +87,17 @@ namespace RentVsOwn
             _basis = Math.Max(0, initialCashFlow - _securityDeposit);
             _invested = _basis;
             output.WriteLine($"* Invested  {_invested:C0}");
-            _financial = new Financial
+
+
+            // TODO: Code needs work
+#if false
+                 _financial = new Financial
             {
                 InitialInvestment = (double)initialCashFlow,
                 DiscountRatePerMonth = (double)simulation.DiscountRatePerMonth,
-            };
+            }; 
+#endif
+
 
             _report.Add(new Data
             {
@@ -158,7 +162,12 @@ namespace RentVsOwn
             var text = new StringBuilder();
             text.AppendLine(
                 $"{Name} spent {_totalSpent:C0} (average of {_averageSpent:C0} / month) and has net worth of {NetWorth:C0} on initial investment of {_basis:C0} + security deposit of {_initialSecurityDeposit:C0}");
-            text.Append(_financial);
+
+            // TODO: Code needs work
+#if false
+                 text.Append(_financial); 
+#endif
+
             return text.ToString().TrimEnd();
         }
     }

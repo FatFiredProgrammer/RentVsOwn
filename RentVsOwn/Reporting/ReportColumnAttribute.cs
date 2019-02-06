@@ -22,6 +22,8 @@ namespace RentVsOwn.Reporting
 
         public int Precision { get; set; } = -1;
 
+        public ReportColumnGrouping Grouping { get; set; }
+
         public bool Ignore { get; set; }
     }
 }

@@ -1,68 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace RentVsOwn.Financials
 {
-    public sealed class Financial
+    [PublicAPI]
+    public static class Financial
     {
-        public Financial()
+        public static double ConvertDiscountRateMonthToYear(double discountRatePerMonth)
         {
-            
-        }
-        public Financial(double initialInvestment, double discountRatePerMonth)
-        {
-
+            var discountRatePerYear = Math.Pow(1d + discountRatePerMonth, 12) - 1;
+            return discountRatePerYear;
         }
 
-        public double? Npv { get; private set; }
-        public double? Irr { get; private set; }
+        public static decimal ConvertDiscountRateMonthToYear(decimal discountRatePerMonth)
+            => (decimal)ConvertDiscountRateMonthToYear((double)discountRatePerMonth);
 
-        /// <summary>
-        /// Gets or sets the discount rate per annum.
-        /// </summary>
-        /// <value>The rate.</value>
-        public double DiscountRatePerMonth { get; set; } = .08d;
-        public double InitialInvestment { get; set; }
-
-        private List<double> _cashFlows = new List<double>();
-
-        public void Add(double cashFlow)
+        public static double ConvertDiscountRateYearToMonth(double discountRatePerYear)
         {
-            // TODO: Code needs work
-#if false
-                 monthly.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1];
-
-            output.WriteLine($"* Net present value of {_npv:C0}");
-            output.WriteLine($"* Internal rate of return of {_irr:P2}");
-            Debug.Assert(Math.Abs(Npv.Calculate((double)_initialInvestment, _cashFlows, (double)_irr / 12)) < .1); 
-#endif
-
+            var discountRatePerMonth = Math.Pow(1 + discountRatePerYear, 1d / 12d) - 1;
+            return discountRatePerMonth;
         }
 
-        public void Calculate()
-        {
-            if (_cashFlows.Count >= 1)
-            {
-                Npv = Financials.Npv.Calculate(InitialInvestment, _cashFlows, (double)DiscountRatePerMonth / 12);
-                Irr = Financials.Irr.Calculate(InitialInvestment, _cashFlows, (double)DiscountRatePerMonth / 12) * 12;
-            }
-            else
-            {
-                Npv = null;
-                Irr = null;
-            }
-
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            var text = new StringBuilder();
-            if (Npv.HasValue)
-                text.AppendLine($"Net present value of {Npv:C0}");
-            if (Irr.HasValue)
-                text.AppendLine($"Internal rate of return of {Irr:P2}");
-            return text.ToString().TrimEnd();
-        }
+        public static decimal ConvertDiscountRateYearToMonth(decimal discountRatePerYear)
+            => (decimal)ConvertDiscountRateYearToMonth((double)discountRatePerYear);
     }
 }

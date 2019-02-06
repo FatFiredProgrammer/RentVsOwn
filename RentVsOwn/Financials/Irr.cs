@@ -18,28 +18,25 @@ namespace RentVsOwn.Financials
 
         private int _iterationCount;
 
-        private double _discountRatePerMonthGuess;
+        private double _guess;
 
-        private readonly List<double> _monthlyCashFlows = new List<double>();
+        private readonly List<double> _cashFlows = new List<double>();
 
-        public static double Calculate(double initialInvestment, IList<double> monthlyCashFlows, double discountRatePerYearGuess)
+        public static double Calculate(double initialInvestment, IList<double> cashFlows, double guess)
         {
             if (initialInvestment <= 0)
                 throw new ArgumentException("initialInvestment <= 0", nameof(initialInvestment));
-            if (monthlyCashFlows == null || monthlyCashFlows.Count < 1)
-                throw new ArgumentException("monthlyCashFlows.Count < 1", nameof(monthlyCashFlows));
-
-            var discountRatePerMonthGuess = Math.Pow(1 + discountRatePerYearGuess, 1d / 12d) - 1;
+            if (cashFlows == null || cashFlows.Count < 1)
+                throw new ArgumentException("cashFlows.Count < 1", nameof(cashFlows));
 
             var irr = new Irr
             {
-                _discountRatePerMonthGuess = discountRatePerMonthGuess
+                _guess = guess
             };
-            irr._monthlyCashFlows.Add(-initialInvestment);
-            irr._monthlyCashFlows.AddRange(monthlyCashFlows);
-            var irrPerMonth = irr.Calculate();
-            var irrPerYear = Math.Pow(1d + irrPerMonth, 12) - 1;
-            return irrPerYear;
+            irr._cashFlows.Add(-initialInvestment);
+            irr._cashFlows.AddRange(cashFlows);
+            var discountRate = irr.Calculate();
+            return discountRate;
         }
 
         private double Calculate(double estimatedReturn)
@@ -56,7 +53,7 @@ namespace RentVsOwn.Financials
 
         private double Calculate()
         {
-            var result = Calculate(_discountRatePerMonthGuess);
+            var result = Calculate(_guess);
             if (result > 1)
                 throw new Exception("IRR calculation failed to converge.");
 
@@ -73,9 +70,9 @@ namespace RentVsOwn.Financials
             var sumOfDerivative = 0d;
             if (IsValidIterationBounds(estimatedReturnRate))
             {
-                for (var i = 1; i < _monthlyCashFlows.Count; i++)
+                for (var i = 1; i < _cashFlows.Count; i++)
                 {
-                    sumOfDerivative += _monthlyCashFlows[i] * i / Math.Pow(1 + estimatedReturnRate, i);
+                    sumOfDerivative += _cashFlows[i] * i / Math.Pow(1 + estimatedReturnRate, i);
                 }
             }
 
@@ -99,9 +96,9 @@ namespace RentVsOwn.Financials
             var sumOfPolynomial = 0d;
             if (IsValidIterationBounds(estimatedReturnRate))
             {
-                for (var j = 0; j < _monthlyCashFlows.Count; j++)
+                for (var j = 0; j < _cashFlows.Count; j++)
                 {
-                    sumOfPolynomial += _monthlyCashFlows[j] / Math.Pow(1 + estimatedReturnRate, j);
+                    sumOfPolynomial += _cashFlows[j] / Math.Pow(1 + estimatedReturnRate, j);
                 }
             }
 
