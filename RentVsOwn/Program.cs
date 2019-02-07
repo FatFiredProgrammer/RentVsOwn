@@ -32,7 +32,7 @@ namespace RentVsOwn
                     HoaPerMonth = 0,
                     Allow1031Exchange = true,
                     // RentPerMonth = 2300,
-                    OwnerAllowTaxDeductions = false,
+                    OwnerAllowTaxDeductions = true,
                     Csv = false,
 
                     // LandlordDownPaymentPercentage = null,

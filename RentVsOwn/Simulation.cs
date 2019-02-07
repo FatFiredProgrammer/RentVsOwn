@@ -74,6 +74,22 @@ namespace RentVsOwn
             RentSecurityDepositMonths = Math.Max(0, RentSecurityDepositMonths);
         }
 
+        private void MonthlyReport(IEntity entity, IOutput output)
+        {
+            output.WriteLine(Separator);
+            output.WriteLine(entity.ToString().TrimEnd());
+
+            var format = Csv ? ReportFormat.Csv : ReportFormat.Markdown;
+            var monthly = entity.GenerateReport(ReportGrouping.Monthly, format);
+            if (!string.IsNullOrWhiteSpace(monthly))
+            {
+                output.VerboseLine(Separator);
+                output.VerboseLine($"{entity.Name} Monthly Report");
+                output.VerboseLine(string.Empty);
+                output.VerboseLine(monthly.TrimEnd());
+            }
+        }
+
         private bool Next()
         {
             if (Month >= Months)
@@ -121,35 +137,29 @@ namespace RentVsOwn
 
             // Write the results for each entity plus any NPV data
             // ReSharper disable once ImplicitlyCapturedClosure
-            people.ForEach(c =>
-            {
-                output.WriteLine(Separator);
-                output.WriteLine(c.ToString().TrimEnd());
-
-                var format = Csv ? ReportFormat.Csv : ReportFormat.Markdown;
-                var yearly = c.GenerateReport(ReportGrouping.Yearly, format);
-                if (!string.IsNullOrWhiteSpace(yearly))
-                {
-                    output.VerboseLine(Separator);
-                    output.VerboseLine($"{c.Name} Yearly Report");
-                    output.VerboseLine(string.Empty);
-                    output.VerboseLine(yearly.TrimEnd());
-                }
-
-                var monthly = c.GenerateReport(ReportGrouping.Monthly, format);
-                if (!string.IsNullOrWhiteSpace(monthly))
-                {
-                    output.VerboseLine(Separator);
-                    output.VerboseLine($"{c.Name} Monthly Report");
-                    output.VerboseLine(string.Empty);
-                    output.VerboseLine(monthly.TrimEnd());
-                }
-            });
+            people.ForEach(c => MonthlyReport(c, output));
+            people.ForEach(c => YearlyReport(c, output));
         }
 
         /// <inheritdoc />
         public override string ToString()
             => Name ?? "Default Simulation";
+
+        private void YearlyReport(IEntity entity, IOutput output)
+        {
+            output.WriteLine(Separator);
+            output.WriteLine(entity.ToString().TrimEnd());
+
+            var format = Csv ? ReportFormat.Csv : ReportFormat.Markdown;
+            var yearly = entity.GenerateReport(ReportGrouping.Yearly, format);
+            if (!string.IsNullOrWhiteSpace(yearly))
+            {
+                output.VerboseLine(Separator);
+                output.VerboseLine($"{entity.Name} Yearly Report");
+                output.VerboseLine(string.Empty);
+                output.VerboseLine(yearly.TrimEnd());
+            }
+        }
 
         #region Period
         [ReportColumn(Format = ReportColumnFormat.Number, Precision = 1, Notes = "Number of years the simulation runs. Default is 8.7; the national average for home ownership.")]
