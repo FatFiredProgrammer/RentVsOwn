@@ -7,57 +7,19 @@ using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
-    public sealed class Owner : Entity
+    public sealed class Owner : Entity<OwnerData>
     {
-        [PublicAPI]
-        private sealed class Data
-        {
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Total => Expenses + Principal;
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Expenses => Insurance + PropertyTax + Hoa + Maintenance + Interest;
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Insurance { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal PropertyTax { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Hoa { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Maintenance { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Interest { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Principal { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateNpv = true, CalculateIrr = true)]
-            public decimal CashFlow { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Last)]
-            public decimal HomeValue { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Last)]
-            public decimal LoanBalance { get; set; }
-        }
-
         public Owner(ISimulation simulation, IOutput output)
             : base(simulation, output)
         {
         }
 
-        private decimal NetWorth => _cash + _homeValue - _loanBalance;
+        public override decimal NetWorth => _cash + _homeValue - _loanBalance;
 
         private decimal _initialCash;
 
         private decimal _cash;
 
-        private readonly Report<Data> _report = new Report<Data>();
 
         private decimal _loanBalance;
 
@@ -67,7 +29,7 @@ namespace RentVsOwn
 
         private decimal _hoaPerMonth;
 
-        private void Finalize(Data data)
+        private void Finalize(OwnerData data)
         {
             WriteLine($"* {_homeValue:C0} gross home sale proceeds ");
             var sellerFixedCosts = Simulation.SellerFixedCosts;
@@ -87,7 +49,7 @@ namespace RentVsOwn
 
             _homeValue = 0;
 
-            _report.AddNote(WriteLine($"* {proceeds:C0} net home sale proceeds"));
+            Report.AddNote(WriteLine($"* {proceeds:C0} net home sale proceeds"));
 
             _cash += proceeds;
             _cash = _cash.ToDollars();
@@ -98,19 +60,19 @@ namespace RentVsOwn
 
         /// <inheritdoc />
         public override string GenerateReport(ReportGrouping grouping, ReportFormat format)
-            => _report.Generate(grouping, format);
+            => Report.Generate(grouping, format);
 
         private void Initialize()
         {
             _homeValue = Simulation.HomePurchaseAmount;
-            _report.AddNote(WriteLine($"* {_homeValue:C0} home value"));
+            Report.AddNote(WriteLine($"* {_homeValue:C0} home value"));
             _loanBalance = Simulation.OwnerLoanAmount;
-            _report.AddNote(WriteLine($"* {_loanBalance:C0} loan amount"));
+            Report.AddNote(WriteLine($"* {_loanBalance:C0} loan amount"));
             _insurancePerMonth = Simulation.InsurancePerMonth;
             _hoaPerMonth = Simulation.HoaPerMonth;
 
             _initialCash += Simulation.OwnerDownPayment;
-            _report.AddNote(WriteLine($"* {Simulation.OwnerDownPayment:C0} down payment"));
+            Report.AddNote(WriteLine($"* {Simulation.OwnerDownPayment:C0} down payment"));
 
             var buyerFixedCosts = Simulation.BuyerFixedCosts;
             WriteLine($"* {Simulation.BuyerFixedCosts:C0} buyer fixed costs");
@@ -118,13 +80,13 @@ namespace RentVsOwn
             WriteLine($"* {buyerVariableCosts:C0} buyer variable costs of {Simulation.BuyerVariableCostsPercentage:P2}");
             var buyerCosts = buyerFixedCosts + buyerVariableCosts;
             _initialCash += buyerCosts;
-            _report.AddNote(WriteLine($"* {buyerCosts:C0} total buyer costs"));
+            Report.AddNote(WriteLine($"* {buyerCosts:C0} total buyer costs"));
 
-            _report.AddNote(WriteLine($"* {_initialCash:C0} starting cash"));
+            Report.AddNote(WriteLine($"* {_initialCash:C0} starting cash"));
 
-            _report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
-            _report.AddNote(WriteLine($"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
-            _report.Add(new Data
+            Report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
+            Report.AddNote(WriteLine($"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P4} monthly discount rate"));
+            Report.Add(new OwnerData
             {
                 CashFlow = -_initialCash,
                 LoanBalance = _loanBalance,
@@ -153,9 +115,9 @@ namespace RentVsOwn
             }
         }
 
-        private Data Process()
+        private OwnerData Process()
         {
-            var data = new Data
+            var data = new OwnerData
             {
                 HomeValue = _homeValue,
             };
@@ -208,15 +170,8 @@ namespace RentVsOwn
             if (Simulation.IsFinalMonth)
                 Finalize(data);
 
-            _report.Add(data);
+            Report.Add(data);
         }
 
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            var text = new StringBuilder();
-            text.AppendLine($"{Name} has net worth of {NetWorth:C0} on initial investment of {_initialCash:C0}");
-            return text.ToString().TrimEnd();
-        }
     }
 }

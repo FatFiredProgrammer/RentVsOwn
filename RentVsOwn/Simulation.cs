@@ -10,7 +10,7 @@ namespace RentVsOwn
     {
         public const string Separator = "\r\n---\r\n";
 
-        [ReportColumn("Name of Simulation", Format = ReportColumnFormat.Text)]
+        [ReportColumn("Name of Simulation")]
         public string Name { get; set; } = "Default Simulation";
 
         private string GetSummary()

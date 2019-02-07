@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Text;
 using RentVsOwn.Output;
 using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
-    public abstract class Entity : IEntity, IOutput
+    public abstract class Entity<TData> : IEntity, IOutput
+        where TData : class
     {
         protected Entity(ISimulation simulation, IOutput output)
         {
@@ -19,6 +21,14 @@ namespace RentVsOwn
         /// <inheritdoc />
         public string Name => GetType().Name;
 
+        public abstract decimal NetWorth { get; }
+
+        protected decimal InitialCash { get; set; }
+
+        protected decimal Cash { get; set; }
+
+        protected Report<TData> Report { get; } = new Report<TData>();
+
         /// <inheritdoc />
         public void Flush()
             => _output.Flush();
@@ -29,6 +39,13 @@ namespace RentVsOwn
         public abstract void NextYear();
 
         public abstract void Simulate();
+
+        public override string ToString()
+        {
+            var text = new StringBuilder();
+            text.AppendLine($"{Name} has {NetWorth:C0} net worth on {InitialCash:C0} initial investment.");
+            return text.ToString().TrimEnd();
+        }
 
         /// <inheritdoc />
         public string VerboseLine(string text)

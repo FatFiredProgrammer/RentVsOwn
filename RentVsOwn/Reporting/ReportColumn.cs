@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -18,6 +17,25 @@ namespace RentVsOwn.Reporting
             Notes = string.Empty;
             var name = propertyInfo.Name;
             PropertyInfo = propertyInfo;
+            if (PropertyInfo.PropertyType == typeof(bool))
+            {
+                Alignment = ReportColumnAlignment.Right;
+                Grouping = ReportColumnGrouping.Last;
+                Format = ReportColumnFormat.Boolean;
+            }
+            else if (PropertyInfo.PropertyType == typeof(string))
+            {
+                Alignment = ReportColumnAlignment.Left;
+                Grouping = ReportColumnGrouping.Last;
+                Format = ReportColumnFormat.Text;
+            }
+            else
+            {
+                Alignment = ReportColumnAlignment.Right;
+                Grouping = ReportColumnGrouping.Sum;
+                Format = ReportColumnFormat.Number;
+            }
+
             if (propertyInfo.GetCustomAttributes(typeof(ReportColumnAttribute), false).FirstOrDefault() is ReportColumnAttribute attribute)
             {
                 if (!string.IsNullOrWhiteSpace(attribute.Name))
@@ -27,7 +45,7 @@ namespace RentVsOwn.Reporting
                 Notes = attribute.Notes;
                 Grouping = attribute.Grouping;
                 Format = attribute.Format;
-                Precision = attribute.Precision < 0 ? GetDefaultPrecision(Format) : attribute.Precision;
+                Precision = attribute.Precision;
                 CalculateAverage = attribute.CalculateAverage;
                 CalculateSum = attribute.CalculateSum;
                 IncludePeriod0 = attribute.IncludePeriod0;
@@ -35,6 +53,7 @@ namespace RentVsOwn.Reporting
                 CalculateIrr = attribute.CalculateIrr;
             }
 
+            Precision = Precision < 0 ? GetDefaultPrecision(Format) : Precision;
             Name = FormatName(name);
         }
 
@@ -46,7 +65,7 @@ namespace RentVsOwn.Reporting
 
         public ReportColumnFormat Format { get; }
 
-        public int Precision { get; }
+        public int Precision { get; } = -1;
 
         public ReportColumnGrouping Grouping { get; }
 
@@ -92,6 +111,7 @@ namespace RentVsOwn.Reporting
                 if (CalculateIrr || CalculateNpv)
                     cashFlow += (double)value;
             }
+
             if (CalculateIrr || CalculateNpv)
                 _cashFlows.Add(cashFlow);
             Average = Sum / Count;
@@ -100,7 +120,7 @@ namespace RentVsOwn.Reporting
         public void Calculate(ReportGrouping grouping, double discountRatePerYear)
         {
             // The underlying data is always monthly
-            var discountRate = grouping == ReportGrouping.Yearly ? discountRatePerYear: Financial.ConvertDiscountRateYearToMonth(discountRatePerYear);
+            var discountRate = grouping == ReportGrouping.Yearly ? discountRatePerYear : Financial.ConvertDiscountRateYearToMonth(discountRatePerYear);
             if (CalculateNpv)
                 Npv = (decimal)Financials.Npv.Calculate(_cashFlows, discountRate);
             if (CalculateIrr)
@@ -149,6 +169,9 @@ namespace RentVsOwn.Reporting
             {
                 case ReportColumnFormat.Text:
                     return value.ToString();
+
+                case ReportColumnFormat.Boolean:
+                    return (bool)value ? "Yes" : "No";
 
                 case ReportColumnFormat.Number:
                     var numberFormat = $"{{0:N{precision}}}";
@@ -208,15 +231,10 @@ namespace RentVsOwn.Reporting
         {
             switch (format)
             {
-                case ReportColumnFormat.Number:
-                    return 0;
-                case ReportColumnFormat.Currency:
-                    return 0;
                 case ReportColumnFormat.Percentage:
                     return 2;
-                case ReportColumnFormat.Text:
-                    return 0;
                 default:
+                    return 0;
                     throw new ArgumentOutOfRangeException(nameof(format), format, null);
             }
         }

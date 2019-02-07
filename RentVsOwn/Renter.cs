@@ -7,30 +7,14 @@ using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
-    public sealed class Renter : Entity
+    public sealed class Renter : Entity<RenterData>
     {
-        [PublicAPI]
-        private sealed class Data
-        {
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Expenses => Rent + Insurance;
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Rent { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-            public decimal Insurance { get; set; }
-
-            [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateNpv = true, CalculateIrr = true)]
-            public decimal CashFlow { get; set; }
-        }
-
         public Renter(ISimulation simulation, IOutput output)
             : base(simulation, output)
         {
         }
 
-        private decimal NetWorth => _invested + _cash + _securityDeposit;
+        public override decimal NetWorth => _invested + _cash + _securityDeposit;
 
         private decimal _initialCash;
 
@@ -42,13 +26,13 @@ namespace RentVsOwn
 
         private decimal _securityDeposit;
 
-        private readonly Report<Data> _report = new Report<Data>();
-
-        private decimal _rentersInsurancePerMonth;
+        private decimal _insurancePerMonth;
 
         private decimal _rentPerMonth;
 
-        private void Finalize(Data data)
+        private readonly Report<RenterData> _report = new Report<RenterData>();
+
+        private void Finalize(RenterData data)
         {
             _cash += _invested;
             data.CashFlow += _invested;
@@ -80,7 +64,7 @@ namespace RentVsOwn
 
         private void Initialize()
         {
-            _rentersInsurancePerMonth = Simulation.RentersInsurancePerMonth;
+            _insurancePerMonth = Simulation.RentersInsurancePerMonth;
             _rentPerMonth = Simulation.RentPerMonth;
 
             _initialCash =
@@ -103,7 +87,7 @@ namespace RentVsOwn
             _report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
             _report.AddNote(WriteLine(
                 $"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
-            _report.Add(new Data
+            _report.Add(new RenterData
             {
                 CashFlow = -_initialCash,
             });
@@ -122,25 +106,25 @@ namespace RentVsOwn
 
             if (Simulation.InflationRatePerYear > 0)
             {
-                _rentersInsurancePerMonth = (_rentersInsurancePerMonth + _rentersInsurancePerMonth * Simulation.InflationRatePerYear).ToDollarCents();
-                WriteLine($"* Renters insurance increased {Simulation.InflationRatePerYear:P2} to {_rentersInsurancePerMonth:C2}");
+                _insurancePerMonth = (_insurancePerMonth + _insurancePerMonth * Simulation.InflationRatePerYear).ToDollarCents();
+                WriteLine($"* Renters insurance increased {Simulation.InflationRatePerYear:P2} to {_insurancePerMonth:C2}");
             }
         }
 
-        private Data Process()
+        private RenterData Process()
         {
-            var data = new Data
+            var data = new RenterData
             {
                 Rent = _rentPerMonth,
                 CashFlow = -_rentPerMonth,
             };
             WriteLine($"* {_rentPerMonth:C0} rent");
 
-            if (_rentersInsurancePerMonth > 0)
+            if (_insurancePerMonth > 0)
             {
-                data.Insurance = _rentersInsurancePerMonth;
+                data.Insurance = _insurancePerMonth;
                 data.CashFlow -= data.Insurance;
-                WriteLine($"* {_rentersInsurancePerMonth:C0} renter's insurance");
+                WriteLine($"* {_insurancePerMonth:C0} renter's insurance");
             }
 
             var growth = (_invested * Simulation.DiscountRatePerYear / 12).ToDollarCents();
@@ -162,14 +146,6 @@ namespace RentVsOwn
                 Finalize(data);
 
             _report.Add(data);
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            var text = new StringBuilder();
-            text.AppendLine($"{Name} has net worth of {NetWorth:C0} on initial cash of {_initialCash:C0}");
-            return text.ToString().TrimEnd();
         }
     }
 }

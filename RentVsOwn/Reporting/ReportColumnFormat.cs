@@ -9,5 +9,7 @@
         Percentage,
 
         Text,
+
+        Boolean,
     }
 }
