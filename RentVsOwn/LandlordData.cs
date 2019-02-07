@@ -7,10 +7,17 @@ namespace RentVsOwn
     public sealed class LandlordData
     {
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-        public decimal Total => Expenses + Principal;
+        public decimal Rent { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+        public decimal Total => Expenses + Principal;
+
+        // TODO: 
+        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Expenses => Insurance + PropertyTax + Hoa + Maintenance + Interest;
+
+        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+        public decimal ManagementFee { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Insurance { get; set; }
@@ -68,3 +75,5 @@ namespace RentVsOwn
         public decimal NpvCashFlow { get; set; }
     }
 }
+
+// TODO:

@@ -1,91 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using JetBrains.Annotations;
-using RentVsOwn.Financials;
 using RentVsOwn.Output;
-using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
     public sealed class Landlord : Entity<LandlordData>
     {
-
         public Landlord(ISimulation simulation, IOutput output)
-            :base(simulation, output)
+            : base(simulation, output)
         {
         }
 
-
-        public override decimal NetWorth => Cash;
-
+        public override decimal NetWorth => Cash - _securityDeposit + _homeValue - _loanBalance - _personalLoan;
 
         /// <summary>
         ///     The basis in the home.
         /// </summary>
         private decimal _basis;
 
-
-//        private decimal _totalRent;
-
-//        private decimal _averageRent;
-
-        private decimal _totalExpenses;
-
-  //      private decimal _averageExpenses;
-
         private decimal _carryOverDepreciation;
 
         private decimal _totalUsedDepreciation;
 
-        /// <summary>
-        ///     This represents a personal loan we either had to take out this
-        ///     month to make cash flow or an amount we paid back to against a previous personal loan
-        /// </summary>
-        private decimal _personalLoan;
-
-        /// <summary>
-        /// </summary>
-        private decimal _currentYearTaxableIncome;
-
-
-        [ReportColumn(Ignore = true)]
-        public decimal LandlordLoanBalance { get; set; }
-
-        [ReportColumn(Ignore = true)]
-        public decimal LandlordHomeValue { get; set; }
-
-#if false
-// TODO: Code needs work
-
-        private decimal NetWorth => _invested + Cash + _securityDeposit;
-
-        private decimal InitialCash;
-
-        private decimal _basis;
-
-        private decimal _invested;
-
-        private decimal Cash;
-
         private decimal _securityDeposit;
 
-        private readonly Report<Data> Report = new Report<Data>();
-
-        private decimal _rentersInsurancePerMonth;
-
         private decimal _rentPerMonth;
-#endif
-#if false
-// TODO: Code needs work
-        private decimal NetWorth => Cash + _homeValue - _loanBalance;
-
-        private decimal InitialCash;
-
-        private decimal Cash;
-
-        private readonly Report<Data> Report = new Report<Data>();
 
         private decimal _loanBalance;
 
@@ -95,32 +33,41 @@ namespace RentVsOwn
 
         private decimal _hoaPerMonth;
 
-#endif
+        /// <summary>
+        ///     This represents a personal loan we either had to take out this
+        ///     month to make cash flow or an amount we paid back to against a previous personal loan
+        /// </summary>
+        private decimal _personalLoan;
+
+        /// <summary>
+        ///     Current year taxable income
+        /// </summary>
+        private decimal _taxableIncome;
+
+        private void CalculateCash(LandlordData data)
+        {
+            // TODO: 
+            WriteLine($"* Total monthly expenses of {data.Expenses:C0} leaving cash of {data.Cash:C0}");
+        }
 
         private void CalculateExpenses(LandlordData data)
         {
+            // TODO: 
             if (Simulation.LandlordManagementFeePercentagePerMonth > 0)
             {
-                // TODO: Code needs work
-#if false
-                     var managementFee = Simulation.CurrentRentPerMonth * Simulation.LandlordManagementFeePercentagePerMonth;
-                data.Expenses += managementFee;
-                data.Cash -= managementFee;
-                WriteLine($"* Management fee of {managementFee:C0}"); 
-#endif
-
+                data.ManagementFee = _rentPerMonth * Simulation.LandlordManagementFeePercentagePerMonth;
+                WriteLine($"* {data.ManagementFee:C0} management fee");
             }
 
             if (Simulation.PropertyTaxPercentagePerYear > 0)
             {
                 // TODO: Code needs work
 #if false
-                     var propertyTax = (Simulation.LandlordHomeValue * Simulation.PropertyTaxPercentagePerYear / 12).ToDollars();
+                     data.P = (Simulation.LandlordHomeValue * Simulation.PropertyTaxPercentagePerYear / 12).ToDollars();
                 data.Expenses += propertyTax;
                 data.Cash -= propertyTax;
-                WriteLine($"* Spent {propertyTax:C0} on property tax"); 
+                WriteLine($"* Spent {propertyTax:C0} on property tax");
 #endif
-
             }
 
             // TODO: Code needs work
@@ -148,7 +95,6 @@ namespace RentVsOwn
             } 
 #endif
 
-
             // If we have a personal loan, pay interest on it.
             // TODO: Code needs work
 #if false
@@ -161,9 +107,9 @@ namespace RentVsOwn
             }
 
             // We pay the previous years taxes at the start of each new year.
-            if (Simulation.IsNewYear && _currentYearTaxableIncome > 0)
+            if (Simulation.IsNewYear && _taxableIncome > 0)
             {
-                var taxes = (_currentYearTaxableIncome * Simulation.MarginalTaxRatePerYear).ToDollars();
+                var taxes = (_taxableIncome * Simulation.MarginalTaxRatePerYear).ToDollars();
                 if (taxes > 0)
                 {
                     data.Expenses += taxes;
@@ -171,22 +117,22 @@ namespace RentVsOwn
                     WriteLine($"* Paid last year's taxes of {taxes:C0}");
                 }
 
-                _currentYearTaxableIncome = 0;
+                _taxableIncome = 0;
             } 
 #endif
 
-
-            WriteLine($"* Total monthly expenses of {data.Expenses:C0} leaving cash of {data.Cash:C0}");
-            _totalExpenses += data.Expenses;
+            WriteLine($"* {data.Expenses:C0} total monthly expenses");
         }
 
         private void CalculateTaxableIncome(LandlordData data)
         {
+            // TODO: 
+
             // My net income includes amount I have paid in principle.
-//            var taxableIncome = data.NetIncome.ToDollars();
-// TODO: 
+            //            var taxableIncome = data.NetIncome.ToDollars();
+            // TODO: 
             var taxableIncome = 0m;
-WriteLine($"* Net taxable income of {taxableIncome:C0}");
+            WriteLine($"* Net taxable income of {taxableIncome:C0}");
 
             // We now have a net income for the month.
             // Let's see what we can do about using depreciation
@@ -207,13 +153,14 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
                 WriteLine($"* Carry over depreciation of {_carryOverDepreciation:C0}");
             if (taxableIncome > 0)
             {
-                _currentYearTaxableIncome += taxableIncome;
-                WriteLine($"* Taxable income of {taxableIncome:C0} ({_currentYearTaxableIncome:C0} current year)");
+                _taxableIncome += taxableIncome;
+                WriteLine($"* Taxable income of {taxableIncome:C0} ({_taxableIncome:C0} current year)");
             }
         }
 
         private void CloseOutPersonalLoan(ref decimal proceeds)
         {
+            // TODO: 
             if (_personalLoan != 0)
             {
                 proceeds -= _personalLoan;
@@ -224,6 +171,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 
         protected override void Finalize(LandlordData data)
         {
+            // TODO: 
             var proceeds = SellHome();
             PayTaxesOnHomeSale(ref proceeds);
             PayOffLoan(ref proceeds);
@@ -300,98 +248,27 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 #endif
         }
 
-        public override string GenerateReport(ReportGrouping grouping, ReportFormat format)
-            => Report.Generate(grouping, format);
-
-        /// <inheritdoc />
-        public override void NextYear()
-        {
-            WriteLine(RentVsOwn.Simulation.Separator);
-            WriteLine($"{Name} Year # {Simulation.Month / 12}{Environment.NewLine}");
-
-            // TODO: Code needs work
-#if false
-                 if (HomeAppreciationPercentagePerYear > 0)
-            {
-                OwnerHomeValue = (OwnerHomeValue + OwnerHomeValue * HomeAppreciationPercentagePerYear).ToDollars();
-                WriteLine($"* Owner Home value increased {HomeAppreciationPercentagePerYear:P2} to {OwnerHomeValue:C0}");
-                LandlordHomeValue = (LandlordHomeValue + LandlordHomeValue * HomeAppreciationPercentagePerYear).ToDollars();
-                WriteLine($"* Landlord Home value increased {HomeAppreciationPercentagePerYear:P2} to {LandlordHomeValue:C0}");
-            }
-
-            if (InflationRatePerYear > 0)
-            {
-                RentersInsurancePerMonth = (RentersInsurancePerMonth + RentersInsurancePerMonth * InflationRatePerYear).ToDollarCents();
-                WriteLine($"* Renters insurance increased {InflationRatePerYear:P2} to {RentersInsurancePerMonth:C2}");
-                InsurancePerMonth = (InsurancePerMonth + InsurancePerMonth * InflationRatePerYear).ToDollarCents();
-                WriteLine($"* Home owner's insurance increased {InflationRatePerYear:P2} to {InsurancePerMonth:C2}");
-                HoaPerMonth = (HoaPerMonth + HoaPerMonth * InflationRatePerYear).ToDollarCents();
-                WriteLine($"* HOA increased {InflationRatePerYear:P2} to {HoaPerMonth:C2}");
-            }
-            if (Simulation.RentChangePerYearPercentage > 0)
-            {
-                _rentPerMonth = (_rentPerMonth + _rentPerMonth * Simulation.RentChangePerYearPercentage).ToDollars();
-                WriteLine($"* Rent increased {Simulation.RentChangePerYearPercentage:P2} to {_rentPerMonth:C0}");
-            } 
-#endif
-
-
-            // TODO: Code needs work
-#if false
-                 if (Simulation.InflationRatePerYear > 0)
-            {
-                _rentersInsurancePerMonth = (_rentersInsurancePerMonth + _rentersInsurancePerMonth * Simulation.InflationRatePerYear).ToDollarCents();
-                WriteLine($"* Renters insurance increased {Simulation.InflationRatePerYear:P2} to {_rentersInsurancePerMonth:C2}");
-            } 
-#endif
-#if false
-// TODO: Code needs work
-            WriteLine(RentVsOwn.Simulation.Separator);
-            WriteLine($"{Name} Year # {Simulation.Month / 12}{Environment.NewLine}");
-            if (Simulation.RentChangePerYearPercentage > 0)
-            {
-                _rentPerMonth = (_rentPerMonth + _rentPerMonth * Simulation.RentChangePerYearPercentage).ToDollars();
-                WriteLine($"* Rent increased {Simulation.RentChangePerYearPercentage:P2} to {_rentPerMonth:C0}");
-            }
-
-            if (Simulation.InflationRatePerYear > 0)
-            {
-                _rentersInsurancePerMonth = (_rentersInsurancePerMonth + _rentersInsurancePerMonth * Simulation.InflationRatePerYear).ToDollarCents();
-                WriteLine($"* Renters insurance increased {Simulation.InflationRatePerYear:P2} to {_rentersInsurancePerMonth:C2}");
-            }
-
-#endif
-#if false
-// TODO: Code needs work
-            WriteLine(RentVsOwn.Simulation.Separator);
-            WriteLine($"{Name} Year # {Simulation.Month / 12}{Environment.NewLine}");
-
-            if (Simulation.HomeAppreciationPercentagePerYear > 0)
-            {
-                _homeValue = (_homeValue + _homeValue * Simulation.HomeAppreciationPercentagePerYear).ToDollars();
-                WriteLine($"* Owner Home value increased {Simulation.HomeAppreciationPercentagePerYear:P2} to {_homeValue:C0}");
-            }
-
-            if (Simulation.InflationRatePerYear > 0)
-            {
-                _insurancePerMonth = (_insurancePerMonth + _insurancePerMonth * Simulation.InflationRatePerYear).ToDollarCents();
-                WriteLine($"* Home owner's insurance increased {Simulation.InflationRatePerYear:P2} to {_insurancePerMonth:C2}");
-                _hoaPerMonth = (_hoaPerMonth + _hoaPerMonth * Simulation.InflationRatePerYear).ToDollarCents();
-                WriteLine($"* HOA increased {Simulation.InflationRatePerYear:P2} to {_hoaPerMonth:C2}");
-            }
-
-#endif
-
-        }
-
-
         protected override void Initialize()
         {
-            LandlordHomeValue = Simulation.HomePurchaseAmount;
-            LandlordLoanBalance = Simulation.LandlordLoanAmount;
+            // TODO: Code needs work
+#if false
+             private decimal _basis;
+        private decimal _securityDeposit;
+        private decimal _rentPerMonth;
+        private decimal _loanBalance;
+        private decimal _homeValue;
+        private decimal _insurancePerMonth;
+        private decimal _hoaPerMonth;
+        private decimal _personalLoan;
+        private decimal _taxableIncome; 
+#endif
+
+            // TODO: 
 
             // TODO: Code needs work
 #if false
+            LandlordHomeValue = Simulation.HomePurchaseAmount;
+            LandlordLoanBalance = Simulation.LandlordLoanAmount;
                  InitialCash = 0;
             Cash = 0;
             _totalRent = 0;
@@ -401,9 +278,8 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             _carryOverDepreciation = 0;
             _totalUsedDepreciation = 0;
             _personalLoan = 0;
-            _currentYearTaxableIncome = 0; 
+            _taxableIncome = 0; 
 #endif
-
 
             // TODO: Code needs work
 #if false
@@ -427,7 +303,6 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
                  WriteLine($"* Initial loan balance of {Simulation.LandlordLoanBalance:C0}"); 
 #endif
 
-
             // TODO: Code needs work
 #if false
      Report.AddNotes
@@ -444,15 +319,15 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             _rentPerMonth = Simulation.RentPerMonth;
 
             InitialCash =
-                Simulation.OwnerDownPayment +
+                Simulation.LandlordDownPayment +
                 Simulation.BuyerFixedCosts +
-                Simulation.OwnerLoanAmount *
+                Simulation.LandlordLoanAmount *
                 Simulation.BuyerVariableCostsPercentage;
 
             Report.AddNote(WriteLine($"* {InitialCash:C0} starting cash"));
-            VerboseLine($"    * {Simulation.OwnerDownPayment:C0} down payment +  + )");
+            VerboseLine($"    * {Simulation.LandlordDownPayment:C0} down payment +  + )");
             VerboseLine($"    * {Simulation.BuyerFixedCosts:C0} fixed closing costs");
-            VerboseLine($"    * {Simulation.OwnerLoanAmount * Simulation.BuyerVariableCostsPercentage:C0} variable closing costs");
+            VerboseLine($"    * {Simulation.LandlordLoanAmount * Simulation.BuyerVariableCostsPercentage:C0} variable closing costs");
 
             _securityDeposit = (Simulation.RentSecurityDepositMonths * Simulation.RentPerMonth).ToDollars();
             Report.AddNote(WriteLine($"* {_securityDeposit:C0} security deposit"));
@@ -473,17 +348,17 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 // TODO: Code needs work
             _homeValue = Simulation.HomePurchaseAmount;
             Report.AddNote(WriteLine($"* {_homeValue:C0} home value"));
-            _loanBalance = Simulation.OwnerLoanAmount;
+            _loanBalance = Simulation.LandlordLoanAmount;
             Report.AddNote(WriteLine($"* {_loanBalance:C0} loan amount"));
             _insurancePerMonth = Simulation.InsurancePerMonth;
             _hoaPerMonth = Simulation.HoaPerMonth;
 
-            InitialCash += Simulation.OwnerDownPayment;
-            Report.AddNote(WriteLine($"* {Simulation.OwnerDownPayment:C0} down payment"));
+            InitialCash += Simulation.LandlordDownPayment;
+            Report.AddNote(WriteLine($"* {Simulation.LandlordDownPayment:C0} down payment"));
 
             var buyerFixedCosts = Simulation.BuyerFixedCosts;
             WriteLine($"* {Simulation.BuyerFixedCosts:C0} buyer fixed costs");
-            var buyerVariableCosts = Simulation.OwnerLoanAmount * Simulation.BuyerVariableCostsPercentage;
+            var buyerVariableCosts = Simulation.LandlordLoanAmount * Simulation.BuyerVariableCostsPercentage;
             WriteLine($"* {buyerVariableCosts:C0} buyer variable costs of {Simulation.BuyerVariableCostsPercentage:P2}");
             var buyerCosts = buyerFixedCosts + buyerVariableCosts;
             InitialCash += buyerCosts;
@@ -501,29 +376,28 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             });
 
 #endif
-
         }
 
         private LandlordData InitializeData()
         {
+            // TODO: 
             // Set up our monthly ledger
             var monthly = new LandlordData
             {
+                Rent = _rentPerMonth,
+
                 // TODO: Code needs work
 #if false
-                     Rent = Simulation.CurrentRentPerMonth,
                 Interest = 0,
                 Principal = 0,
                 Expenses = 0,
-                Cash = Simulation.CurrentRentPerMonth,
+                Cash = _rentPerMonth,
                 PersonalLoan = 0, 
 #endif
-
             };
 
             // TODO: Code needs work
 #if false
-
             _totalRent += data.Rent;
             WriteLine($"* Received rent of {data.Rent:C0}");
 
@@ -545,12 +419,38 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             } 
 #endif
 
-
             return monthly;
+        }
+
+        /// <inheritdoc />
+        public override void NextYear()
+        {
+            WriteLine(RentVsOwn.Simulation.Separator);
+            WriteLine($"{Name} Year # {Simulation.Month / 12}{Environment.NewLine}");
+            if (Simulation.RentChangePerYearPercentage > 0)
+            {
+                _rentPerMonth = (_rentPerMonth + _rentPerMonth * Simulation.RentChangePerYearPercentage).ToDollars();
+                WriteLine($"* Rent increased {Simulation.RentChangePerYearPercentage:P2} to {_rentPerMonth:C0}");
+            }
+
+            if (Simulation.HomeAppreciationPercentagePerYear > 0)
+            {
+                _homeValue = (_homeValue + _homeValue * Simulation.HomeAppreciationPercentagePerYear).ToDollars();
+                WriteLine($"* Owner Home value increased {Simulation.HomeAppreciationPercentagePerYear:P2} to {_homeValue:C0}");
+            }
+
+            if (Simulation.InflationRatePerYear > 0)
+            {
+                _insurancePerMonth = (_insurancePerMonth + _insurancePerMonth * Simulation.InflationRatePerYear).ToDollarCents();
+                WriteLine($"* Home owner's insurance increased {Simulation.InflationRatePerYear:P2} to {_insurancePerMonth:C2}");
+                _hoaPerMonth = (_hoaPerMonth + _hoaPerMonth * Simulation.InflationRatePerYear).ToDollarCents();
+                WriteLine($"* HOA increased {Simulation.InflationRatePerYear:P2} to {_hoaPerMonth:C2}");
+            }
         }
 
         private static void PayDownLoan(LandlordData data)
         {
+            // TODO:
             // If we have any cash left, use it to pay down the mortgage balance.
             // TODO: Code needs work
 #if false
@@ -562,11 +462,11 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
                 WriteLine($"* Paid additional principal of {additionalPrincipal:C0} leaving balance of {Simulation.LandlordLoanBalance:C0} and cash of {data.Cash:C0}");
             } 
 #endif
-
         }
 
         private static void PayOffLoan(ref decimal proceeds)
         {
+            // TODO:
             // TODO: Code needs work
 #if false
                  if (Simulation.LandlordLoanBalance > 0)
@@ -578,27 +478,27 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 
             Simulation.LandlordHomeValue = 0; 
 #endif
-
         }
 
         private void PayRemainingIncomeTax(ref decimal proceeds)
         {
-            if (_currentYearTaxableIncome > 0)
+            // TODO:
+            if (_taxableIncome > 0)
             {
-                var taxes = (_currentYearTaxableIncome * Simulation.MarginalTaxRatePerYear).ToDollars();
+                var taxes = (_taxableIncome * Simulation.MarginalTaxRatePerYear).ToDollars();
                 if (taxes > 0)
                 {
                     proceeds -= taxes;
-                    _totalExpenses += taxes;
                     WriteLine($"* Paid remaining yearly taxes of {taxes:C0}");
                 }
 
-                _currentYearTaxableIncome = 0;
+                _taxableIncome = 0;
             }
         }
 
         private void PayTaxesOnHomeSale(ref decimal proceeds)
         {
+            // TODO:
             var capitalGains = proceeds - _basis;
             if (capitalGains > 0)
             {
@@ -611,7 +511,6 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
                     {
                         proceeds -= reclaimedDepreciationTaxes;
                         capitalGains -= reclaimedDepreciation;
-                        _totalExpenses += reclaimedDepreciationTaxes;
                         _totalUsedDepreciation -= reclaimedDepreciation;
                         WriteLine($"* Paid depreciation recapture taxes of {reclaimedDepreciationTaxes:C0} on {reclaimedDepreciation:C0}");
                     }
@@ -621,7 +520,6 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
                 {
                     var capitalGainsTaxes = (capitalGains * Simulation.CapitalGainsRatePerYear).ToDollars();
                     proceeds -= capitalGainsTaxes;
-                    _totalExpenses += capitalGainsTaxes;
                     WriteLine($"* Paid capital gains taxes of {capitalGainsTaxes:C0} on {capitalGains:C0}");
                 }
             }
@@ -629,8 +527,10 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 
         protected override LandlordData Process()
         {
+            // TODO:
             var data = InitializeData();
             CalculateExpenses(data);
+            CalculateCash(data);
             CalculateTaxableIncome(data);
             RepayPersonalLoan(data);
             PayDownLoan(data);
@@ -668,8 +568,8 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             };
             if (_loanBalance > 0)
             {
-                var loanPayment = Simulation.OwnerMonthlyPayment;
-                data.Interest = (_loanBalance * Simulation.OwnerInterestRatePerYear / 12).ToDollars();
+                var loanPayment = Simulation.LandlordMonthlyPayment;
+                data.Interest = (_loanBalance * Simulation.LandlordInterestRatePerYear / 12).ToDollars();
                 data.Principal = Math.Min(loanPayment - data.Interest, _loanBalance).ToDollars();
                 WriteLine($"* {loanPayment:C0} loan payment ({data.Principal:C0} principal / {data.Interest:C0} interest)");
 
@@ -708,6 +608,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 
         private void RecordCashFlow(LandlordData data)
         {
+            // TODO:
             // Cash flow used for NPV
             // TODO: Code needs work
 #if false
@@ -718,7 +619,6 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             } 
 #endif
 
-
             // TODO: Code needs work
 #if false
                  // data.PersonalLoan could be positive or negative depending on whether we took out loan or repaid one.
@@ -728,11 +628,11 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             CashFlows.Add((double)cashFlow);
             WriteLine($"* NPV cash flow of {cashFlow:C0}"); 
 #endif
-
         }
 
         private void RepayPersonalLoan(LandlordData data)
         {
+            // TODO:
             if (data.Cash > 0 && _personalLoan > 0)
             {
                 var personalLoanPayment = Math.Min(_personalLoan, data.Cash);
@@ -745,6 +645,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 
         private decimal SellHome()
         {
+            // TODO:
             // TODO: Code needs work
 #if false
                  var homeValue = Simulation.LandlordHomeValue;
@@ -757,64 +658,12 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             return proceeds; 
 #endif
             return 0;
-
-        }
-
-        /// <inheritdoc />
-        public override void Simulate()
-        {
-            WriteLine($"{Name} in month # {Simulation.Month}{Environment.NewLine}");
-
-            if (Simulation.IsInitialMonth)
-                Initialize();
-            var monthly = Process();
-            if (Simulation.IsFinalMonth)
-                Finalize(monthly);
-
-            // TODO: Code needs work
-#if false
-                 _months.Add(monthly);
-
-            _averageRent = (_totalRent / Simulation.Month).ToDollars();
-            _averageExpenses = (_totalExpenses / Simulation.Month).ToDollars();
-            _netWorth = Cash - _personalLoan + Simulation.LandlordHomeValue - Simulation.LandlordLoanBalance; 
-#endif
-
-            // TODO: Code needs work
-#if false
-                 Report.Add(data); 
-#endif
-
-            // TODO: Code needs work
-#if false
-                 WriteLine($"{Name} in month # {Simulation.Month}{Environment.NewLine}");
-
-            if (Simulation.IsInitialMonth)
-                Initialize();
-            var data = Process();
-            if (Simulation.IsFinalMonth)
-                Finalize(data);
-
-            Report.Add(data); 
-#endif
-#if false
-// TODO: Code needs work
-            WriteLine($"{Name} in month # {Simulation.Month}{Environment.NewLine}");
-
-            if (Simulation.IsInitialMonth)
-                Initialize();
-            var data = Process();
-            if (Simulation.IsFinalMonth)
-                Finalize(data);
-
-            Report.Add(data);
-
-#endif
         }
 
         private void TakePersonalLoan(LandlordData data)
         {
-            if (data.Cash < 0)
+            // TODO:
+            // if (data.Cash < 0)
             {
                 var personalLoanAmount = Math.Abs(data.Cash);
                 _personalLoan += personalLoanAmount;
@@ -826,3 +675,5 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
         }
     }
 }
+
+// TODO: Use a single pay taxes routine.
