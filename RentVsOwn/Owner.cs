@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Text;
-using JetBrains.Annotations;
 using RentVsOwn.Financials;
 using RentVsOwn.Output;
-using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
@@ -14,12 +11,7 @@ namespace RentVsOwn
         {
         }
 
-        public override decimal NetWorth => _cash + _homeValue - _loanBalance;
-
-        private decimal _initialCash;
-
-        private decimal _cash;
-
+        public override decimal NetWorth => Cash + _homeValue - _loanBalance;
 
         private decimal _loanBalance;
 
@@ -29,7 +21,7 @@ namespace RentVsOwn
 
         private decimal _hoaPerMonth;
 
-        private void Finalize(OwnerData data)
+        protected override void Finalize(OwnerData data)
         {
             WriteLine($"* {_homeValue:C0} gross home sale proceeds ");
             var sellerFixedCosts = Simulation.SellerFixedCosts;
@@ -51,18 +43,14 @@ namespace RentVsOwn
 
             Report.AddNote(WriteLine($"* {proceeds:C0} net home sale proceeds"));
 
-            _cash += proceeds;
-            _cash = _cash.ToDollars();
-            WriteLine($"* {_cash:C0} cash on hand");
+            Cash += proceeds;
+            Cash = Cash.ToDollars();
+            WriteLine($"* {Cash:C0} cash on hand");
 
             data.CashFlow += proceeds;
         }
 
-        /// <inheritdoc />
-        public override string GenerateReport(ReportGrouping grouping, ReportFormat format)
-            => Report.Generate(grouping, format);
-
-        private void Initialize()
+        protected override void Initialize()
         {
             _homeValue = Simulation.HomePurchaseAmount;
             Report.AddNote(WriteLine($"* {_homeValue:C0} home value"));
@@ -71,7 +59,7 @@ namespace RentVsOwn
             _insurancePerMonth = Simulation.InsurancePerMonth;
             _hoaPerMonth = Simulation.HoaPerMonth;
 
-            _initialCash += Simulation.OwnerDownPayment;
+            InitialCash += Simulation.OwnerDownPayment;
             Report.AddNote(WriteLine($"* {Simulation.OwnerDownPayment:C0} down payment"));
 
             var buyerFixedCosts = Simulation.BuyerFixedCosts;
@@ -79,16 +67,16 @@ namespace RentVsOwn
             var buyerVariableCosts = Simulation.OwnerLoanAmount * Simulation.BuyerVariableCostsPercentage;
             WriteLine($"* {buyerVariableCosts:C0} buyer variable costs of {Simulation.BuyerVariableCostsPercentage:P2}");
             var buyerCosts = buyerFixedCosts + buyerVariableCosts;
-            _initialCash += buyerCosts;
+            InitialCash += buyerCosts;
             Report.AddNote(WriteLine($"* {buyerCosts:C0} total buyer costs"));
 
-            Report.AddNote(WriteLine($"* {_initialCash:C0} starting cash"));
+            Report.AddNote(WriteLine($"* {InitialCash:C0} starting cash"));
 
             Report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
-            Report.AddNote(WriteLine($"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P4} monthly discount rate"));
+            WriteLine($"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P4} monthly discount rate");
             Report.Add(new OwnerData
             {
-                CashFlow = -_initialCash,
+                CashFlow = -InitialCash,
                 LoanBalance = _loanBalance,
                 HomeValue = _homeValue,
             });
@@ -115,7 +103,7 @@ namespace RentVsOwn
             }
         }
 
-        private OwnerData Process()
+        protected override OwnerData Process()
         {
             var data = new OwnerData
             {
@@ -158,20 +146,5 @@ namespace RentVsOwn
 
             return data;
         }
-
-        /// <inheritdoc />
-        public override void Simulate()
-        {
-            WriteLine($"{Name} in month # {Simulation.Month}{Environment.NewLine}");
-
-            if (Simulation.IsInitialMonth)
-                Initialize();
-            var data = Process();
-            if (Simulation.IsFinalMonth)
-                Finalize(data);
-
-            Report.Add(data);
-        }
-
     }
 }

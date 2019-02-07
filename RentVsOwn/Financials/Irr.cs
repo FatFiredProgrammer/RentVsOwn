@@ -18,7 +18,7 @@ namespace RentVsOwn.Financials
                 throw new ArgumentException("cashFlows[0] >= 0", nameof(cashFlows));
 
             _guess = guess;
-            _cashFlows = cashFlows.ToList();
+            CashFlows = cashFlows.ToList();
         }
 
         public static int MaxIterations { get; set; } = 25;
@@ -27,7 +27,7 @@ namespace RentVsOwn.Financials
 
         private readonly double _guess;
 
-        private readonly List<double> _cashFlows;
+        private readonly List<double> CashFlows;
 
         public static double Calculate(IList<double> cashFlows, double guess)
         {
@@ -47,9 +47,9 @@ namespace RentVsOwn.Financials
                 var ddx = 0d;
 
                 var x2 = x0;
-                npv = Reduce(_cashFlows, (pv, pmt, t) => pv + pmt / Math.Pow(x2 + 1.0d, t), 0d);
+                npv = Reduce(CashFlows, (pv, pmt, t) => pv + pmt / Math.Pow(x2 + 1.0d, t), 0d);
                 var x3 = x0;
-                ddx = Reduce(_cashFlows, (pv, pmt, t) => pv + -t * pmt / Math.Pow(x3 + 1.0d, t + 1), 0d);
+                ddx = Reduce(CashFlows, (pv, pmt, t) => pv + -t * pmt / Math.Pow(x3 + 1.0d, t + 1), 0d);
                 var x1 = x0 - npv / ddx;
                 if (double.IsInfinity(x1) || double.IsNaN(x1))
                     break;

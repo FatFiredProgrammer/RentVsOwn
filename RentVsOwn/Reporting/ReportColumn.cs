@@ -91,7 +91,7 @@ namespace RentVsOwn.Reporting
 
         public decimal Npv { get; private set; }
 
-        private readonly List<double> _cashFlows = new List<double>();
+        private readonly List<double> CashFlows = new List<double>();
 
         public void Accumulate<T>(ReportGroup<T> @group)
             where T : class
@@ -113,7 +113,7 @@ namespace RentVsOwn.Reporting
             }
 
             if (CalculateIrr || CalculateNpv)
-                _cashFlows.Add(cashFlow);
+                CashFlows.Add(cashFlow);
             Average = Sum / Count;
         }
 
@@ -122,10 +122,10 @@ namespace RentVsOwn.Reporting
             // The underlying data is always monthly
             var discountRate = grouping == ReportGrouping.Yearly ? discountRatePerYear : Financial.ConvertDiscountRateYearToMonth(discountRatePerYear);
             if (CalculateNpv)
-                Npv = (decimal)Financials.Npv.Calculate(_cashFlows, discountRate);
+                Npv = (decimal)Financials.Npv.Calculate(CashFlows, discountRate);
             if (CalculateIrr)
             {
-                var irr = Financials.Irr.Calculate(_cashFlows, discountRate);
+                var irr = Financials.Irr.Calculate(CashFlows, discountRate);
                 Irr = double.IsNaN(irr) ? 0m : (decimal)irr;
             }
 

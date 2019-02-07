@@ -18,16 +18,14 @@ namespace RentVsOwn
         }
 
 
-        public override decimal NetWorth => _cash;
+        public override decimal NetWorth => Cash;
 
-        private decimal _initialCash;
 
         /// <summary>
         ///     The basis in the home.
         /// </summary>
         private decimal _basis;
 
-        private decimal _cash;
 
 //        private decimal _totalRent;
 
@@ -52,8 +50,6 @@ namespace RentVsOwn
         private decimal _currentYearTaxableIncome;
 
 
-        private readonly Report<LandlordData> _report = new Report<LandlordData>();
-
         [ReportColumn(Ignore = true)]
         public decimal LandlordLoanBalance { get; set; }
 
@@ -63,19 +59,19 @@ namespace RentVsOwn
 #if false
 // TODO: Code needs work
 
-        private decimal NetWorth => _invested + _cash + _securityDeposit;
+        private decimal NetWorth => _invested + Cash + _securityDeposit;
 
-        private decimal _initialCash;
+        private decimal InitialCash;
 
         private decimal _basis;
 
         private decimal _invested;
 
-        private decimal _cash;
+        private decimal Cash;
 
         private decimal _securityDeposit;
 
-        private readonly Report<Data> _report = new Report<Data>();
+        private readonly Report<Data> Report = new Report<Data>();
 
         private decimal _rentersInsurancePerMonth;
 
@@ -83,13 +79,13 @@ namespace RentVsOwn
 #endif
 #if false
 // TODO: Code needs work
-        private decimal NetWorth => _cash + _homeValue - _loanBalance;
+        private decimal NetWorth => Cash + _homeValue - _loanBalance;
 
-        private decimal _initialCash;
+        private decimal InitialCash;
 
-        private decimal _cash;
+        private decimal Cash;
 
-        private readonly Report<Data> _report = new Report<Data>();
+        private readonly Report<Data> Report = new Report<Data>();
 
         private decimal _loanBalance;
 
@@ -226,7 +222,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             }
         }
 
-        private void Finalize(LandlordData data)
+        protected override void Finalize(LandlordData data)
         {
             var proceeds = SellHome();
             PayTaxesOnHomeSale(ref proceeds);
@@ -236,41 +232,41 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             WriteLine($"* Net home sale proceeds of {proceeds:C0}");
 
             // Put proceeds into cash account
-            _cash += proceeds;
-            _cash = _cash.ToDollars();
-            WriteLine($"* Total cash on hand of {_cash:C0}");
+            Cash += proceeds;
+            Cash = Cash.ToDollars();
+            WriteLine($"* Total cash on hand of {Cash:C0}");
 
             // Add in this very last cash flow
             // TODO: Code needs work
 #if false
-                 _cashFlows[_cashFlows.Count - 1] += (double)proceeds;
-            WriteLine($"* Adjusted NPV cash flow of {_cashFlows[_cashFlows.Count - 1]:C0} accounting for sale proceeds of {proceeds:C0}");
-            data.NpvCashFlow = (decimal)_cashFlows[_cashFlows.Count - 1]; 
+                 CashFlows[CashFlows.Count - 1] += (double)proceeds;
+            WriteLine($"* Adjusted NPV cash flow of {CashFlows[CashFlows.Count - 1]:C0} accounting for sale proceeds of {proceeds:C0}");
+            data.NpvCashFlow = (decimal)CashFlows[CashFlows.Count - 1]; 
 #endif
 #if false
 // TODO: Code needs work
-            _cash += _invested;
+            Cash += _invested;
             data.CashFlow += _invested;
-            _report.AddNote(WriteLine($"* {_invested:C0} investment closed out"));
+            Report.AddNote(WriteLine($"* {_invested:C0} investment closed out"));
 
             var capitalGains = (_invested - _basis).ToDollars();
             WriteLine($"* Capital gains of {capitalGains:C0} on investment basis of {_basis:C0}");
             if (capitalGains > 0)
             {
                 var capitalGainsTax = (Simulation.CapitalGainsRatePerYear * capitalGains).ToDollars();
-                _cash -= capitalGainsTax;
+                Cash -= capitalGainsTax;
                 data.CashFlow -= capitalGainsTax;
-                _report.AddNote(WriteLine($"* {capitalGainsTax:C0} capital gains tax"));
+                Report.AddNote(WriteLine($"* {capitalGainsTax:C0} capital gains tax"));
             }
 
             _invested = 0;
 
-            _cash += _securityDeposit;
+            Cash += _securityDeposit;
             data.CashFlow += _securityDeposit;
             WriteLine($"* {_securityDeposit:C0} security deposit returned");
             _securityDeposit = 0;
 
-            WriteLine($"* {_cash:C0} cash on hand");
+            WriteLine($"* {Cash:C0} cash on hand");
 
 #endif
 #if false
@@ -293,11 +289,11 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 
             _homeValue = 0;
 
-            _report.AddNote(WriteLine($"* {proceeds:C0} net home sale proceeds"));
+            Report.AddNote(WriteLine($"* {proceeds:C0} net home sale proceeds"));
 
-            _cash += proceeds;
-            _cash = _cash.ToDollars();
-            WriteLine($"* {_cash:C0} cash on hand");
+            Cash += proceeds;
+            Cash = Cash.ToDollars();
+            WriteLine($"* {Cash:C0} cash on hand");
 
             data.CashFlow += proceeds;
 
@@ -305,7 +301,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
         }
 
         public override string GenerateReport(ReportGrouping grouping, ReportFormat format)
-            => _report.Generate(grouping, format);
+            => Report.Generate(grouping, format);
 
         /// <inheritdoc />
         public override void NextYear()
@@ -389,15 +385,15 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
         }
 
 
-        private void Initialize()
+        protected override void Initialize()
         {
             LandlordHomeValue = Simulation.HomePurchaseAmount;
             LandlordLoanBalance = Simulation.LandlordLoanAmount;
 
             // TODO: Code needs work
 #if false
-                 _initialCash = 0;
-            _cash = 0;
+                 InitialCash = 0;
+            Cash = 0;
             _totalRent = 0;
             _averageRent = 0;
             _totalExpenses = 0;
@@ -415,15 +411,15 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 #endif
 
             WriteLine($"* Down payment of {Simulation.LandlordDownPayment:C0}");
-            _initialCash += Simulation.LandlordDownPayment;
+            InitialCash += Simulation.LandlordDownPayment;
             WriteLine($"* Fixed closing costs of {Simulation.BuyerFixedCosts:C0}");
-            _initialCash += Simulation.BuyerFixedCosts;
+            InitialCash += Simulation.BuyerFixedCosts;
             _basis -= Simulation.BuyerFixedCosts;
             var variableClosingCosts = (Simulation.LandlordLoanAmount * Simulation.BuyerVariableCostsPercentage).ToDollars();
             WriteLine($"* Variable closing costs of {variableClosingCosts:C0}");
-            _initialCash += variableClosingCosts;
+            InitialCash += variableClosingCosts;
             _basis -= variableClosingCosts;
-            WriteLine($"* Total initial investment of {_initialCash:C0}");
+            WriteLine($"* Total initial investment of {InitialCash:C0}");
             WriteLine($"* Basis in home purchase {_basis:C0}");
 
             // TODO: Code needs work
@@ -435,11 +431,11 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             // TODO: Code needs work
 #if false
      Report.AddNotes
-            _report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
-            _report.AddNote(WriteLine($"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
-            _report.Add(new Data
+            Report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
+            Report.AddNote(WriteLine($"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P4} monthly discount rate"));
+            Report.Add(new Data
             {
-                CashFlow = -_initialCash,
+                CashFlow = -InitialCash,
             }); 
 #endif
 #if false
@@ -447,59 +443,59 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             _rentersInsurancePerMonth = Simulation.RentersInsurancePerMonth;
             _rentPerMonth = Simulation.RentPerMonth;
 
-            _initialCash =
+            InitialCash =
                 Simulation.OwnerDownPayment +
                 Simulation.BuyerFixedCosts +
                 Simulation.OwnerLoanAmount *
                 Simulation.BuyerVariableCostsPercentage;
 
-            _report.AddNote(WriteLine($"* {_initialCash:C0} starting cash"));
+            Report.AddNote(WriteLine($"* {InitialCash:C0} starting cash"));
             VerboseLine($"    * {Simulation.OwnerDownPayment:C0} down payment +  + )");
             VerboseLine($"    * {Simulation.BuyerFixedCosts:C0} fixed closing costs");
             VerboseLine($"    * {Simulation.OwnerLoanAmount * Simulation.BuyerVariableCostsPercentage:C0} variable closing costs");
 
             _securityDeposit = (Simulation.RentSecurityDepositMonths * Simulation.RentPerMonth).ToDollars();
-            _report.AddNote(WriteLine($"* {_securityDeposit:C0} security deposit"));
-            _invested = Math.Max(0, _initialCash - _securityDeposit);
+            Report.AddNote(WriteLine($"* {_securityDeposit:C0} security deposit"));
+            _invested = Math.Max(0, InitialCash - _securityDeposit);
             _basis = _invested;
-            _report.AddNote(WriteLine($"* {_invested:C0} invested @ {Simulation.DiscountRatePerYear:P2}"));
+            Report.AddNote(WriteLine($"* {_invested:C0} invested @ {Simulation.DiscountRatePerYear:P2}"));
 
-            _report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
-            _report.AddNote(WriteLine(
-                $"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
-            _report.Add(new Data
+            Report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
+            Report.AddNote(WriteLine(
+                $"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P4} monthly discount rate"));
+            Report.Add(new Data
             {
-                CashFlow = -_initialCash,
+                CashFlow = -InitialCash,
             });
 
 #endif
 #if false
 // TODO: Code needs work
             _homeValue = Simulation.HomePurchaseAmount;
-            _report.AddNote(WriteLine($"* {_homeValue:C0} home value"));
+            Report.AddNote(WriteLine($"* {_homeValue:C0} home value"));
             _loanBalance = Simulation.OwnerLoanAmount;
-            _report.AddNote(WriteLine($"* {_loanBalance:C0} loan amount"));
+            Report.AddNote(WriteLine($"* {_loanBalance:C0} loan amount"));
             _insurancePerMonth = Simulation.InsurancePerMonth;
             _hoaPerMonth = Simulation.HoaPerMonth;
 
-            _initialCash += Simulation.OwnerDownPayment;
-            _report.AddNote(WriteLine($"* {Simulation.OwnerDownPayment:C0} down payment"));
+            InitialCash += Simulation.OwnerDownPayment;
+            Report.AddNote(WriteLine($"* {Simulation.OwnerDownPayment:C0} down payment"));
 
             var buyerFixedCosts = Simulation.BuyerFixedCosts;
             WriteLine($"* {Simulation.BuyerFixedCosts:C0} buyer fixed costs");
             var buyerVariableCosts = Simulation.OwnerLoanAmount * Simulation.BuyerVariableCostsPercentage;
             WriteLine($"* {buyerVariableCosts:C0} buyer variable costs of {Simulation.BuyerVariableCostsPercentage:P2}");
             var buyerCosts = buyerFixedCosts + buyerVariableCosts;
-            _initialCash += buyerCosts;
-            _report.AddNote(WriteLine($"* {buyerCosts:C0} total buyer costs"));
+            InitialCash += buyerCosts;
+            Report.AddNote(WriteLine($"* {buyerCosts:C0} total buyer costs"));
 
-            _report.AddNote(WriteLine($"* {_initialCash:C0} starting cash"));
+            Report.AddNote(WriteLine($"* {InitialCash:C0} starting cash"));
 
-            _report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
-            _report.AddNote(WriteLine($"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
-            _report.Add(new Data
+            Report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
+            Report.AddNote(WriteLine($"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P4} monthly discount rate"));
+            Report.Add(new Data
             {
-                CashFlow = -_initialCash,
+                CashFlow = -InitialCash,
                 LoanBalance = _loanBalance,
                 HomeValue = _homeValue,
             });
@@ -631,7 +627,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             }
         }
 
-        private LandlordData Process()
+        protected override LandlordData Process()
         {
             var data = InitializeData();
             CalculateExpenses(data);
@@ -729,7 +725,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             // Essentially, the personal loan causes us to defer cash flow (for NPV/IRR) until we actually payback the loan.
             var cashFlow = data.NetIncome - data.PersonalLoan;
             data.NpvCashFlow = cashFlow;
-            _cashFlows.Add((double)cashFlow);
+            CashFlows.Add((double)cashFlow);
             WriteLine($"* NPV cash flow of {cashFlow:C0}"); 
 #endif
 
@@ -781,12 +777,12 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
 
             _averageRent = (_totalRent / Simulation.Month).ToDollars();
             _averageExpenses = (_totalExpenses / Simulation.Month).ToDollars();
-            _netWorth = _cash - _personalLoan + Simulation.LandlordHomeValue - Simulation.LandlordLoanBalance; 
+            _netWorth = Cash - _personalLoan + Simulation.LandlordHomeValue - Simulation.LandlordLoanBalance; 
 #endif
 
             // TODO: Code needs work
 #if false
-                 _report.Add(data); 
+                 Report.Add(data); 
 #endif
 
             // TODO: Code needs work
@@ -799,7 +795,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             if (Simulation.IsFinalMonth)
                 Finalize(data);
 
-            _report.Add(data); 
+            Report.Add(data); 
 #endif
 #if false
 // TODO: Code needs work
@@ -811,7 +807,7 @@ WriteLine($"* Net taxable income of {taxableIncome:C0}");
             if (Simulation.IsFinalMonth)
                 Finalize(data);
 
-            _report.Add(data);
+            Report.Add(data);
 
 #endif
         }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Text;
-using JetBrains.Annotations;
 using RentVsOwn.Financials;
 using RentVsOwn.Output;
-using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
@@ -14,15 +11,11 @@ namespace RentVsOwn
         {
         }
 
-        public override decimal NetWorth => _invested + _cash + _securityDeposit;
-
-        private decimal _initialCash;
+        public override decimal NetWorth => _invested + Cash + _securityDeposit;
 
         private decimal _basis;
 
         private decimal _invested;
-
-        private decimal _cash;
 
         private decimal _securityDeposit;
 
@@ -30,66 +23,59 @@ namespace RentVsOwn
 
         private decimal _rentPerMonth;
 
-        private readonly Report<RenterData> _report = new Report<RenterData>();
-
-        private void Finalize(RenterData data)
+        protected override void Finalize(RenterData data)
         {
-            _cash += _invested;
+            Cash += _invested;
             data.CashFlow += _invested;
-            _report.AddNote(WriteLine($"* {_invested:C0} investment closed out"));
+            Report.AddNote(WriteLine($"* {_invested:C0} investment (future value)"));
 
             var capitalGains = (_invested - _basis).ToDollars();
             WriteLine($"* Capital gains of {capitalGains:C0} on investment basis of {_basis:C0}");
             if (capitalGains > 0)
             {
                 var capitalGainsTax = (Simulation.CapitalGainsRatePerYear * capitalGains).ToDollars();
-                _cash -= capitalGainsTax;
+                Cash -= capitalGainsTax;
                 data.CashFlow -= capitalGainsTax;
-                _report.AddNote(WriteLine($"* {capitalGainsTax:C0} capital gains tax"));
+                WriteLine($"* {capitalGainsTax:C0} capital gains tax");
             }
 
             _invested = 0;
 
-            _cash += _securityDeposit;
+            Cash += _securityDeposit;
             data.CashFlow += _securityDeposit;
             WriteLine($"* {_securityDeposit:C0} security deposit returned");
             _securityDeposit = 0;
 
-            WriteLine($"* {_cash:C0} cash on hand");
+            WriteLine($"* {Cash:C0} cash on hand");
         }
 
-        /// <inheritdoc />
-        public override string GenerateReport(ReportGrouping grouping, ReportFormat format)
-            => _report.Generate(grouping, format);
-
-        private void Initialize()
+        protected override void Initialize()
         {
             _insurancePerMonth = Simulation.RentersInsurancePerMonth;
             _rentPerMonth = Simulation.RentPerMonth;
 
-            _initialCash =
+            InitialCash =
                 Simulation.OwnerDownPayment +
                 Simulation.BuyerFixedCosts +
                 Simulation.OwnerLoanAmount *
                 Simulation.BuyerVariableCostsPercentage;
 
-            _report.AddNote(WriteLine($"* {_initialCash:C0} starting cash"));
+            Report.AddNote(WriteLine($"* {InitialCash:C0} starting cash"));
             VerboseLine($"    * {Simulation.OwnerDownPayment:C0} down payment +  + )");
             VerboseLine($"    * {Simulation.BuyerFixedCosts:C0} fixed closing costs");
             VerboseLine($"    * {Simulation.OwnerLoanAmount * Simulation.BuyerVariableCostsPercentage:C0} variable closing costs");
 
             _securityDeposit = (Simulation.RentSecurityDepositMonths * Simulation.RentPerMonth).ToDollars();
-            _report.AddNote(WriteLine($"* {_securityDeposit:C0} security deposit"));
-            _invested = Math.Max(0, _initialCash - _securityDeposit);
+            Report.AddNote(WriteLine($"* {_securityDeposit:C0} security deposit"));
+            _invested = Math.Max(0, InitialCash - _securityDeposit);
             _basis = _invested;
-            _report.AddNote(WriteLine($"* {_invested:C0} invested @ {Simulation.DiscountRatePerYear:P2}"));
+            Report.AddNote(WriteLine($"* {_invested:C0} invested @ {Simulation.DiscountRatePerYear:P2}"));
 
-            _report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
-            _report.AddNote(WriteLine(
-                $"* {_report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(_report.DiscountRatePerYear):P4} monthly discount rate"));
-            _report.Add(new RenterData
+            Report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
+            WriteLine($"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P4} monthly discount rate");
+            Report.Add(new RenterData
             {
-                CashFlow = -_initialCash,
+                CashFlow = -InitialCash,
             });
         }
 
@@ -111,7 +97,7 @@ namespace RentVsOwn
             }
         }
 
-        private RenterData Process()
+        protected override RenterData Process()
         {
             var data = new RenterData
             {
@@ -132,20 +118,6 @@ namespace RentVsOwn
             WriteLine($"* Investment of {_invested:C0} grew by {growth:C0} ({Simulation.DiscountRatePerYear / 12:P2})");
 
             return data;
-        }
-
-        /// <inheritdoc />
-        public override void Simulate()
-        {
-            WriteLine($"{Name} in month # {Simulation.Month}{Environment.NewLine}");
-
-            if (Simulation.IsInitialMonth)
-                Initialize();
-            var data = Process();
-            if (Simulation.IsFinalMonth)
-                Finalize(data);
-
-            _report.Add(data);
         }
     }
 }
