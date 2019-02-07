@@ -122,19 +122,19 @@ namespace RentVsOwn.Reporting
         private void GenerateData(StringBuilder text, ReportGrouping grouping, List<ReportColumn> columns, Separators separators)
         {
             var groups = GetGroups(grouping).ToList();
-            foreach (var @group in groups)
+            foreach (var group in groups)
             {
                 var first = true;
                 text.Append(separators.First);
                 switch (grouping)
                 {
                     case ReportGrouping.Monthly:
-                        text.Append($"{@group.Period}");
+                        text.Append($"{group.Period}");
                         first = false;
                         break;
 
                     case ReportGrouping.Yearly:
-                        text.Append($"{@group.Period}");
+                        text.Append($"{group.Period}");
                         first = false;
                         break;
 
@@ -152,7 +152,7 @@ namespace RentVsOwn.Reporting
                     else
                         text.Append(separators.Middle);
                     text.Append($"{column.FormatValue(group.GetValue(column))}");
-                    column.Accumulate(@group);
+                    column.Accumulate(group);
                 }
 
                 text.AppendLine(separators.Last);

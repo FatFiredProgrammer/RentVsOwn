@@ -10,11 +10,7 @@ namespace RentVsOwn
         public decimal Rent { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-        public decimal Total => Expenses + Principal;
-
-        // TODO: 
-        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-        public decimal Expenses => Insurance + PropertyTax + Hoa + Maintenance + Interest;
+        public decimal Expenses => ManagementFee + Insurance + PropertyTax + Hoa + Maintenance + OperatingLoanInterest + OtherTaxes + Interest;
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal ManagementFee { get; set; }
@@ -32,13 +28,23 @@ namespace RentVsOwn
         public decimal Maintenance { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+        public decimal OperatingLoanInterest { get; set; }
+
+        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+        public decimal OtherTaxes { get; set; }
+
+        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Interest { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Principal { get; set; }
 
-        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateNpv = true, CalculateIrr = true)]
-        public decimal CashFlow { get; set; }
+        /// <summary>
+        ///     Gets or sets the operating loan amount required during this period.
+        /// </summary>
+        /// <value>The operating loan.</value>
+        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum)]
+        public decimal OperatingLoan { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Last)]
         public decimal HomeValue { get; set; }
@@ -46,34 +52,17 @@ namespace RentVsOwn
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Last)]
         public decimal LoanBalance { get; set; }
 
-        // TODO: Code needs work
-#if false
-                 public decimal Rent { get; set; }
-
-            public decimal Expenses { get; set; }
-#endif
-
-        // TODO: Code needs work
-#if false
-             public decimal Principal { get; set; }
-
-        public decimal Interest { get; set; }
-
-        public decimal NetIncome => Rent - Expenses;
-#endif
+        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateNpv = true, CalculateIrr = true)]
+        public decimal CashFlow { get; set; }
 
         /// <summary>
         ///     Gets or sets the cash on hand this month.
         ///     This starts with the value of the rent and then gets progressively decreased.
         ///     If we go negative, we need a personal loan.
+        ///     This is really an accumulator and ends up being zeroed out.
         /// </summary>
         /// <value>The cash.</value>
+        [ReportColumn(Ignore = true)]
         public decimal Cash { get; set; }
-
-        public decimal PersonalLoan { get; set; }
-
-        public decimal NpvCashFlow { get; set; }
     }
 }
-
-// TODO:

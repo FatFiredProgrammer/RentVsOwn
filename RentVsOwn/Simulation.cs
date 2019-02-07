@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using RentVsOwn.Financials;
 using RentVsOwn.Output;
 using RentVsOwn.Reporting;
 
 namespace RentVsOwn
 {
+    [PublicAPI]
     public sealed class Simulation : ISimulation
     {
         public const string Separator = "\r\n---\r\n";
@@ -33,12 +35,12 @@ namespace RentVsOwn
             LandlordDownPaymentPercentage = LandlordDownPaymentPercentage ?? OwnerDownPaymentPercentage;
             LandlordDownPaymentPercentage = Math.Min(Math.Max(0m, LandlordDownPaymentPercentage.Value), 100).ToPercent();
             LandlordDownPayment = (HomePurchaseAmount * LandlordDownPaymentPercentage.Value).ToDollars();
-            LandlordInterestRate = LandlordInterestRate ?? OwnerInterestRatePerYear;
-            LandlordInterestRate = Math.Min(Math.Max(0m, LandlordInterestRate.Value), 100).ToPercent();
+            LandlordInterestRatePerYear = LandlordInterestRatePerYear ?? OwnerInterestRatePerYear;
+            LandlordInterestRatePerYear = Math.Min(Math.Max(0m, LandlordInterestRatePerYear.Value), 100).ToPercent();
             LandlordManagementFeePercentagePerMonth = Math.Min(Math.Max(0m, LandlordManagementFeePercentagePerMonth), 100).ToPercent();
             LandlordLoanAmount = HomePurchaseAmount - LandlordDownPayment;
             LandlordLoanYears = Math.Max(1, LandlordLoanYears ?? OwnerLoanYears);
-            LandlordMonthlyPayment = PaymentCalculator.CalculatePayment(LandlordLoanAmount, LandlordInterestRate.Value, LandlordLoanYears.Value);
+            LandlordMonthlyPayment = PaymentCalculator.CalculatePayment(LandlordLoanAmount, LandlordInterestRatePerYear.Value, LandlordLoanYears.Value);
 
             DiscountRatePerYear = Math.Min(Math.Max(0m, DiscountRatePerYear), 100).ToPercent();
             CapitalGainsRatePerYear = Math.Min(Math.Max(0m, CapitalGainsRatePerYear), 100).ToPercent();
@@ -96,9 +98,8 @@ namespace RentVsOwn
             // Create the various entries we are simulating
             var people = new List<IEntity>
             {
-                // new Renter(this, output),
-                // new Owner(this, output),
-
+                new Renter(this, output),
+                new Owner(this, output),
                 new Landlord(this, output),
             };
 
@@ -245,9 +246,9 @@ namespace RentVsOwn
         /// </summary>
         /// <value>The owner interest rate.</value>
         [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Landlord's mortgage interest rate. Default is 4.75%. If null, use home owner's value.")]
-        public decimal? LandlordInterestRate { get; set; } = .0475m;
+        public decimal? LandlordInterestRatePerYear { get; set; } = .0475m;
 
-        decimal ISimulation.LandlordInterestRate => LandlordInterestRate ?? 0m;
+        decimal ISimulation.LandlordInterestRatePerYear => LandlordInterestRatePerYear ?? 0m;
 
         /// <summary>
         ///     Gets or sets the owner loan years.
@@ -262,8 +263,6 @@ namespace RentVsOwn
         /// <value>The owner down payment percentage.</value>
         [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Landlord down payment percentage. Default is 25%. If null, use home owner's value.")]
         public decimal? LandlordDownPaymentPercentage { get; set; } = .25m;
-
-        decimal ISimulation.LandlordDownPaymentPercentage => LandlordDownPaymentPercentage ?? 0m;
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Notes = "Landlord down payment. Calculated.")]
         public decimal LandlordDownPayment { get; private set; }
@@ -280,6 +279,13 @@ namespace RentVsOwn
         /// <value>The management fee percentage.</value>
         [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Landlord property management fee as a percentage of monthly rent. Default is 10%.")]
         public decimal LandlordManagementFeePercentagePerMonth { get; set; } = .1m;
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether 1031 exchange is allowed.
+        /// </summary>
+        /// <value><c>true</c> if allow 1031 exchange; otherwise, <c>false</c>.</value>
+        [ReportColumn(Notes = "Allow landlord to make a 1031 exchange at close of simulation. Default is false.")]
+        public bool Allow1031Exchange { get; set; }
         #endregion
 
         #region Rent

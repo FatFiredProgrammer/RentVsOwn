@@ -91,20 +91,20 @@ namespace RentVsOwn.Reporting
 
         public decimal Npv { get; private set; }
 
-        private readonly List<double> CashFlows = new List<double>();
+        private readonly List<double> _cashFlows = new List<double>();
 
-        public void Accumulate<T>(ReportGroup<T> @group)
+        public void Accumulate<T>(ReportGroup<T> group)
             where T : class
         {
             if (!CalculateAverage && !CalculateSum && !CalculateIrr && !CalculateNpv)
                 return;
 
-            if (!IncludePeriod0 && !CalculateIrr && !CalculateNpv && @group.Period == 0)
+            if (!IncludePeriod0 && !CalculateIrr && !CalculateNpv && group.Period == 0)
                 return;
 
             Count++;
             var cashFlow = 0d;
-            foreach (var data in @group.Data)
+            foreach (var data in group.Data)
             {
                 var value = GetDecimalValue(data);
                 Sum += value;
@@ -113,7 +113,7 @@ namespace RentVsOwn.Reporting
             }
 
             if (CalculateIrr || CalculateNpv)
-                CashFlows.Add(cashFlow);
+                _cashFlows.Add(cashFlow);
             Average = Sum / Count;
         }
 
@@ -122,10 +122,10 @@ namespace RentVsOwn.Reporting
             // The underlying data is always monthly
             var discountRate = grouping == ReportGrouping.Yearly ? discountRatePerYear : Financial.ConvertDiscountRateYearToMonth(discountRatePerYear);
             if (CalculateNpv)
-                Npv = (decimal)Financials.Npv.Calculate(CashFlows, discountRate);
+                Npv = (decimal)Financials.Npv.Calculate(_cashFlows, discountRate);
             if (CalculateIrr)
             {
-                var irr = Financials.Irr.Calculate(CashFlows, discountRate);
+                var irr = Financials.Irr.Calculate(_cashFlows, discountRate);
                 Irr = double.IsNaN(irr) ? 0m : (decimal)irr;
             }
 
@@ -199,23 +199,23 @@ namespace RentVsOwn.Reporting
                 case null:
                     return 0m;
                 case sbyte number:
-                    return (decimal)number;
+                    return number;
                 case short number:
-                    return (decimal)number;
+                    return number;
                 case int number:
-                    return (decimal)number;
+                    return number;
                 case long number:
-                    return (decimal)number;
+                    return number;
                 case byte number:
-                    return (decimal)number;
+                    return number;
                 case ushort number:
-                    return (decimal)number;
+                    return number;
                 case uint number:
-                    return (decimal)number;
+                    return number;
                 case ulong number:
-                    return (decimal)number;
+                    return number;
                 case char number:
-                    return (decimal)number;
+                    return number;
                 case float number:
                     return (decimal)number;
                 case double number:
@@ -235,7 +235,6 @@ namespace RentVsOwn.Reporting
                     return 2;
                 default:
                     return 0;
-                    throw new ArgumentOutOfRangeException(nameof(format), format, null);
             }
         }
 

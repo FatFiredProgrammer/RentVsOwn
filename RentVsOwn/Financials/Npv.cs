@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace RentVsOwn.Financials
 {
+    [PublicAPI]
     public static class Npv
     {
         /// <summary>

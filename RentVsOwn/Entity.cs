@@ -21,15 +21,13 @@ namespace RentVsOwn
         /// <inheritdoc />
         public string Name => GetType().Name;
 
-        public abstract decimal NetWorth { get; }
+        protected abstract decimal NetWorth { get; }
 
         protected decimal InitialCash { get; set; }
 
         protected decimal Cash { get; set; }
 
         protected Report<TData> Report { get; } = new Report<TData>();
-
-        protected abstract void Finalize(TData data);
 
         /// <inheritdoc />
         public void Flush()
@@ -39,23 +37,29 @@ namespace RentVsOwn
         public virtual string GenerateReport(ReportGrouping grouping, ReportFormat format)
             => Report.Generate(grouping, format);
 
-        protected abstract void Initialize();
-
         public abstract void NextYear();
 
-        protected abstract TData Process();
+        protected abstract void OnFinalMonth(TData data);
+
+        protected abstract void OnInitialMonth();
+
+        protected abstract TData OnProcess();
+
+        protected virtual void OnRecordData(TData data)
+        {
+            Report.Add(data);
+        }
 
         public virtual void Simulate()
         {
             WriteLine($"{Name} in month # {Simulation.Month}{Environment.NewLine}");
 
             if (Simulation.IsInitialMonth)
-                Initialize();
-            var data = Process();
+                OnInitialMonth();
+            var data = OnProcess();
             if (Simulation.IsFinalMonth)
-                Finalize(data);
-
-            Report.Add(data);
+                OnFinalMonth(data);
+            OnRecordData(data);
         }
 
         public override string ToString()

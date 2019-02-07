@@ -30,15 +30,11 @@
 
         decimal DiscountRatePerYear { get; }
 
-        decimal DiscountRatePerMonth { get; }
-
         decimal CapitalGainsRatePerYear { get; }
 
         decimal MarginalTaxRatePerYear { get; }
 
-        decimal LandlordInterestRate { get; }
-
-        decimal LandlordDownPaymentPercentage { get; }
+        decimal LandlordInterestRatePerYear { get; }
 
         decimal LandlordDownPayment { get; }
 
@@ -71,5 +67,7 @@
         decimal DepreciablePercentage { get; }
 
         decimal InflationRatePerYear { get; }
+
+        bool Allow1031Exchange { get; }
     }
 }

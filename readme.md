@@ -4,6 +4,7 @@ An application that simulates owning, renting and being a landlord of a property
 
 https://fbe.unimelb.edu.au/__data/assets/pdf_file/0011/1497953/2011MayLiER_NPV_submission.pdf
 
+Net worth
 Only relative npv/irr relevant for rent vs own.
 landlord retains security deposit!
 Check ISimulate parameter uisage.
@@ -34,6 +35,8 @@ Personal loan interest
 
 Moving costs every 3 years.
 PV of NET CF =M11/(1+Home!$H$2/12)^Own!A11
+
+https://iqcalculators.com/calculate-real-estate-roi
 
 Gross Income(including vacancy allowance) - Operating Expenses = EBITDA(Earnings before interest, taxes, depreciation and amortization)
 EBITDA - Interest Expenses - Depreciation = EBTA

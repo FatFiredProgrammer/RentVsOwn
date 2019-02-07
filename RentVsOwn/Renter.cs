@@ -11,7 +11,7 @@ namespace RentVsOwn
         {
         }
 
-        public override decimal NetWorth => _invested + Cash + _securityDeposit;
+        protected override decimal NetWorth => _invested + Cash + _securityDeposit;
 
         private decimal _basis;
 
@@ -23,7 +23,25 @@ namespace RentVsOwn
 
         private decimal _rentPerMonth;
 
-        protected override void Finalize(RenterData data)
+        /// <inheritdoc />
+        public override void NextYear()
+        {
+            WriteLine(RentVsOwn.Simulation.Separator);
+            WriteLine($"{Name} Year # {Simulation.Month / 12}{Environment.NewLine}");
+            if (Simulation.RentChangePerYearPercentage > 0)
+            {
+                _rentPerMonth = (_rentPerMonth + _rentPerMonth * Simulation.RentChangePerYearPercentage).ToDollars();
+                WriteLine($"* Rent increased {Simulation.RentChangePerYearPercentage:P2} to {_rentPerMonth:C0}");
+            }
+
+            if (Simulation.InflationRatePerYear > 0)
+            {
+                _insurancePerMonth = (_insurancePerMonth + _insurancePerMonth * Simulation.InflationRatePerYear).ToDollarCents();
+                WriteLine($"* Renters insurance increased {Simulation.InflationRatePerYear:P2} to {_insurancePerMonth:C2}");
+            }
+        }
+
+        protected override void OnFinalMonth(RenterData data)
         {
             Cash += _invested;
             data.CashFlow += _invested;
@@ -49,10 +67,11 @@ namespace RentVsOwn
             WriteLine($"* {Cash:C0} cash on hand");
         }
 
-        protected override void Initialize()
+        protected override void OnInitialMonth()
         {
             _insurancePerMonth = Simulation.RentersInsurancePerMonth;
             _rentPerMonth = Simulation.RentPerMonth;
+            Report.AddNote(WriteLine($"* {_rentPerMonth:C0} initial rent"));
 
             InitialCash =
                 Simulation.OwnerDownPayment +
@@ -72,32 +91,14 @@ namespace RentVsOwn
             Report.AddNote(WriteLine($"* {_invested:C0} invested @ {Simulation.DiscountRatePerYear:P2}"));
 
             Report.DiscountRatePerYear = Simulation.DiscountRatePerYear;
-            WriteLine($"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P4} monthly discount rate");
+            WriteLine($"* {Report.DiscountRatePerYear:P2} annual discount rate; {Financial.ConvertDiscountRateYearToMonth(Report.DiscountRatePerYear):P6} monthly discount rate");
             Report.Add(new RenterData
             {
                 CashFlow = -InitialCash,
             });
         }
 
-        /// <inheritdoc />
-        public override void NextYear()
-        {
-            WriteLine(RentVsOwn.Simulation.Separator);
-            WriteLine($"{Name} Year # {Simulation.Month / 12}{Environment.NewLine}");
-            if (Simulation.RentChangePerYearPercentage > 0)
-            {
-                _rentPerMonth = (_rentPerMonth + _rentPerMonth * Simulation.RentChangePerYearPercentage).ToDollars();
-                WriteLine($"* Rent increased {Simulation.RentChangePerYearPercentage:P2} to {_rentPerMonth:C0}");
-            }
-
-            if (Simulation.InflationRatePerYear > 0)
-            {
-                _insurancePerMonth = (_insurancePerMonth + _insurancePerMonth * Simulation.InflationRatePerYear).ToDollarCents();
-                WriteLine($"* Renters insurance increased {Simulation.InflationRatePerYear:P2} to {_insurancePerMonth:C2}");
-            }
-        }
-
-        protected override RenterData Process()
+        protected override RenterData OnProcess()
         {
             var data = new RenterData
             {
@@ -108,7 +109,7 @@ namespace RentVsOwn
 
             if (_insurancePerMonth > 0)
             {
-                data.Insurance = _insurancePerMonth;
+                data.Insurance += _insurancePerMonth;
                 data.CashFlow -= data.Insurance;
                 WriteLine($"* {_insurancePerMonth:C0} renter's insurance");
             }
