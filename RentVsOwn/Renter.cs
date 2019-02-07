@@ -65,6 +65,7 @@ namespace RentVsOwn
             _securityDeposit = 0;
 
             WriteLine($"* {Cash:C0} cash on hand");
+            Report.AddNote($"* {ToString()}");
         }
 
         protected override void OnInitialMonth()

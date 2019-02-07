@@ -216,6 +216,7 @@ namespace RentVsOwn
             RefundSecurityDeposit(data);
             PayIncomeTax(data);
             CloseOutOperatingLoan(data);
+            Report.AddNote($"* {ToString()}");
         }
 
         protected override void OnInitialMonth()

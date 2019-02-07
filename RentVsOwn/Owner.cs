@@ -95,6 +95,7 @@ namespace RentVsOwn
             WriteLine($"* {Cash:C0} cash on hand");
 
             data.CashFlow += proceeds;
+            Report.AddNote($"* {ToString()}");
         }
 
         protected override void OnInitialMonth()

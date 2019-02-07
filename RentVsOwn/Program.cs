@@ -33,6 +33,7 @@ namespace RentVsOwn
                     Allow1031Exchange = true,
                     RentPerMonth = 2300,
                     OwnerAllowTaxDeductions = true,
+                    Csv = false,
                     // LandlordDownPaymentPercentage = null,
                     // LandlordInterestRatePerYear = null,
                     // LandlordLoanYears = null,
