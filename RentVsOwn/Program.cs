@@ -31,9 +31,10 @@ namespace RentVsOwn
                     // LandlordManagementFeePercentagePerMonth = .1m,
                     HoaPerMonth = 0,
                     Allow1031Exchange = true,
-                    RentPerMonth = 2300,
-                    OwnerAllowTaxDeductions = true,
+                    // RentPerMonth = 2300,
+                    OwnerAllowTaxDeductions = false,
                     Csv = false,
+
                     // LandlordDownPaymentPercentage = null,
                     // LandlordInterestRatePerYear = null,
                     // LandlordLoanYears = null,

@@ -98,7 +98,7 @@ namespace RentVsOwn
             // If we have a operating loan, pay interest on it.
             if (_operatingLoan > 0)
             {
-                data.OperatingLoanInterest += (_operatingLoan * Simulation.DiscountRatePerYear / 12).ToDollars();
+                data.OperatingLoanInterest += (_operatingLoan * Simulation.LandlordOperationLoanRatePerYear / 12).ToDollars();
                 data.Cash -= data.OperatingLoanInterest;
                 data.CashFlow -= data.OperatingLoanInterest;
                 WriteLine($"* {data.OperatingLoanInterest:C0} operating loan interest");
@@ -145,8 +145,10 @@ namespace RentVsOwn
             if (_operatingLoan <= 0)
                 return;
 
+            // This is a cash only transaction.
+            // The negative cash flow which generated the loan was accounted for in the NPV already.
+            // This is merely an adjustment for our net worth.
             data.Cash -= _operatingLoan;
-            data.CashFlow -= _operatingLoan;
             WriteLine($"* Closed out operating loan of {_operatingLoan:C0}");
             _operatingLoan = 0;
         }
@@ -216,7 +218,6 @@ namespace RentVsOwn
             RefundSecurityDeposit(data);
             PayIncomeTax(data);
             CloseOutOperatingLoan(data);
-            Report.AddNote($"* {ToString()}");
         }
 
         protected override void OnInitialMonth()
@@ -287,6 +288,8 @@ namespace RentVsOwn
                 data.Cash = 0;
             }
 
+            if(Simulation.IsFinalMonth)
+                Report.AddNote($"* {ToString()}");
             base.OnRecordData(data);
         }
 
@@ -415,11 +418,13 @@ namespace RentVsOwn
             if (data.Cash <= 0 || _operatingLoan <= 0)
                 return;
 
-            var operatingLoanPayment = Math.Min(_operatingLoan, data.Cash);
+            // This is a cash only transaction.
+            // The negative cash flow which generated the loan was accounted for in the NPV already.
+            // This is merely an adjustment for our net worth.
+             var operatingLoanPayment = Math.Min(_operatingLoan, data.Cash);
             _operatingLoan -= operatingLoanPayment;
             data.Cash -= operatingLoanPayment;
-            data.CashFlow -= operatingLoanPayment;
-            data.OperatingLoan = -operatingLoanPayment;
+            data.OperatingLoan -= operatingLoanPayment;
             WriteLine($"* {operatingLoanPayment:C0} operating loan payment leaving a balance of {_operatingLoan:C0}");
         }
 

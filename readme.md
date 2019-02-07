@@ -2,6 +2,66 @@
 
 An application that simulates owning, renting and being a landlord of a property.
 
+## TODO
+
+Include moving costs. 
+Perhaps allow renter to move periodically during simulation.
+
+## Notes to /u/friendly_hendie
+
+I shared an XLSX spreadsheet [here](https://github.com/johnweeder/RentVsOwn/blob/master/RentVsOwn.xlsx).
+I tried to change my code to output a spreadsheet so you could just it.
+I tested my code as best I could by comparing mine to yours for similar runs until I got everything to match up.
+Except for the issues below.
+
+Renter NPV -$198,269 vs owner NPV of -$134,136. This is a clear victory, in this case, for own over rent.
+Even lowering the rent to equal the owner's monthly payment doesn't help.
+
+At $2,300 rent, the landlord has an NPV of -$38,185 at an 8% discount rate. At 2% IRR.
+However, we've basically chosen relatively conservative options here which work against the landlord.
+
+
+Problems with the spreadsheet.
+
+* When comparing rentals, NPV/IRR is only meaningful in a relative sense. 
+I.e. it only let's you decide which is better/worse - renting or owning.
+It says nothing about the true economic value.
+A person _must_ either rent or own - you must have a place to live.
+The NPV here is not truly a cash flow showing revenue from an asset. 
+Rather, it is accumulating the net value of the costs associated with owning or renting.
+See scholarly paper referenced below.
+* Your spreadsheet, the landlord does not appear to account for the security deposit being held.
+* Your spreadsheet, the monthly discount rate for NPV is calculated as "rate / 12".
+It should be "(1+rate)^(1/12)-1"
+* Your spreadsheet,  does not appear to account for the loan balance in the final cash flow.
+* Your spreadsheet, property tax and mortgage interest deduction are not relevant landlord assuming they rent more than 14 days per year.
+These are already deductible expenses in any case.
+One can't take an _additional_ "tax savings" because these expenses are _already_ offsetting rental income.
+I.e. you're not _saving_ on tax, you're simply not paying tax which would otherwise have been due.
+Since your spreadsheet is not paying tax to begin with, this essentially gives you a **tax deduction twice**! 
+* Your spreadsheet, tax savings via depreciation are a "non-cash" expense are should _not_ be included in NPV.
+See link below.
+* To the extent you have a loss or unused depreciation, a loss can only be used to offset other passive income (in most reasonable cases).
+Assuming all your properties are similar, you can't use a rob Peter to pay Paul approach here to boost your cash flow. 
+In essence, that is just transferring value from another property.
+* Your fixed closing costs for both purchase and sale are way out of line with respect to Omaha.
+I understand other areas of the country are different.
+Buyers fees are 1/2 title insurance, 1/2 of closing fee, some doc fees, termite and an appraisal. 
+Plus a percentage fee for loan origination (1 or 2%).
+Sellers closing costs here are 1/2 title insurance, 1/2 of closing fee and some documentation fees - plus a 6% commission.
+
+Changes made to my simulation:
+
+* CSV and markdown reports
+* Monthly and yearly reports.
+* Landlord security deposit held/returned
+* Vacancy holdback 
+* 1031 exchange
+* Added support for mortgage/propert tax deductions
+* Charge interest on an operating loan for negative cash flows.
+
+# Links
+
 This code available on [github](https://github.com/johnweeder/RentVsOwn).
 
 See [Rent vs Own NPV](https://fbe.unimelb.edu.au/__data/assets/pdf_file/0011/1497953/2011MayLiER_NPV_submission.pdf)
@@ -10,57 +70,9 @@ for a discussion of how to use values.
 See [this](https://iqcalculators.com/calculate-real-estate-roi) for discussion of how to evaluate
 ROI from a landlord perspective.
 
-## TODO
+[TurboTax](https://turbotax.intuit.com/tax-tips/home-ownership/buying-a-second-home-tax-tips-for-homeowners/L5Mzc5URo)
+provided rules for tax deductibilty of expenses.
 
-Include moving costs. 
-Perhaps allow renter to move periodically during simulation.
-
-## Notes to /u/friendly_hendie
-
-Changes made:
-
-* Support CSV and markdown reports
-* Support both monthly and yearly reports.
-* Landlord now accounts for security deposit
-* Support a 1031 exchange
-* Added support for tax deductions
-Only relative npv/irr relevant for rent vs own.
-Net worth
-landlord retains security deposit!
-incorrect monthly discount rate calc!
-Not accouniting for loan balance
-large difference in monthly vs yearly npv calculations because of partial year?
-tax savings/deprecation are a "non-cash" expense are are not included in NPV.
-property tax, Mortgage interest deduction not relevant landlord. These are already deductible expenses.
-The area not unless < 14 days / year
-https://turbotax.intuit.com/tax-tips/home-ownership/buying-a-second-home-tax-tips-for-homeowners/L5Mzc5URo
-
-
-Owner: Fixed closing cost of 2 pmts and $5000 are way out of line.
-1/2 title insurance + 1/2 appraisal + 1/2 termite + lender fee ($200) + settlement + doc + origination.
-
-Monthly NPV discount rate (1+Rate)^(1/12)-1
-Monthly IRR to annual: (1+rate)^12 - 1
-lose security deposit
-
-compounded future value: =-C9*(1+0.08/12)^A113
-Vacancy rate 5%
-Renter move years!
-1031 exchange
-Personal loan interest
-
-=D9/(1+$L$2/12)^A9
-
-Moving costs every 3 years.
-PV of NET CF =M11/(1+Home!$H$2/12)^Own!A11
-
-
-
-Gross Income(including vacancy allowance) - Operating Expenses = EBITDA(Earnings before interest, taxes, depreciation and amortization)
-EBITDA - Interest Expenses - Depreciation = EBTA
-EBTA x Marginal Tax Rate =  Estimated Property Income Taxes
-EBTA - Estimate Property Income Taxes = Net Income
-Net Income + Depreciation - Mortgage Principal Payments = Net Cash Flow
 
 # Simulation Parameters
 
@@ -70,7 +82,7 @@ Net Income + Depreciation - Mortgage Principal Payments = Net Cash Flow
 |Years|8.7|Number of years the simulation runs. Default is 8.7; the national average for home ownership.|
 |Months|104|Number of months the simulation runs.|
 |Home Purchase Amount|$289,900|Home purchase amount. Default is $289,900.|
-|Home Appreciation Percentage Per Year|2.80%|Home appreciation per year. Default is 3.7% (historic average).|
+|Home Appreciation Percentage Per Year|3.70%|Home appreciation per year. Default is 3.7% (historic average). If null, defaults to inflation rate.|
 |Insurance Per Month|$150|Insurance costs per month. Default is $150.|
 |Hoa Per Month|$0|HOA fees per month. Default is $100.|
 |Home Maintenance Percentage Per Year|1.50%|Home maintenance percentage per year. Default is 1.5%.|
@@ -80,47 +92,36 @@ Net Income + Depreciation - Mortgage Principal Payments = Net Cash Flow
 |Owner Down Payment|$57,980|Home owner down payment. Calculated.|
 |Owner Loan Amount|$231,920|Home owner loan amount. Calculated.|
 |Owner Monthly Payment|$1,141|Home owner monthly payment. Calculated.|
-|Landlord Interest Rate|4.75%|Landlord's mortgage interest rate. Default is 4.75%. If null, use home owner's value.|
+|Owner Allow Tax Deductions|Yes|Allow home owner to deduct mortgage interest and property tax. Default is false.|
+|Landlord Interest Rate Per Year|4.75%|Landlord's mortgage interest rate. Default is 4.75%. If null, use home owner's value.|
 |Landlord Loan Years|20|Landlord's loan term. Default is 20 years. If null, use home owner's value.|
 |Landlord Down Payment Percentage|25.00%|Landlord down payment percentage. Default is 25%. If null, use home owner's value.|
 |Landlord Down Payment|$72,475|Landlord down payment. Calculated.|
 |Landlord Loan Amount|$217,425|Landlord loan amount. Calculated.|
 |Landlord Monthly Payment|$1,405|Landlord monthly payment. Calculated.|
 |Landlord Management Fee Percentage Per Month|10.00%|Landlord property management fee as a percentage of monthly rent. Default is 10%.|
-|Rent Per Month|$2,165|Initial rent per month. Defaults is the home owners initial monthly expense.|
-|Rent Security Deposit Months|1|Number of months of rent retained as security deposit. Defaults is 1.|
+|Landlord Vacancy Fee Percentage|5.00%|Landlord property fee charged to represent loss due to vacancies. Default is 5%.|
+|Allow 1031  Exchange|Yes|Allow landlord to make a 1031 exchange at close of simulation. Default is false.|
+|Rent Per Month|$2,300|Initial rent per month. Default is the home owners initial monthly expense.|
+|Rent Security Deposit Months|1|Number of months of rent retained as security deposit. Default is 1.|
 |Renters Insurance Per Month|$15|Renter's insurance cost per month. Default is $15.|
 |Rent Change Per Year Percentage|3.00%|The percentage increase in rent each year. Default is 3%.|
-|Buyer Fixed Costs|$1,500|Fixed closing costs like title insurance, inspection, appraisal, etc. Defaults is $1,500.|
-|Buyer Variable Costs Percentage|1.50%|Variable closing costs such as loan origination. Defaults is 1.5%.|
+|Buyer Fixed Costs|$1,500|Fixed closing costs like title insurance, inspection, appraisal, etc. Default is $1,500.|
+|Buyer Variable Costs Percentage|1.50%|Variable closing costs such as loan origination. Default is 1.5%.|
 |Seller Commission Percentage|6.00%|Commission percentage paid to sell a home. Default is 6% (Omaha).|
 |Seller Fixed Costs|$1,000|Fixed costs to sell a home. Title insurance, doc fees, etc. Default is $1000.|
 |Depreciation Years|27.50|Number of years to depreciate. Default is 27.5.|
-|Depreciable Percentage|80.00%|Percentage of the home which is depreciable versus land. Defaults is 80%.|
+|Depreciable Percentage|80.00%|Percentage of the home which is depreciable versus land. Default is 80%.|
 |Capital Gains Rate Per Year|15.00%|Capital gains tax rate per year. Default is 15%.|
 |Marginal Tax Rate Per Year|24.00%|Marginal tax rate per year. Default is 24%.|
 |Property Tax Percentage Per Year|2.12%|Property tax percentage per year. Default is 2.12% (Omaha).|
-|Discount Rate Per Year|8.00%|Assumed rate of return per year for investments and also the rate assumed in NPV calculations. Defaults is 8%.|
+|Discount Rate Per Year|8.00%|Assumed rate of return per year for investments and also the rate assumed in NPV calculations. Default is 8%.|
 |Discount Rate Per Month|0.64%|Monthly discount rate.|
-|Inflation Rate Per Year|2.80%|The inflation percentage per year. Defaults is 2.8%.|
+|Inflation Rate Per Year|2.80%|The inflation percentage per year. Default is 2.8%.|
+
 
 
 # Sample Result
 
-
-|Year|Expenses|Rent|Renters Insurance|Cash Flow|
-| ---: | ---: | ---: | ---: | ---: |
-|0|$0|$0|$0|($62,959)|
-|1|$25,380|$25,200|$180|($25,380)|
-|2|$26,645|$26,460|$185|($26,645)|
-|3|$27,970|$27,780|$190|($27,970)|
-|4|$29,367|$29,172|$195|($29,367)|
-|5|$30,837|$30,636|$201|($30,837)|
-|6|$32,379|$32,172|$207|($32,379)|
-|7|$33,992|$33,780|$212|($33,992)|
-|8|$35,690|$35,472|$218|($35,690)|
-|9|$24,982|$24,832|$150|$89,489|
-|Sum|$267,243|$265,504|$1,739||
-|Average|$29,694|$29,500|$193||
-|NPV||||($188,833)|
-|IRR||||-25.66%|
+A sample excel file can be downloaded [here](https://github.com/johnweeder/RentVsOwn/blob/master/RentVsOwn.xlsx),
+This file is also included in the project.
