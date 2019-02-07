@@ -2,7 +2,9 @@
 {
     public enum ReportFormat
     {
-        Parameters,
+        ParametersCsv,
+
+        ParametersMarkdown,
 
         Markdown,
 

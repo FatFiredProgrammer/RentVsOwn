@@ -10,7 +10,7 @@ namespace RentVsOwn
         public decimal Total => Expenses + Principal;
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-        public decimal Expenses => Insurance + PropertyTax + Hoa + Maintenance + Interest;
+        public decimal Expenses => Insurance + PropertyTax + Hoa + Maintenance + Interest + TaxDeduction;
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Insurance { get; set; }
@@ -26,6 +26,9 @@ namespace RentVsOwn
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Interest { get; set; }
+
+        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+        public decimal TaxDeduction { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Principal { get; set; }

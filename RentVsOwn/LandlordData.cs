@@ -10,10 +10,13 @@ namespace RentVsOwn
         public decimal Rent { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-        public decimal Expenses => ManagementFee + Insurance + PropertyTax + Hoa + Maintenance + OperatingLoanInterest + OtherTaxes + Interest;
+        public decimal Expenses => ManagementFee + VacancyFee + Insurance + PropertyTax + Hoa + Maintenance + OperatingLoanInterest + OtherTaxes + Interest;
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal ManagementFee { get; set; }
+
+        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
+        public decimal VacancyFee { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Insurance { get; set; }

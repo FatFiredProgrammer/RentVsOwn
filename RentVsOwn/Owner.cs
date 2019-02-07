@@ -6,6 +6,8 @@ namespace RentVsOwn
 {
     public sealed class Owner : Entity<OwnerData>
     {
+        private const decimal MaxPropertyTaxDeductionAmount = 10000m;
+
         public Owner(ISimulation simulation, IOutput output)
             : base(simulation, output)
         {
@@ -20,6 +22,28 @@ namespace RentVsOwn
         private decimal _insurancePerMonth;
 
         private decimal _hoaPerMonth;
+
+        private decimal _mortgageInterest;
+
+        private decimal _propertyTax;
+
+        private void CalculateTaxDeductions(OwnerData data)
+        {
+            if (!Simulation.OwnerAllowTaxDeductions)
+                return;
+
+            var mortgageInterest = _mortgageInterest;
+            var propertyTax = Math.Min(MaxPropertyTaxDeductionAmount, _propertyTax);
+            var deductibleAmount = mortgageInterest + propertyTax;
+            var deduction = deductibleAmount * Simulation.MarginalTaxRatePerYear;
+
+            // Note: It's a negative expense that offsets other expenses.
+            data.TaxDeduction = -deduction;
+            WriteLine($"* {deduction:C0} tax deduction based on {mortgageInterest:C0} mortgage interest and {propertyTax:C0} property tax");
+
+            _mortgageInterest = 0;
+            _propertyTax = 0;
+        }
 
         /// <inheritdoc />
         public override void NextYear()
@@ -44,6 +68,8 @@ namespace RentVsOwn
 
         protected override void OnFinalMonth(OwnerData data)
         {
+            CalculateTaxDeductions(data);
+
             WriteLine($"* {_homeValue:C0} gross home sale proceeds ");
             var sellerFixedCosts = Simulation.SellerFixedCosts;
             WriteLine($"* {sellerFixedCosts:C0} seller fixed costs");
@@ -113,6 +139,7 @@ namespace RentVsOwn
             {
                 var loanPayment = Simulation.OwnerMonthlyPayment;
                 data.Interest += (_loanBalance * Simulation.OwnerInterestRatePerYear / 12).ToDollars();
+                _mortgageInterest += data.Interest;
                 data.Principal += Math.Min(loanPayment - data.Interest, _loanBalance).ToDollars();
                 WriteLine($"* {loanPayment:C0} loan payment ({data.Principal:C0} principal / {data.Interest:C0} interest)");
 
@@ -123,6 +150,8 @@ namespace RentVsOwn
             }
 
             data.PropertyTax += (_homeValue * Simulation.PropertyTaxPercentagePerYear / 12).ToDollars();
+            _propertyTax = data.PropertyTax;
+
             WriteLine($"* {data.PropertyTax:C0} property tax");
 
             if (Simulation.InsurancePerMonth > 0)
@@ -139,6 +168,9 @@ namespace RentVsOwn
 
             data.Maintenance += (_homeValue * Simulation.HomeMaintenancePercentagePerYear / 12).ToDollars();
             WriteLine($"* {data.Maintenance:C0} home maintenance");
+
+            if (Simulation.IsYearEnd)
+                CalculateTaxDeductions(data);
 
             WriteLine($"* {data.Total:C0} total payments");
 

@@ -2,6 +2,8 @@
 {
     public enum ReportColumnAlignment
     {
+        Unknown,
+
         Right,
 
         Left,

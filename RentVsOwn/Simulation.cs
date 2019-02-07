@@ -15,8 +15,8 @@ namespace RentVsOwn
         [ReportColumn("Name of Simulation")]
         public string Name { get; set; } = "Default Simulation";
 
-        private string GetSummary()
-            => new Report<Simulation>(this).ToString().TrimEnd();
+        private string GetSummary(ReportFormat format)
+            => new Report<Simulation>(this).Generate(ReportGrouping.NotGrouped, format).TrimEnd();
 
         private void Initialize()
         {
@@ -38,6 +38,7 @@ namespace RentVsOwn
             LandlordInterestRatePerYear = LandlordInterestRatePerYear ?? OwnerInterestRatePerYear;
             LandlordInterestRatePerYear = Math.Min(Math.Max(0m, LandlordInterestRatePerYear.Value), 100).ToPercent();
             LandlordManagementFeePercentagePerMonth = Math.Min(Math.Max(0m, LandlordManagementFeePercentagePerMonth), 100).ToPercent();
+            LandlordVacancyFeePercentage = Math.Min(Math.Max(0m, LandlordVacancyFeePercentage), 100).ToPercent();
             LandlordLoanAmount = HomePurchaseAmount - LandlordDownPayment;
             LandlordLoanYears = Math.Max(1, LandlordLoanYears ?? OwnerLoanYears);
             LandlordMonthlyPayment = PaymentCalculator.CalculatePayment(LandlordLoanAmount, LandlordInterestRatePerYear.Value, LandlordLoanYears.Value);
@@ -52,14 +53,14 @@ namespace RentVsOwn
             PropertyTaxPercentagePerYear = Math.Min(Math.Max(0m, PropertyTaxPercentagePerYear), 100).ToPercent();
             InsurancePerMonth = Math.Max(0m, InsurancePerMonth).ToDollarCents();
             HoaPerMonth = Math.Max(0m, HoaPerMonth).ToDollarCents();
-            HomeAppreciationPercentagePerYear = Math.Min(Math.Max(0m, HomeAppreciationPercentagePerYear), 100).ToPercent();
+            HomeAppreciationPercentagePerYear = Math.Min(Math.Max(0m, HomeAppreciationPercentagePerYear ?? InflationRatePerYear), 100).ToPercent();
             HomeMaintenancePercentagePerYear = Math.Min(Math.Max(0m, HomeMaintenancePercentagePerYear), 100).ToPercent();
             SellerCommissionPercentage = Math.Min(Math.Max(0m, SellerCommissionPercentage), 100).ToPercent();
             SellerFixedCosts = Math.Max(0m, SellerFixedCosts).ToDollars();
             DepreciationYears = Math.Max(1, DepreciationYears).ToValue();
             DepreciablePercentage = Math.Min(Math.Max(0m, DepreciablePercentage), 100).ToPercent();
 
-            RentChangePerYearPercentage = Math.Min(Math.Max(0m, RentChangePerYearPercentage ?? HomeAppreciationPercentagePerYear), 100).ToPercent();
+            RentChangePerYearPercentage = Math.Min(Math.Max(0m, RentChangePerYearPercentage ?? HomeAppreciationPercentagePerYear ?? InflationRatePerYear), 100).ToPercent();
             var defaultRent =
                 OwnerMonthlyPayment +
                 InsurancePerMonth +
@@ -93,7 +94,7 @@ namespace RentVsOwn
             // Create the simulation data and dump it to output.
             Initialize();
             output.WriteLine(Separator);
-            output.WriteLine(GetSummary().TrimEnd());
+            output.WriteLine(GetSummary(Csv ? ReportFormat.ParametersCsv : ReportFormat.ParametersMarkdown).TrimEnd());
 
             // Create the various entries we are simulating
             var people = new List<IEntity>
@@ -124,7 +125,7 @@ namespace RentVsOwn
                 output.WriteLine(Separator);
                 output.WriteLine(c.ToString().TrimEnd());
 
-                const ReportFormat format = ReportFormat.Csv;
+                var format = Csv ? ReportFormat.Csv : ReportFormat.Markdown;
                 var yearly = c.GenerateReport(ReportGrouping.Yearly, format);
                 if (!string.IsNullOrWhiteSpace(yearly))
                 {
@@ -167,6 +168,12 @@ namespace RentVsOwn
 
         [ReportColumn(Ignore = true)]
         public bool IsNewYear => Month != 1 && (Month - 1) % 12 == 0;
+
+        [ReportColumn(Ignore = true)]
+        public bool IsYearEnd => Month != 1 && (Month - 1) % 12 == 11;
+
+        [ReportColumn(Ignore = true)]
+        public bool Csv { get; set; } = true;
         #endregion
 
         #region Simulation Parameters
@@ -181,8 +188,10 @@ namespace RentVsOwn
         ///     Gets or sets the home appreciation percentage per year.
         /// </summary>
         /// <value>The home appreciation percentage per year.</value>
-        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Home appreciation per year. Default is 3.7% (historic average).")]
-        public decimal HomeAppreciationPercentagePerYear { get; set; } = .037m;
+        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Home appreciation per year. Default is 3.7% (historic average). If null, defaults to inflation rate.")]
+        public decimal? HomeAppreciationPercentagePerYear { get; set; } = .037m;
+
+        decimal ISimulation.HomeAppreciationPercentagePerYear => HomeAppreciationPercentagePerYear ?? 0m;
         #endregion
 
         #region Expenses
@@ -238,6 +247,9 @@ namespace RentVsOwn
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Notes = "Home owner monthly payment. Calculated.")]
         public decimal OwnerMonthlyPayment { get; private set; }
+
+        [ReportColumn(Notes = "Allow home owner to deduct mortgage interest and property tax. Default is false.")]
+        public bool OwnerAllowTaxDeductions { get; set; }
         #endregion
 
         #region Landlord
@@ -281,10 +293,17 @@ namespace RentVsOwn
         public decimal LandlordManagementFeePercentagePerMonth { get; set; } = .1m;
 
         /// <summary>
+        ///     Gets or sets the landlord vacancy fee percentage.
+        /// </summary>
+        /// <value>The landlord vacancy fee percentage.</value>
+        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Landlord property fee charged to represent loss due to vacancies. Default is 5%.")]
+        public decimal LandlordVacancyFeePercentage { get; set; } = .05m;
+
+        /// <summary>
         ///     Gets or sets a value indicating whether 1031 exchange is allowed.
         /// </summary>
         /// <value><c>true</c> if allow 1031 exchange; otherwise, <c>false</c>.</value>
-        [ReportColumn(Notes = "Allow landlord to make a 1031 exchange at close of simulation. Default is false.")]
+        [ReportColumn(Name = "Allow 1031 Exchange", Notes = "Allow landlord to make a 1031 exchange at close of simulation. Default is false.")]
         public bool Allow1031Exchange { get; set; }
         #endregion
 
@@ -293,7 +312,7 @@ namespace RentVsOwn
         ///     Gets or sets the initial rent.
         /// </summary>
         /// <value>The initial rent.</value>
-        [ReportColumn(Format = ReportColumnFormat.Currency, Notes = "Initial rent per month. Defaults is the home owners initial monthly expense.")]
+        [ReportColumn(Format = ReportColumnFormat.Currency, Notes = "Initial rent per month. Default is the home owners initial monthly expense.")]
         public decimal? RentPerMonth { get; set; }
 
         decimal ISimulation.RentPerMonth => RentPerMonth ?? 0m;
@@ -302,7 +321,7 @@ namespace RentVsOwn
         ///     Gets or sets the rent security deposit months.
         /// </summary>
         /// <value>The rent security deposit months.</value>
-        [ReportColumn(Format = ReportColumnFormat.Number, Notes = "Number of months of rent retained as security deposit. Defaults is 1.")]
+        [ReportColumn(Format = ReportColumnFormat.Number, Notes = "Number of months of rent retained as security deposit. Default is 1.")]
         public int RentSecurityDepositMonths { get; set; } = 1;
 
         /// <summary>
@@ -327,14 +346,14 @@ namespace RentVsOwn
         ///     Gets or sets the closing fixed costs.
         /// </summary>
         /// <value>The closing fixed costs.</value>
-        [ReportColumn(Format = ReportColumnFormat.Currency, Notes = "Fixed closing costs like title insurance, inspection, appraisal, etc. Defaults is $1,500.")]
+        [ReportColumn(Format = ReportColumnFormat.Currency, Notes = "Fixed closing costs like title insurance, inspection, appraisal, etc. Default is $1,500.")]
         public decimal BuyerFixedCosts { get; set; } = 1500m;
 
         /// <summary>
         ///     Gets or sets the closing variable costs percentage.
         /// </summary>
         /// <value>The closing variable costs percentage.</value>
-        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Variable closing costs such as loan origination. Defaults is 1.5%.")]
+        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Variable closing costs such as loan origination. Default is 1.5%.")]
         public decimal BuyerVariableCostsPercentage { get; set; } = .015m;
 
         /// <summary>
@@ -364,7 +383,7 @@ namespace RentVsOwn
         ///     Gets or sets the depreciable percentage.
         /// </summary>
         /// <value>The depreciable percentage.</value>
-        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Percentage of the home which is depreciable versus land. Defaults is 80%.")]
+        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Percentage of the home which is depreciable versus land. Default is 80%.")]
         public decimal DepreciablePercentage { get; set; } = .8m;
         #endregion
 
@@ -398,7 +417,7 @@ namespace RentVsOwn
         ///     the rate assumed in NPV calculations.
         /// </summary>
         /// <value>The discount rate.</value>
-        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Assumed rate of return per year for investments and also the rate assumed in NPV calculations. Defaults is 8%.")]
+        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Assumed rate of return per year for investments and also the rate assumed in NPV calculations. Default is 8%.")]
         public decimal DiscountRatePerYear { get; set; } = .08m;
 
         [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Monthly discount rate.")]
@@ -409,7 +428,7 @@ namespace RentVsOwn
         ///     This controls an increase in costs each year.
         /// </summary>
         /// <value>The inflation rate.</value>
-        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "The inflation percentage per year. Defaults is 2.8%.")]
+        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "The inflation percentage per year. Default is 2.8%.")]
         public decimal InflationRatePerYear { get; set; } = .028m;
         #endregion
     }

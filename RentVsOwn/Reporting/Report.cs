@@ -78,8 +78,11 @@ namespace RentVsOwn.Reporting
                 case ReportFormat.Csv:
                     return GenerateNotes(format, Separators.Csv) + GenerateCsv(grouping, columns);
 
-                case ReportFormat.Parameters:
-                    return GenerateNotes(format, Separators.None) + GenerateParameters(columns);
+                case ReportFormat.ParametersCsv:
+                    return GenerateNotes(format, Separators.None) + GenerateParameters(columns, Separators.Csv);
+
+                case ReportFormat.ParametersMarkdown:
+                    return GenerateNotes(format, Separators.None) + GenerateParameters(columns, Separators.Markdown);
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(format), format, null);
@@ -417,18 +420,18 @@ namespace RentVsOwn.Reporting
             return text.ToString();
         }
 
-        private string GenerateParameters(List<ReportColumn> columns)
+        private string GenerateParameters(List<ReportColumn> columns, Separators separators)
         {
             if (_data.Count != 1)
                 throw new InvalidOperationException($"Report of {nameof(T)} expected one data element.");
 
             var item = _data[0];
             var text = new StringBuilder();
-            text.AppendLine("|Parameter|Value|Notes|");
-            text.AppendLine("| :--- | ---: | :--- |");
+            text.AppendLine($"{separators.First}Parameter{separators.Middle}Value{separators.Middle}Notes{separators.Last}");
+            text.AppendLine($"{separators.First} :--- {separators.Middle} ---: {separators.Middle} :--- {separators.Last}");
             foreach (var column in columns)
             {
-                text.AppendLine($"|{column.Name}|{column.FormatValue(column.GetValue(item))}|{column.Notes}|");
+                text.AppendLine($"{separators.First}{column.Name}{separators.Middle}{column.FormatValue(column.GetValue(item))}{separators.Middle}{column.Notes}{separators.Last}");
             }
 
             return text.ToString();
@@ -477,6 +480,6 @@ namespace RentVsOwn.Reporting
 
         /// <inheritdoc />
         public override string ToString()
-            => Generate(ReportGrouping.NotGrouped, ReportFormat.Parameters);
+            => Generate(ReportGrouping.NotGrouped, ReportFormat.ParametersMarkdown);
     }
 }

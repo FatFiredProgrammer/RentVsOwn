@@ -41,11 +41,15 @@ namespace RentVsOwn.Reporting
                 if (!string.IsNullOrWhiteSpace(attribute.Name))
                     name = attribute.Name;
 
-                Alignment = attribute.Alignment;
                 Notes = attribute.Notes;
-                Grouping = attribute.Grouping;
-                Format = attribute.Format;
-                Precision = attribute.Precision;
+                if (attribute.Alignment != ReportColumnAlignment.Unknown)
+                    Alignment = attribute.Alignment;
+                if (attribute.Grouping != ReportColumnGrouping.Unknown)
+                    Grouping = attribute.Grouping;
+                if (attribute.Format != ReportColumnFormat.Unknown)
+                    Format = attribute.Format;
+                if (attribute.Precision >= 0)
+                    Precision = attribute.Precision;
                 CalculateAverage = attribute.CalculateAverage;
                 CalculateSum = attribute.CalculateSum;
                 IncludePeriod0 = attribute.IncludePeriod0;
@@ -53,6 +57,12 @@ namespace RentVsOwn.Reporting
                 CalculateIrr = attribute.CalculateIrr;
             }
 
+            if (Grouping == ReportColumnGrouping.Unknown)
+                Grouping = ReportColumnGrouping.Sum;
+            if (Alignment == ReportColumnAlignment.Unknown)
+                Alignment = ReportColumnAlignment.Left;
+            if (Format == ReportColumnFormat.Unknown)
+                Format = ReportColumnFormat.Text;
             Precision = Precision < 0 ? GetDefaultPrecision(Format) : Precision;
             Name = FormatName(name);
         }

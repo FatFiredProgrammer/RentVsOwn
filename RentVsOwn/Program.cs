@@ -31,7 +31,8 @@ namespace RentVsOwn
                     // LandlordManagementFeePercentagePerMonth = .1m,
                     HoaPerMonth = 0,
                     Allow1031Exchange = true,
-                    // Rent = 2100,
+                    RentPerMonth = 2300,
+                    OwnerAllowTaxDeductions = true,
                     // LandlordDownPaymentPercentage = null,
                     // LandlordInterestRatePerYear = null,
                     // LandlordLoanYears = null,
@@ -40,7 +41,6 @@ namespace RentVsOwn
                     // InsurancePerMonth = 100,
                     // HomeMaintenancePercentagePerYear = .01m,
                 };
-                simulator.HomeAppreciationPercentagePerYear = simulator.InflationRatePerYear;
 
                 simulator.Run(output);
             }

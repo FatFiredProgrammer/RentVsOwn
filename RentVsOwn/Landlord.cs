@@ -47,6 +47,14 @@ namespace RentVsOwn
 
         private void CalculateExpenses(LandlordData data)
         {
+            if (Simulation.LandlordVacancyFeePercentage > 0)
+            {
+                data.VacancyFee += _rentPerMonth * Simulation.LandlordVacancyFeePercentage;
+                data.Cash -= data.VacancyFee;
+                data.CashFlow -= data.VacancyFee;
+                WriteLine($"* {data.VacancyFee:C0} vacancy fee");
+            }
+
             if (Simulation.LandlordManagementFeePercentagePerMonth > 0)
             {
                 data.ManagementFee += _rentPerMonth * Simulation.LandlordManagementFeePercentagePerMonth;
@@ -95,10 +103,6 @@ namespace RentVsOwn
                 data.CashFlow -= data.OperatingLoanInterest;
                 WriteLine($"* {data.OperatingLoanInterest:C0} operating loan interest");
             }
-
-            // We pay the previous years taxes at the start of each new year.
-            if (Simulation.IsNewYear)
-                PayIncomeTax(data);
         }
 
         private void CalculateTaxableIncome(LandlordData data)
@@ -130,6 +134,10 @@ namespace RentVsOwn
                 _taxableIncome += taxableIncome;
                 WriteLine($"* {taxableIncome:C0} taxable income ({_taxableIncome:C0} current year)");
             }
+
+            // Pay income tax at the end of the year.
+            if (Simulation.IsYearEnd)
+                PayIncomeTax(data);
         }
 
         private void CloseOutOperatingLoan(LandlordData data)

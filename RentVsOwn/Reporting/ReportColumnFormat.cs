@@ -2,6 +2,8 @@
 {
     public enum ReportColumnFormat
     {
+        Unknown,
+
         Number,
 
         Currency,

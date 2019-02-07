@@ -2,28 +2,46 @@
 
 An application that simulates owning, renting and being a landlord of a property.
 
-https://fbe.unimelb.edu.au/__data/assets/pdf_file/0011/1497953/2011MayLiER_NPV_submission.pdf
+This code available on [github](https://github.com/johnweeder/RentVsOwn).
 
-Net worth
+See [Rent vs Own NPV](https://fbe.unimelb.edu.au/__data/assets/pdf_file/0011/1497953/2011MayLiER_NPV_submission.pdf)
+for a discussion of how to use values.
+
+See [this](https://iqcalculators.com/calculate-real-estate-roi) for discussion of how to evaluate
+ROI from a landlord perspective.
+
+## TODO
+
+Include moving costs. 
+Perhaps allow renter to move periodically during simulation.
+
+## Notes to /u/friendly_hendie
+
+Changes made:
+
+* Support CSV and markdown reports
+* Support both monthly and yearly reports.
+* Landlord now accounts for security deposit
+* Support a 1031 exchange
+* Added support for tax deductions
 Only relative npv/irr relevant for rent vs own.
+Net worth
 landlord retains security deposit!
-Check ISimulate parameter uisage.
-Resharper project check
 incorrect monthly discount rate calc!
 Not accouniting for loan balance
 large difference in monthly vs yearly npv calculations because of partial year?
+tax savings/deprecation are a "non-cash" expense are are not included in NPV.
+property tax, Mortgage interest deduction not relevant landlord. These are already deductible expenses.
+The area not unless < 14 days / year
+https://turbotax.intuit.com/tax-tips/home-ownership/buying-a-second-home-tax-tips-for-homeowners/L5Mzc5URo
 
-Used discount rate == to downpayment!
+
 Owner: Fixed closing cost of 2 pmts and $5000 are way out of line.
 1/2 title insurance + 1/2 appraisal + 1/2 termite + lender fee ($200) + settlement + doc + origination.
 
 Monthly NPV discount rate (1+Rate)^(1/12)-1
-Monthly IRR to annual: (1+IRR)^12 - 1
+Monthly IRR to annual: (1+rate)^12 - 1
 lose security deposit
-
-Remove unused values in ISimulation
-
-USe DAta/Reports to report averages.
 
 compounded future value: =-C9*(1+0.08/12)^A113
 Vacancy rate 5%
@@ -36,7 +54,7 @@ Personal loan interest
 Moving costs every 3 years.
 PV of NET CF =M11/(1+Home!$H$2/12)^Own!A11
 
-https://iqcalculators.com/calculate-real-estate-roi
+
 
 Gross Income(including vacancy allowance) - Operating Expenses = EBITDA(Earnings before interest, taxes, depreciation and amortization)
 EBITDA - Interest Expenses - Depreciation = EBTA
@@ -87,7 +105,7 @@ Net Income + Depreciation - Mortgage Principal Payments = Net Cash Flow
 |Inflation Rate Per Year|2.80%|The inflation percentage per year. Defaults is 2.8%.|
 
 
-## Sample Run
+# Sample Result
 
 
 |Year|Expenses|Rent|Renters Insurance|Cash Flow|

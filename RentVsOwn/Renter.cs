@@ -80,7 +80,7 @@ namespace RentVsOwn
                 Simulation.BuyerVariableCostsPercentage;
 
             Report.AddNote(WriteLine($"* {InitialCash:C0} starting cash"));
-            VerboseLine($"    * {Simulation.OwnerDownPayment:C0} down payment +  + )");
+            VerboseLine($"    * {Simulation.OwnerDownPayment:C0} down payment");
             VerboseLine($"    * {Simulation.BuyerFixedCosts:C0} fixed closing costs");
             VerboseLine($"    * {Simulation.OwnerLoanAmount * Simulation.BuyerVariableCostsPercentage:C0} variable closing costs");
 

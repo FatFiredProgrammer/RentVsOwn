@@ -2,6 +2,8 @@
 {
     public enum ReportColumnGrouping
     {
+        Unknown,
+
         Sum,
 
         Average,

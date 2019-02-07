@@ -8,7 +8,7 @@
 
         bool IsFinalMonth { get; }
 
-        bool IsNewYear { get; }
+        bool IsYearEnd { get; }
 
         decimal HomePurchaseAmount { get; }
 
@@ -19,6 +19,8 @@
         decimal OwnerLoanAmount { get; }
 
         decimal OwnerMonthlyPayment { get; }
+
+        bool OwnerAllowTaxDeductions { get; }
 
         decimal RentPerMonth { get; }
 
@@ -43,6 +45,8 @@
         decimal LandlordMonthlyPayment { get; }
 
         decimal LandlordManagementFeePercentagePerMonth { get; }
+
+        decimal LandlordVacancyFeePercentage { get; }
 
         decimal BuyerFixedCosts { get; }
 
