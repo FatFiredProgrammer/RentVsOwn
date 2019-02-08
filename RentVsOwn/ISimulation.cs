@@ -48,8 +48,6 @@
 
         decimal LandlordVacancyFeePercentage { get; }
 
-        decimal LandlordOperationLoanRatePerYear { get; }
-
         decimal BuyerFixedCosts { get; }
 
         decimal BuyerVariableCostsPercentage { get; }

@@ -52,13 +52,13 @@ Sellers closing costs here are 1/2 title insurance, 1/2 of closing fee and some 
 
 Changes made to my simulation:
 
+* Removed operating loan concept. It was wrong as an idea and implemented wrong.
 * CSV and markdown reports
 * Monthly and yearly reports.
 * Landlord security deposit held/returned
 * Vacancy holdback 
 * 1031 exchange
 * Added support for mortgage/propert tax deductions
-* Charge interest on an operating loan for negative cash flows.
 
 # Links
 

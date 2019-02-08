@@ -10,7 +10,7 @@ namespace RentVsOwn
         public decimal Rent { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-        public decimal Expenses => ManagementFee + VacancyFee + Insurance + PropertyTax + Hoa + Maintenance + OperatingLoanInterest + OtherTaxes + Interest;
+        public decimal Expenses => ManagementFee + VacancyFee + Insurance + PropertyTax + Hoa + Maintenance + OtherTaxes + Interest;
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal ManagementFee { get; set; }
@@ -31,9 +31,6 @@ namespace RentVsOwn
         public decimal Maintenance { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
-        public decimal OperatingLoanInterest { get; set; }
-
-        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal OtherTaxes { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
@@ -41,13 +38,6 @@ namespace RentVsOwn
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum, CalculateSum = true, CalculateAverage = true, IncludePeriod0 = false)]
         public decimal Principal { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the operating loan amount required during this period.
-        /// </summary>
-        /// <value>The operating loan.</value>
-        [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Sum)]
-        public decimal OperatingLoan { get; set; }
 
         [ReportColumn(Format = ReportColumnFormat.Currency, Grouping = ReportColumnGrouping.Last)]
         public decimal HomeValue { get; set; }

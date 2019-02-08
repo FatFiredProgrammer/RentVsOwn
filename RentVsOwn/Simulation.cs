@@ -42,7 +42,6 @@ namespace RentVsOwn
             LandlordLoanAmount = HomePurchaseAmount - LandlordDownPayment;
             LandlordLoanYears = Math.Max(1, LandlordLoanYears ?? OwnerLoanYears);
             LandlordMonthlyPayment = PaymentCalculator.CalculatePayment(LandlordLoanAmount, LandlordInterestRatePerYear.Value, LandlordLoanYears.Value);
-            LandlordOperationLoanRatePerYear = Math.Min(Math.Max(0m, LandlordOperationLoanRatePerYear), 100).ToPercent();
 
             DiscountRatePerYear = Math.Min(Math.Max(0m, DiscountRatePerYear), 100).ToPercent();
             CapitalGainsRatePerYear = Math.Min(Math.Max(0m, CapitalGainsRatePerYear), 100).ToPercent();
@@ -136,7 +135,6 @@ namespace RentVsOwn
             while (Next()); // Move to next month.
 
             // Write the results for each entity plus any NPV data
-            // ReSharper disable once ImplicitlyCapturedClosure
             people.ForEach(c => MonthlyReport(c, output));
             people.ForEach(c => YearlyReport(c, output));
         }
@@ -272,13 +270,6 @@ namespace RentVsOwn
         public decimal? LandlordInterestRatePerYear { get; set; } = .0475m;
 
         decimal ISimulation.LandlordInterestRatePerYear => LandlordInterestRatePerYear ?? 0m;
-
-        /// <summary>
-        ///     Gets or sets the owner interest rate.
-        /// </summary>
-        /// <value>The owner interest rate.</value>
-        [ReportColumn(Format = ReportColumnFormat.Percentage, Notes = "Landlord's operating loan interest rate. Default is 6.0%.")]
-        public decimal LandlordOperationLoanRatePerYear { get; set; } = .06m;
 
         /// <summary>
         ///     Gets or sets the owner loan years.

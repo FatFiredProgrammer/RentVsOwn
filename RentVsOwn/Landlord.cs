@@ -11,7 +11,7 @@ namespace RentVsOwn
         {
         }
 
-        protected override decimal NetWorth => Cash - _securityDeposit + _homeValue - _loanBalance - _operatingLoan;
+        protected override decimal NetWorth => Cash - _securityDeposit + _homeValue - _loanBalance;
 
         /// <summary>
         ///     The basis in the home.
@@ -33,12 +33,6 @@ namespace RentVsOwn
         private decimal _insurancePerMonth;
 
         private decimal _hoaPerMonth;
-
-        /// <summary>
-        ///     This represents a operating loan we either had to take out this
-        ///     month to make cash flow or an amount we paid back to against a previous operating loan
-        /// </summary>
-        private decimal _operatingLoan;
 
         /// <summary>
         ///     Current year taxable income
@@ -94,15 +88,6 @@ namespace RentVsOwn
                 data.CashFlow -= data.Maintenance;
                 WriteLine($"* {data.Maintenance:C0} maintenance");
             }
-
-            // If we have a operating loan, pay interest on it.
-            if (_operatingLoan > 0)
-            {
-                data.OperatingLoanInterest += (_operatingLoan * Simulation.LandlordOperationLoanRatePerYear / 12).ToDollars();
-                data.Cash -= data.OperatingLoanInterest;
-                data.CashFlow -= data.OperatingLoanInterest;
-                WriteLine($"* {data.OperatingLoanInterest:C0} operating loan interest");
-            }
         }
 
         private void CalculateTaxableIncome(LandlordData data)
@@ -138,19 +123,6 @@ namespace RentVsOwn
             // Pay income tax at the end of the year.
             if (Simulation.IsYearEnd)
                 PayIncomeTax(data);
-        }
-
-        private void CloseOutOperatingLoan(LandlordData data)
-        {
-            if (_operatingLoan <= 0)
-                return;
-
-            // This is a cash only transaction.
-            // The negative cash flow which generated the loan was accounted for in the NPV already.
-            // This is merely an adjustment for our net worth.
-            data.Cash -= _operatingLoan;
-            WriteLine($"* Closed out operating loan of {_operatingLoan:C0}");
-            _operatingLoan = 0;
         }
 
         private LandlordData InitializeMonth()
@@ -217,7 +189,6 @@ namespace RentVsOwn
             SellHome(data);
             RefundSecurityDeposit(data);
             PayIncomeTax(data);
-            CloseOutOperatingLoan(data);
         }
 
         protected override void OnInitialMonth()
@@ -267,9 +238,7 @@ namespace RentVsOwn
             var data = InitializeMonth();
             CalculateExpenses(data);
             CalculateTaxableIncome(data);
-            RepayOperatingLoan(data);
             PayDownLoan(data);
-            PayTheBills(data);
 
             return data;
         }
@@ -373,35 +342,6 @@ namespace RentVsOwn
             }
         }
 
-        private void PayTheBills(LandlordData data)
-        {
-            if (data.Cash >= 0)
-                return;
-
-            // If we have a negative cash flow, then we need to do something about it.
-            // Cash flow is already dealing with the NPV.
-            // This is more to account for net worth and to allow us to assign interest to operating loans.
-            var operatingLoanAmount = Math.Abs(data.Cash);
-
-            // Start by drawing on our cash
-            var cashAmount = Math.Max(0, Math.Min(operatingLoanAmount, Cash));
-            if (cashAmount > 0)
-            {
-                operatingLoanAmount -= cashAmount;
-                Cash -= cashAmount;
-                WriteLine($"* {cashAmount:C0} cash on hand used to cover negative cash flow");
-                data.Cash += operatingLoanAmount;
-            }
-
-            if (operatingLoanAmount > 0)
-            {
-                _operatingLoan += operatingLoanAmount;
-                data.OperatingLoan += operatingLoanAmount;
-                WriteLine($"* {operatingLoanAmount:C0} operating loan creating a balance of {_operatingLoan:C0}");
-                data.Cash += operatingLoanAmount;
-            }
-        }
-
         private void RefundSecurityDeposit(LandlordData data)
         {
             if (_securityDeposit <= 0)
@@ -411,21 +351,6 @@ namespace RentVsOwn
             data.CashFlow -= _securityDeposit;
             WriteLine($"* {_securityDeposit:C0} security deposit refunded");
             _securityDeposit = 0;
-        }
-
-        private void RepayOperatingLoan(LandlordData data)
-        {
-            if (data.Cash <= 0 || _operatingLoan <= 0)
-                return;
-
-            // This is a cash only transaction.
-            // The negative cash flow which generated the loan was accounted for in the NPV already.
-            // This is merely an adjustment for our net worth.
-             var operatingLoanPayment = Math.Min(_operatingLoan, data.Cash);
-            _operatingLoan -= operatingLoanPayment;
-            data.Cash -= operatingLoanPayment;
-            data.OperatingLoan -= operatingLoanPayment;
-            WriteLine($"* {operatingLoanPayment:C0} operating loan payment leaving a balance of {_operatingLoan:C0}");
         }
 
         private void SellHome(LandlordData data)
