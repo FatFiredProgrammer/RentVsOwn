@@ -2,6 +2,12 @@
 
 An application that simulates owning, renting and being a landlord of a property.
 
+1207 N 207th Cir
+Elkhorn, NE 68022
+4 beds 4 baths 3,717 sqft
+
+https://www.zillow.com/homes/for_rent/118807282_zpid/297017-_price/1191-_mp/featured_sort/41.284643,-96.204958,41.241093,-96.266499_rect/13_zm/
+
 ## TODO
 
 Include moving costs. 
